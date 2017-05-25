@@ -14,7 +14,9 @@ set(SOURCE_FILES
     preferencesdialog.cpp
     filebrowserinputwidget.cpp
     documentgenerator.cpp
+    markdownviewer.cpp
     markdowneditor.cpp
+    markdowneditorhighlighter.cpp
 )
 
 qt5_add_resources(RESOURCE_FILES resources.qrc)

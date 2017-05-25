@@ -1,9 +1,10 @@
 #include "markdowneditor.h"
 #include "ui_markdowneditor.h"
-#include <QFileDialog>
 
-MarkdownEditor::MarkdownEditor(QWidget* parent) :
+MarkdownEditor::MarkdownEditor(QSharedPointer<AppConfig> config,
+                               QWidget* parent) :
     QWidget(parent),
+    mConfig(config),
     ui(new Ui::MarkdownEditor)
 {
     ui->setupUi(this);
@@ -17,6 +18,12 @@ MarkdownEditor::~MarkdownEditor()
 }
 
 
+void MarkdownEditor::load()
+{
+    openFile(mConfig->markdownFile());
+}
+
+
 void MarkdownEditor::newFile()
 {
     ui->textEdit->clear();
@@ -25,36 +32,19 @@ void MarkdownEditor::newFile()
 
 void MarkdownEditor::openFile(const QString& path)
 {
-    QString fileName = path;
+    QFile file(path);
 
-    if (fileName.isNull())
+    if (file.open(QFile::ReadOnly | QFile::Text))
     {
-        fileName = QFileDialog::getOpenFileName(this, tr("Open File"), "",
-                                                "Markdown Files (*.md *.txt)");
-    }
-
-    if (!fileName.isEmpty())
-    {
-        QFile file(fileName);
-
-        if (file.open(QFile::ReadOnly | QFile::Text))
-        {
-            ui->textEdit->setPlainText(file.readAll());
-        }
+        QByteArray read = file.readAll();
+        ui->textEdit->setText(read);
     }
 }
 
 
 void MarkdownEditor::setupEditor()
 {
-    QFont font;
-    font.setFamily("Monaco");
-    font.setFixedPitch(true);
-    font.setPointSize(14);
-
-    ui->textEdit->setFont(font);
-
-    //highlighter = new Highlighter(editor->document());
+    mHighlighter = new MarkdownEditorHighlighter(ui->textEdit->document());
 
     QFile file("mainwindow.h");
 

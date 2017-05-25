@@ -2,6 +2,9 @@
 #define MARKDOWNEDITOR_H
 
 #include <QWidget>
+#include <QSharedPointer>
+#include "appconfig.h"
+#include "markdowneditorhighlighter.h"
 
 namespace Ui
 {
@@ -18,10 +21,12 @@ class MarkdownEditor : public QWidget
     Q_OBJECT
 
 public:
-    explicit MarkdownEditor(QWidget* parent = 0);
+    explicit MarkdownEditor(QSharedPointer<AppConfig> config,
+                            QWidget* parent = 0);
     ~MarkdownEditor();
 
 public slots:
+    void load();
     void newFile();
     void openFile(const QString& path = QString());
 
@@ -30,6 +35,8 @@ private:
 
 private:
     Ui::MarkdownEditor* ui;
+    QSharedPointer<AppConfig> mConfig;
+    MarkdownEditorHighlighter* mHighlighter;
 };
 
 #endif // MARKDOWNEDITOR_H

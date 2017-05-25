@@ -22,27 +22,25 @@ MainWindow::MainWindow(QWidget* parent) :
     setWindowTitle("Pandora");
 
     // Setup markdown editor
-    mEditor = new MarkdownEditor(this);
-    mEditor->setMinimumSize(600, 800);
+    mEditor = new MarkdownEditor(mConfig, this);
+    mEditor->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
     mUi->horizontalLayout->addWidget(mEditor);
 
-    // Setup web engine
-    mWebView = new QWebEngineView(this);
-    mWebView->setMinimumSize(600, 800);
-    mUi->horizontalLayout->addWidget(mWebView);
-    connect(mWebView->page(), &QWebEnginePage::scrollPositionChanged,
-            this, &MainWindow::onScrollPositionChanged);
-    connect(mWebView, &QWebEngineView::loadFinished, this, &MainWindow::onPageLoaded);
+    // Setup markdown viewer
+    mViewer = new MarkdownViewer(mConfig, this);
+    mViewer->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
+    mUi->horizontalLayout->addWidget(mViewer);
+
+    // Setup preferences dialog
+    mCfgDialog = new PreferencesDialog(mConfig, this);
+    connect(mUi->actionPreferences, &QAction::triggered, mCfgDialog, &PreferencesDialog::show);
+    connect(mCfgDialog, &PreferencesDialog::saved, mViewer, &MarkdownViewer::generate);
+    connect(mCfgDialog, &PreferencesDialog::saved, mEditor, &MarkdownEditor::load);
 
     // Set window size and position
     setMinimumSize(800, 800);
     restoreGeometry(mConfig->settings().value("geometry").toByteArray());
     restoreState(mConfig->settings().value("state").toByteArray());
-
-    // Setup preferences dialog and show it on program start
-    mCfgDialog = new PreferencesDialog(mConfig, this);
-    connect(mUi->actionPreferences, &QAction::triggered, mCfgDialog, &PreferencesDialog::show);
-    connect(mCfgDialog, &PreferencesDialog::saved, this, &MainWindow::generate);
 }
 
 
@@ -52,64 +50,9 @@ MainWindow::~MainWindow()
 }
 
 
-void MainWindow::generate()
-{
-    // Directly generate the html so that we have something to display on the screen
-    initDocumentGenerator();
-    mGenerator->generate(mConfig->markdownFile());
-}
-
-
-void MainWindow::initDocumentGenerator()
-{
-    // Setup document generator component
-    mGenerator = QSharedPointer<DocumentGenerator>(new DocumentGenerator(mConfig->markdownFile()));
-    mGenerator->setBibtexFile(mConfig->bibtexFile());
-
-    if (mConfig->outputFile())
-    {
-        mGenerator->setOutputFile(mConfig->outputFile()->fileName());
-    }
-
-    if (mConfig->cssFile())
-    {
-        mGenerator->setCssFile(mConfig->cssFile()->fileName());
-    }
-
-    connect(mGenerator.data(), &DocumentGenerator::generated, this, &MainWindow::loadPage,
-            Qt::UniqueConnection);
-}
-
-
-void MainWindow::loadPage(const QString& path)
-{
-    qDebug() << sTag << "Loading page" << path;
-    QUrl url("file://" + path);
-    mWebView->load(url);
-}
-
-
 void MainWindow::closeEvent(QCloseEvent* /*event*/)
 {
     mConfig->settings().setValue("geometry", saveGeometry());
     mConfig->settings().setValue("state", saveState());
     mConfig->settings().sync();
-}
-
-
-void MainWindow::onScrollPositionChanged(const QPointF pos)
-{
-    mScrollPos = pos;
-}
-
-
-void MainWindow::onPageLoaded(bool ok)
-{
-    if (ok)
-    {
-        // Set scroll position to the last position
-        QString scrollJs("window.scrollTo(%1, %2);");
-        scrollJs = scrollJs.arg(mScrollPos.x()).arg(mScrollPos.y());
-        mWebView->page()->runJavaScript(scrollJs);
-    }
 }

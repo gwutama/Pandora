@@ -6,8 +6,8 @@
 #include <QUrl>
 #include <QSharedPointer>
 #include "preferencesdialog.h"
-#include "documentgenerator.h"
 #include "markdowneditor.h"
+#include "markdownviewer.h"
 
 namespace Ui
 {
@@ -22,26 +22,15 @@ public:
     explicit MainWindow(QWidget* parent = 0);
     ~MainWindow();
 
-private slots:
-    void generate();
-    void onScrollPositionChanged(const QPointF pos);
-    void onPageLoaded(bool ok);
-
 private:
-    void initDocumentGenerator();
-    void loadPage(const QString& path);
-
     void closeEvent(QCloseEvent* event);
 
 private:
-    Ui::MainWindow* mUi;
-    QWebEngineView* mWebView;
+    Ui::MainWindow* mUi;    
     PreferencesDialog* mCfgDialog;
+    MarkdownViewer* mViewer;
     MarkdownEditor* mEditor;
-
     QSharedPointer<AppConfig> mConfig;
-    QSharedPointer<DocumentGenerator> mGenerator;
-    QPointF mScrollPos;
 
     static const char* sTag;
 };
