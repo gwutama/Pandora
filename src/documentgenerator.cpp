@@ -1,5 +1,5 @@
 #include "documentgenerator.h"
-#include <easylogging++.h>
+#include <QDebug>
 #include <QStringList>
 #include <QFileInfo>
 #include "processrunner.h"
@@ -32,7 +32,7 @@ void DocumentGenerator::generate(const QString& path)
         return;
     }
 
-    LOG(DEBUG) << "Executing pandoc process because file has been changed:" << path;
+    qDebug() << sTag << "Executing pandoc because file has been changed:" << path;
     QByteArray output;
 
     if (executePandoc(output))
@@ -46,7 +46,7 @@ void DocumentGenerator::watchFile(const QString& path)
 {
     if (path.isEmpty())
     {
-        LOG(WARNING) << "Cannot add path because it is empty";
+        qWarning() << sTag << "Cannot add path because it is empty";
         return;
     }
 
@@ -54,16 +54,20 @@ void DocumentGenerator::watchFile(const QString& path)
 
     if (!finfo.exists() || !finfo.isReadable())
     {
-        LOG(WARNING) << "Cannot add path because it does not exist or not readable";
+        qWarning() << sTag << "Cannot add path because it does not exist or not readable";
         return;
     }
 
     // Unwatch old files first
     QStringList oldPaths = mFsWatcher.files();
-    mFsWatcher.removePaths(oldPaths);
+
+    if (oldPaths.size())
+    {
+        mFsWatcher.removePaths(oldPaths);
+    }
 
     // Then watch requested file
-    LOG(DEBUG) << "Watching path" << path;
+    qDebug() << sTag << "Watching path" << path;
     mFsWatcher.addPath(path);
 
     mMarkdownFile = path;
@@ -94,6 +98,6 @@ bool DocumentGenerator::executePandoc(QByteArray& output)
         cmd = cmd.arg(mBibtexFile);
     }
 
-    LOG(DEBUG) << "Executing pandoc" << cmd;
+    qDebug() << sTag << "Executing pandoc" << cmd;
     return ProcessRunner::run(cmd, output);
 }

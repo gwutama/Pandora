@@ -1,6 +1,6 @@
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
-#include <easylogging++.h>
+#include <QDebug>
 #include "processrunner.h"
 #include <QSysInfo>
 
@@ -18,18 +18,24 @@ MainWindow::MainWindow(QWidget* parent) :
 
     // Setup ui
     mUi->setupUi(this);
-    setAccessibleName("Pandoc Viewer");
-    setWindowTitle("Pandoc Viewer");
+    setAccessibleName("Pandora");
+    setWindowTitle("Pandora");
+
+    // Setup markdown editor
+    mEditor = new MarkdownEditor(this);
+    mEditor->setMinimumSize(600, 800);
+    mUi->horizontalLayout->addWidget(mEditor);
 
     // Setup web engine
     mWebView = new QWebEngineView(this);
-    mUi->verticalLayout->addWidget(mWebView);
+    mWebView->setMinimumSize(600, 800);
+    mUi->horizontalLayout->addWidget(mWebView);
     connect(mWebView->page(), &QWebEnginePage::scrollPositionChanged,
             this, &MainWindow::onScrollPositionChanged);
     connect(mWebView, &QWebEngineView::loadFinished, this, &MainWindow::onPageLoaded);
 
     // Set window size and position
-    setMinimumSize(600, 800);
+    setMinimumSize(800, 800);
     restoreGeometry(mConfig->settings().value("geometry").toByteArray());
     restoreState(mConfig->settings().value("state").toByteArray());
 
@@ -77,7 +83,7 @@ void MainWindow::initDocumentGenerator()
 
 void MainWindow::loadPage(const QString& path)
 {
-    LOG(DEBUG) << sTag << "Loading page" << path;
+    qDebug() << sTag << "Loading page" << path;
     QUrl url("file://" + path);
     mWebView->load(url);
 }

@@ -7,6 +7,7 @@
 #include <QSharedPointer>
 #include "preferencesdialog.h"
 #include "documentgenerator.h"
+#include "markdowneditor.h"
 
 namespace Ui
 {
@@ -36,6 +37,8 @@ private:
     Ui::MainWindow* mUi;
     QWebEngineView* mWebView;
     PreferencesDialog* mCfgDialog;
+    MarkdownEditor* mEditor;
+
     QSharedPointer<AppConfig> mConfig;
     QSharedPointer<DocumentGenerator> mGenerator;
     QPointF mScrollPos;

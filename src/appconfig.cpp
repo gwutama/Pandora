@@ -1,5 +1,5 @@
 #include "appconfig.h"
-#include <easylogging++.h>
+#include <QDebug>
 #include <QFileInfo>
 
 const char* AppConfig::sTag = "[AppConfig]";
@@ -62,7 +62,7 @@ QTemporaryFile* AppConfig::extractThemeFromResources(const QString& cssTheme)
 
     if (!resourceFile.exists())
     {
-        LOG(WARNING) << sTag << "Theme does not exist:" << cssTheme;
+        qWarning() << sTag << "Theme does not exist:" << cssTheme;
         return nullptr;
     }
 
