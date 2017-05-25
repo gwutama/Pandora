@@ -19,12 +19,23 @@ set(SOURCE_FILES
 qt5_add_resources(RESOURCE_FILES resources.qrc)
 
 qt5_wrap_ui(UI_FILES
-            mainwindow.ui
-            preferencesdialog.ui 
-            filebrowserinputwidget.ui
+    mainwindow.ui
+    preferencesdialog.ui 
+    filebrowserinputwidget.ui
 )
 
-SET(MACOSX_BUNDLE_BUNDLE_NAME ${PROJECT_NAME})
-add_executable(${PROJECT_NAME} MACOSX_BUNDLE ${SOURCE_FILES} ${UI_FILES} ${RESOURCE_FILES})
+add_executable(${PROJECT_NAME} ${SOURCE_FILES} ${UI_FILES} ${RESOURCE_FILES})
 target_link_libraries(${PROJECT_NAME} Qt5::Core Qt5::Gui Qt5::Widgets Qt5::WebEngineWidgets)
-SET_TARGET_PROPERTIES(${PROJECT_NAME} PROPERTIES MACOSX_BUNDLE TRUE)
+
+if (APPLE)
+    set_target_properties(${PROJECT_NAME} PROPERTIES 
+        MACOSX_BUNDLE TRUE
+        MACOSX_BUNDLE_INFO_PLIST MacOSXBundleInfo.plist.in
+        MACOSX_BUNDLE_INFO_STRING "Markdown editor made for pandoc"
+        MACOSX_BUNDLE_LONG_VERSION_STRING 0.1
+        MACOSX_BUNDLE_BUNDLE_NAME ${PROJECT_NAME}
+        MACOSX_BUNDLE_SHORT_VERSION_STRING 0.1
+        MACOSX_BUNDLE_BUNDLE_VERSION 0.1
+        MACOSX_BUNDLE_COPYRIGHT "Copyright 2017 Galuh Utama"
+    )
+endif()
