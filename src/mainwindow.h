@@ -39,6 +39,8 @@ private:
     QSharedPointer<AppConfig> mConfig;
     QSharedPointer<DocumentGenerator> mGenerator;
     QPointF mScrollPos;
+
+    static const char* sTag;
 };
 
 #endif // MAINWINDOW_H

@@ -59,6 +59,8 @@ private:
     // Auto generated based on other properties
     QSharedPointer<QTemporaryFile> mCssFile;
     QSharedPointer<QTemporaryFile> mOutputFile;
+
+    static const char* sTag;
 };
 
 #endif // APPCONFIG_H

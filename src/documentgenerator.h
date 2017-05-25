@@ -38,6 +38,8 @@ private:
     QString mOutputFile;
     QString mBibtexFile;
     QFileSystemWatcher mFsWatcher;
+
+    static const char* sTag;
 };
 
 #endif // DOCUMENTGENERATOR_H

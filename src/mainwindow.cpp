@@ -1,9 +1,10 @@
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
+#include <easylogging++.h>
 #include "processrunner.h"
-#include <QDebug>
 #include <QSysInfo>
 
+const char* MainWindow::sTag = "[MainWindow]";
 
 MainWindow::MainWindow(QWidget* parent) :
     QMainWindow(parent),
@@ -12,7 +13,7 @@ MainWindow::MainWindow(QWidget* parent) :
 {
     if (QSysInfo::productType() == "macos")
     {
-        putenv("PATH=/usr/local/sbin:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin");
+        putenv((char*) "PATH=/usr/local/sbin:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin");
     }
 
     // Setup ui
@@ -76,7 +77,7 @@ void MainWindow::initDocumentGenerator()
 
 void MainWindow::loadPage(const QString& path)
 {
-    qDebug() << "Loading page" << path;
+    LOG(DEBUG) << sTag << "Loading page" << path;
     QUrl url("file://" + path);
     mWebView->load(url);
 }
