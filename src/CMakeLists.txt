@@ -9,23 +9,23 @@ set(CMAKE_INCLUDE_CURRENT_DIR ON)
 set(SOURCE_FILES
     main.cpp
     mainwindow.cpp
-    appconfig.cpp
-    processrunner.cpp
-    preferencesdialog.cpp
-    filebrowserinputwidget.cpp
-    documentgenerator.cpp
-    markdownviewer.cpp
-    markdowneditor.cpp
-    markdowneditorhighlighter.cpp
+    common/appconfig.cpp
+    common/processrunner.cpp
+    preferences/preferencesdialog.cpp
+    preferences/filebrowserinputwidget.cpp
+    markdownviewer/documentgenerator.cpp
+    markdownviewer/markdownviewer.cpp
+    markdowneditor/markdowneditor.cpp
+    markdowneditor/markdowneditorhighlighter.cpp
 )
 
 qt5_add_resources(RESOURCE_FILES resources.qrc)
 
 qt5_wrap_ui(UI_FILES
     mainwindow.ui
-    preferencesdialog.ui 
-    filebrowserinputwidget.ui
-    markdowneditor.ui
+    preferences/preferencesdialog.ui 
+    preferences/filebrowserinputwidget.ui
+    markdowneditor/markdowneditor.ui
 )
 
 find_package(Qt5Core REQUIRED)

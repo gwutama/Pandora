@@ -4,10 +4,10 @@
 #include <QMainWindow>
 #include <QSharedPointer>
 #include <QTemporaryFile>
-#include "appconfig.h"
-#include "preferencesdialog.h"
-#include "markdowneditor.h"
-#include "markdownviewer.h"
+#include "common/appconfig.h"
+#include "preferences/preferencesdialog.h"
+#include "markdowneditor/markdowneditor.h"
+#include "markdownviewer/markdownviewer.h"
 
 namespace Ui
 {

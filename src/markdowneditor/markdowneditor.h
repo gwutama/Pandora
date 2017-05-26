@@ -3,8 +3,8 @@
 
 #include <QWidget>
 #include <QSharedPointer>
-#include "appconfig.h"
-#include "markdowneditorhighlighter.h"
+#include "common/appconfig.h"
+#include "markdowneditor/markdowneditorhighlighter.h"
 
 namespace Ui
 {

@@ -1,6 +1,6 @@
 <RCC>
     <qresource prefix="/">
         <file>themes/default.css</file>
-        <file>emptymarkdownviewer.html</file>
+        <file>markdownviewer/emptymarkdownviewer.html</file>
     </qresource>
 </RCC>

@@ -3,7 +3,7 @@
 
 #include <QDialog>
 #include <QSharedPointer>
-#include "appconfig.h"
+#include "common/appconfig.h"
 
 namespace Ui
 {

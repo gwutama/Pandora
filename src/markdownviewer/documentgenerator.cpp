@@ -2,7 +2,7 @@
 #include <QDebug>
 #include <QStringList>
 #include <QFileInfo>
-#include "processrunner.h"
+#include "common/processrunner.h"
 
 const char* DocumentGenerator::sTag = "[DocumentGenerator]";
 

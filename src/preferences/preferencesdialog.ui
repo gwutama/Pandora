@@ -50,7 +50,7 @@
   <customwidget>
    <class>FileBrowserInputWidget</class>
    <extends>QWidget</extends>
-   <header>filebrowserinputwidget.h</header>
+   <header>preferences/filebrowserinputwidget.h</header>
    <container>1</container>
   </customwidget>
  </customwidgets>

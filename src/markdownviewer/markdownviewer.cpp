@@ -31,7 +31,7 @@ MarkdownViewer::~MarkdownViewer()
 
 void MarkdownViewer::close()
 {
-    QUrl url("qrc:/emptymarkdownviewer.html");
+    QUrl url("qrc:/markdownviewer/emptymarkdownviewer.html");
     mWebView->load(url);
     mScrollPos = QPointF();
 }
