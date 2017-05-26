@@ -21,12 +21,12 @@ MarkdownEditorHighlighter::MarkdownEditorHighlighter(QTextDocument* parent) :
 
 
     // bold
-    mBoldStartRx = QRegExp("\\*\\*.");
-    mBoldEndRx = QRegExp(".\\*\\*");
+    mBoldStartRx = QRegExp("\\*\\*\\S");
+    mBoldEndRx = QRegExp("\\S\\*\\*");
 
     // italic
-    mItalicStartRx = QRegExp("\\*.");
-    mItalicEndRx = QRegExp(".\\*");
+    mItalicStartRx = QRegExp("\\*\\S");
+    mItalicEndRx = QRegExp("\\S\\*");
 
     // h1
     rule.pattern = QRegExp("^# .*$");
@@ -40,7 +40,7 @@ MarkdownEditorHighlighter::MarkdownEditorHighlighter(QTextDocument* parent) :
 
     // h3
     rule.pattern = QRegExp("^### .*$");
-    rule.format = mBoldFmt;
+    rule.format = mHeadingFmt;
     highlightingRules.append(rule);
 
     // h4

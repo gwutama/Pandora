@@ -24,8 +24,8 @@ public:
     virtual ~MarkdownViewer();
 
 public slots:
-    void clear();
-    void generate();
+    void close();
+    void load();
 
 private slots:
     void onScrollPositionChanged(const QPointF pos);

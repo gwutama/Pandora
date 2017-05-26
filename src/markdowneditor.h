@@ -27,17 +27,20 @@ public:
     ~MarkdownEditor();
 
 public slots:
-    void load();
-    void clear();
-    void openFile(const QString& path = QString());
+    void open();
+    void close();
+    void save();
 
 private:
     void setupEditor();
+    void openFile(const QString& path = QString());
 
 private:
     Ui::MarkdownEditor* mUi;
     QSharedPointer<AppConfig> mConfig;
     QSharedPointer<MarkdownEditorHighlighter> mHighlighter;
+
+    static const char* sTag;
 };
 
 #endif // MARKDOWNEDITOR_H

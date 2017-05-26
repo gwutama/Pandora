@@ -28,12 +28,13 @@ MainWindow::MainWindow(QWidget* parent) :
     // Setup preferences dialog
     mCfgDialog = new PreferencesDialog(mConfig, this);
     connect(mUi->actionPreferences, &QAction::triggered, mCfgDialog, &PreferencesDialog::show);
-    connect(mCfgDialog, &PreferencesDialog::saved, mViewer, &MarkdownViewer::generate);
-    connect(mCfgDialog, &PreferencesDialog::saved, mEditor, &MarkdownEditor::load);
+    connect(mCfgDialog, &PreferencesDialog::saved, mViewer, &MarkdownViewer::load);
+    connect(mCfgDialog, &PreferencesDialog::saved, mEditor, &MarkdownEditor::open);
 
     // Menu signals slots
-    connect(mUi->actionOpen, &QAction::triggered, this, &MainWindow::onOpenFileActionTriggered);
-    connect(mUi->actionClose, &QAction::triggered, this, &MainWindow::onCloseFileActionTriggered);
+    connect(mUi->actionOpen, &QAction::triggered, this, &MainWindow::onOpenActionTriggered);
+    connect(mUi->actionClose, &QAction::triggered, this, &MainWindow::onCloseActionTriggered);
+    connect(mUi->actionSave, &QAction::triggered, this, &MainWindow::onSaveActionTriggered);
 
     // Set window size and position
     setMinimumSize(800, 800);
@@ -57,7 +58,7 @@ void MainWindow::closeEvent(QCloseEvent* /*event*/)
 }
 
 
-void MainWindow::onOpenFileActionTriggered(bool /*checked*/)
+void MainWindow::onOpenActionTriggered(bool /*checked*/)
 {
     QString file = QFileDialog::getOpenFileName(this, tr("Markdown File"), "",
                                                 "Markdown file (*.md *.txt *.text)");
@@ -70,13 +71,19 @@ void MainWindow::onOpenFileActionTriggered(bool /*checked*/)
 
     mConfig->setMarkdownFile(file);
     mConfig->save();
-    mViewer->generate();
-    mEditor->load();
+    mViewer->load();
+    mEditor->open();
 }
 
 
-void MainWindow::onCloseFileActionTriggered(bool checked)
+void MainWindow::onCloseActionTriggered(bool checked)
 {
-    mViewer->clear();
-    mEditor->clear();
+    mViewer->close();
+    mEditor->close();
+}
+
+
+void MainWindow::onSaveActionTriggered(bool checked)
+{
+    mEditor->save();
 }

@@ -20,7 +20,7 @@ MarkdownViewer::MarkdownViewer(QSharedPointer<AppConfig> config,
     layout->addWidget(mWebView);
     setLayout(layout);
 
-    clear();
+    close();
 }
 
 
@@ -29,7 +29,7 @@ MarkdownViewer::~MarkdownViewer()
 }
 
 
-void MarkdownViewer::clear()
+void MarkdownViewer::close()
 {
     QUrl url("qrc:/emptymarkdownviewer.html");
     mWebView->load(url);
@@ -37,7 +37,7 @@ void MarkdownViewer::clear()
 }
 
 
-void MarkdownViewer::generate()
+void MarkdownViewer::load()
 {
     // Directly generate the html so that we have something to display on the screen
     initDocumentGenerator();

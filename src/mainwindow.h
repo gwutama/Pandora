@@ -27,8 +27,9 @@ private:
     void closeEvent(QCloseEvent* event);
 
 private slots:
-    void onOpenFileActionTriggered(bool checked);
-    void onCloseFileActionTriggered(bool checked);
+    void onOpenActionTriggered(bool checked);
+    void onCloseActionTriggered(bool checked);
+    void onSaveActionTriggered(bool checked);
 
 private:
     Ui::MainWindow* mUi;    
