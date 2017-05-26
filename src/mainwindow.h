@@ -2,8 +2,6 @@
 #define MAINWINDOW_H
 
 #include <QMainWindow>
-#include <QWebEngineView>
-#include <QUrl>
 #include <QSharedPointer>
 #include "appconfig.h"
 #include "preferencesdialog.h"
@@ -24,9 +22,12 @@ public:
     ~MainWindow();
 
 private:
+    void uiStateNoFileOpen();
+    void uiStateFileOpened();
     void closeEvent(QCloseEvent* event);
 
 private slots:
+    void onNewActionTriggered(bool checked);
     void onOpenActionTriggered(bool checked);
     void onCloseActionTriggered(bool checked);
     void onSaveActionTriggered(bool checked);

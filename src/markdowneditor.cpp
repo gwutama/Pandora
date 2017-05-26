@@ -22,9 +22,9 @@ MarkdownEditor::~MarkdownEditor()
 }
 
 
-void MarkdownEditor::open()
+bool MarkdownEditor::open()
 {
-    openFile(mConfig->markdownFile());
+    return openFile(mConfig->markdownFile());
 }
 
 
@@ -34,12 +34,12 @@ void MarkdownEditor::close()
 }
 
 
-void MarkdownEditor::save()
+bool MarkdownEditor::save()
 {
     if (mConfig->markdownFile().isEmpty())
     {
         qWarning() << sTag << "Cannot save because markdown file is not loaded";
-        return;
+        return false;
     }
 
     QFile file(mConfig->markdownFile());
@@ -47,7 +47,7 @@ void MarkdownEditor::save()
     if (!file.open(QFile::WriteOnly | QFile::Text))
     {
         qWarning() << sTag << "Cannot open markdown file for writing:" << mConfig->markdownFile();
-        return;
+        return false;
     }
 
     QString contents = mUi->textEdit->document()->toPlainText();
@@ -55,26 +55,28 @@ void MarkdownEditor::save()
 
     file.write(contents.toUtf8());
     file.close();
+    return true;
 }
 
 
-void MarkdownEditor::openFile(const QString& path)
+bool MarkdownEditor::openFile(const QString& path)
 {
     QFile file(path);
 
     if (!file.open(QFile::ReadOnly | QFile::Text))
     {
         qWarning() << sTag << "Cannot open markdown file for reading:" << mConfig->markdownFile();
-        return;
+        return false;
     }
 
     QByteArray content = file.readAll();
     QTextDocument* doc = mUi->textEdit->document();
     doc->setPlainText(content);
-    doc->setDocumentMargin(80);
+    doc->setDocumentMargin(70);
     doc->setPlainText(content);
 
     file.close();
+    return true;
 }
 
 

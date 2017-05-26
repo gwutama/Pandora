@@ -24,21 +24,25 @@ DocumentGenerator::~DocumentGenerator()
 }
 
 
-void DocumentGenerator::generate(const QString& path)
+bool DocumentGenerator::generate(const QString& path)
 {
     // Extra check, for ease of mind
     if (path != mMarkdownFile)
     {
-        return;
+        return false;
     }
 
     qDebug() << sTag << "Executing pandoc because file has been changed:" << path;
     QByteArray output;
 
-    if (executePandoc(output))
+    if (!executePandoc(output))
     {
-        emit generated(mOutputFile);
+        qWarning() << sTag << "Error generating html file:" << path;
+        return false;
     }
+
+    emit generated(mOutputFile);
+    return true;
 }
 
 

@@ -22,7 +22,7 @@ public:
     { mBibtexFile = bibtexFile; }
 
 public slots:
-    void generate(const QString& path);
+    bool generate(const QString& path);
 
 private:
     void watchFile(const QString& path);

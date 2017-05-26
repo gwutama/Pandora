@@ -40,6 +40,8 @@ MainWindow::MainWindow(QWidget* parent) :
     setMinimumSize(800, 800);
     restoreGeometry(mConfig->settings().value("geometry").toByteArray());
     restoreState(mConfig->settings().value("state").toByteArray());
+
+    uiStateNoFileOpen();
 }
 
 
@@ -49,12 +51,36 @@ MainWindow::~MainWindow()
 }
 
 
+void MainWindow::uiStateNoFileOpen()
+{
+    // Disable menus File->Close, File->Save
+    // Disable editor
+    mUi->actionClose->setDisabled(true);
+    mUi->actionSave->setDisabled(true);
+    mEditor->setDisabled(true);
+}
+
+
+void MainWindow::uiStateFileOpened()
+{
+    mUi->actionClose->setEnabled(true);
+    mUi->actionSave->setEnabled(true);
+    mEditor->setEnabled(true);
+}
+
+
 void MainWindow::closeEvent(QCloseEvent* /*event*/)
 {
     // Save window size and position
     mConfig->settings().setValue("geometry", saveGeometry());
     mConfig->settings().setValue("state", saveState());
     mConfig->settings().sync();
+}
+
+
+void MainWindow::onNewActionTriggered(bool checked)
+{
+
 }
 
 
@@ -71,8 +97,16 @@ void MainWindow::onOpenActionTriggered(bool /*checked*/)
 
     mConfig->setMarkdownFile(file);
     mConfig->save();
-    mViewer->load();
-    mEditor->open();
+
+    if (mViewer->load() && mEditor->open())
+    {
+        qDebug() << sTag << "File successfully opened";
+        uiStateFileOpened();
+    }
+    else
+    {
+        qWarning() << sTag << "Error opening file";
+    }
 }
 
 
@@ -80,6 +114,7 @@ void MainWindow::onCloseActionTriggered(bool checked)
 {
     mViewer->close();
     mEditor->close();
+    uiStateNoFileOpen();
 }
 
 

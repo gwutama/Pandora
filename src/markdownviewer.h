@@ -25,7 +25,7 @@ public:
 
 public slots:
     void close();
-    void load();
+    bool load();
 
 private slots:
     void onScrollPositionChanged(const QPointF pos);

@@ -37,11 +37,11 @@ void MarkdownViewer::close()
 }
 
 
-void MarkdownViewer::load()
+bool MarkdownViewer::load()
 {
     // Directly generate the html so that we have something to display on the screen
     initDocumentGenerator();
-    mGenerator->generate(mConfig->markdownFile());
+    return mGenerator->generate(mConfig->markdownFile());
 }
 
 

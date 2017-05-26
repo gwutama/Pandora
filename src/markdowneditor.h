@@ -27,13 +27,13 @@ public:
     ~MarkdownEditor();
 
 public slots:
-    void open();
+    bool open();
     void close();
-    void save();
+    bool save();
 
 private:
     void setupEditor();
-    void openFile(const QString& path = QString());
+    bool openFile(const QString& path = QString());
 
 private:
     Ui::MarkdownEditor* mUi;
