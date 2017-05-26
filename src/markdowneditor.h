@@ -15,6 +15,7 @@ class MarkdownEditor;
  * @brief The MarkdownEditor class
  * Resources:
  * http://doc.qt.io/qt-5/qtwidgets-richtext-syntaxhighlighter-example.html
+ * http://doc.qt.io/qt-5/qtwidgets-widgets-codeeditor-example.html
  */
 class MarkdownEditor : public QWidget
 {
@@ -27,7 +28,7 @@ public:
 
 public slots:
     void load();
-    void newFile();
+    void clear();
     void openFile(const QString& path = QString());
 
 private:
@@ -36,7 +37,7 @@ private:
 private:
     Ui::MarkdownEditor* mUi;
     QSharedPointer<AppConfig> mConfig;
-    MarkdownEditorHighlighter* mHighlighter;
+    QSharedPointer<MarkdownEditorHighlighter> mHighlighter;
 };
 
 #endif // MARKDOWNEDITOR_H

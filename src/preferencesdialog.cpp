@@ -10,11 +10,9 @@ PreferencesDialog::PreferencesDialog(QSharedPointer<AppConfig> appConfig,
     mUi->setupUi(this);
     setWindowTitle("Preferences");
 
-    connect(mUi->buttonBox, &QDialogButtonBox::accepted,
-            this, &PreferencesDialog::saveSettings);
+    connect(mUi->buttonBox, &QDialogButtonBox::accepted, this, &PreferencesDialog::saveSettings);
 
     // Fill in values from saved settings
-    mUi->markdownFileBrowse->setFileName(appConfig->markdownFile());
     mUi->bibtexFileBrowse->setFileName(appConfig->bibtexFile());
 }
 
@@ -27,9 +25,7 @@ PreferencesDialog::~PreferencesDialog()
 
 void PreferencesDialog::saveSettings()
 {
-    QString markdownFile = mUi->markdownFileBrowse->fileName();
     QString bibtexFile = mUi->bibtexFileBrowse->fileName();
-    mAppConfig->setMarkdownFile(markdownFile);
     mAppConfig->setBibtexFile(bibtexFile);
     mAppConfig->save();
     emit saved();

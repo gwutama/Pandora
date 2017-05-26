@@ -6,6 +6,13 @@
 
 class QTextDocument;
 
+/**
+ * @brief The MarkdownEditorHighlighter class
+ *
+ * Resource:
+ * http://doc.qt.io/qt-5/qtwidgets-richtext-syntaxhighlighter-example.html
+ * http://doc.qt.io/qt-5/qtwidgets-widgets-codeeditor-example.html
+ */
 class MarkdownEditorHighlighter : public QSyntaxHighlighter
 {
     Q_OBJECT

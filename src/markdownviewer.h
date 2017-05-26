@@ -8,6 +8,12 @@
 #include "appconfig.h"
 #include "documentgenerator.h"
 
+/**
+ * @brief The MarkdownViewer class
+ *
+ * Resource:
+ * http://doc.qt.io/qt-5/qtwidgets-richtext-syntaxhighlighter-example.html
+ */
 class MarkdownViewer : public QWidget
 {
     Q_OBJECT
@@ -18,6 +24,7 @@ public:
     virtual ~MarkdownViewer();
 
 public slots:
+    void clear();
     void generate();
 
 private slots:

@@ -5,6 +5,7 @@
 #include <QWebEngineView>
 #include <QUrl>
 #include <QSharedPointer>
+#include "appconfig.h"
 #include "preferencesdialog.h"
 #include "markdowneditor.h"
 #include "markdownviewer.h"
@@ -24,6 +25,10 @@ public:
 
 private:
     void closeEvent(QCloseEvent* event);
+
+private slots:
+    void onOpenFileActionTriggered(bool checked);
+    void onCloseFileActionTriggered(bool checked);
 
 private:
     Ui::MainWindow* mUi;    

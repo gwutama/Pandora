@@ -11,6 +11,7 @@
 class AppConfig
 {
     friend class PreferencesDialog;
+    friend class MainWindow;
 
 public:
     explicit AppConfig();

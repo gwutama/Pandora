@@ -19,11 +19,21 @@ MarkdownViewer::MarkdownViewer(QSharedPointer<AppConfig> config,
     layout->setMargin(0);
     layout->addWidget(mWebView);
     setLayout(layout);
+
+    clear();
 }
 
 
 MarkdownViewer::~MarkdownViewer()
 {
+}
+
+
+void MarkdownViewer::clear()
+{
+    QUrl url("qrc:/emptymarkdownviewer.html");
+    mWebView->load(url);
+    mScrollPos = QPointF();
 }
 
 

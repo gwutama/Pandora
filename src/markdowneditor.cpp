@@ -25,7 +25,7 @@ void MarkdownEditor::load()
 }
 
 
-void MarkdownEditor::newFile()
+void MarkdownEditor::clear()
 {
     mUi->textEdit->clear();
 }
@@ -54,12 +54,6 @@ void MarkdownEditor::setupEditor()
     font.setPointSize(18);
     mUi->textEdit->setFont(font);
 
-    mHighlighter = new MarkdownEditorHighlighter(mUi->textEdit->document());
-
-    QFile file("mainwindow.h");
-
-    if (file.open(QFile::ReadOnly | QFile::Text))
-    {
-        mUi->textEdit->setPlainText(file.readAll());
-    }
+    MarkdownEditorHighlighter* mhPtr = new MarkdownEditorHighlighter(mUi->textEdit->document());
+    mHighlighter = QSharedPointer<MarkdownEditorHighlighter>(mhPtr);
 }

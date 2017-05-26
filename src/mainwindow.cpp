@@ -1,8 +1,7 @@
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
 #include <QDebug>
-#include "processrunner.h"
-#include <QSysInfo>
+#include <QFileDialog>
 
 const char* MainWindow::sTag = "[MainWindow]";
 
@@ -11,11 +10,6 @@ MainWindow::MainWindow(QWidget* parent) :
     mUi(new Ui::MainWindow),
     mConfig(QSharedPointer<AppConfig>(new AppConfig))
 {
-    if (QSysInfo::productType() == "macos")
-    {
-        putenv((char*) "PATH=/usr/local/sbin:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin");
-    }
-
     // Setup ui
     mUi->setupUi(this);
     setAccessibleName("Pandora");
@@ -37,6 +31,10 @@ MainWindow::MainWindow(QWidget* parent) :
     connect(mCfgDialog, &PreferencesDialog::saved, mViewer, &MarkdownViewer::generate);
     connect(mCfgDialog, &PreferencesDialog::saved, mEditor, &MarkdownEditor::load);
 
+    // Menu signals slots
+    connect(mUi->actionOpen, &QAction::triggered, this, &MainWindow::onOpenFileActionTriggered);
+    connect(mUi->actionClose, &QAction::triggered, this, &MainWindow::onCloseFileActionTriggered);
+
     // Set window size and position
     setMinimumSize(800, 800);
     restoreGeometry(mConfig->settings().value("geometry").toByteArray());
@@ -52,7 +50,33 @@ MainWindow::~MainWindow()
 
 void MainWindow::closeEvent(QCloseEvent* /*event*/)
 {
+    // Save window size and position
     mConfig->settings().setValue("geometry", saveGeometry());
     mConfig->settings().setValue("state", saveState());
     mConfig->settings().sync();
+}
+
+
+void MainWindow::onOpenFileActionTriggered(bool /*checked*/)
+{
+    QString file = QFileDialog::getOpenFileName(this, tr("Markdown File"), "",
+                                                "Markdown file (*.md *.txt *.text)");
+
+    if (file.isEmpty())
+    {
+        qWarning() << sTag << "No file selected";
+        return;
+    }
+
+    mConfig->setMarkdownFile(file);
+    mConfig->save();
+    mViewer->generate();
+    mEditor->load();
+}
+
+
+void MainWindow::onCloseFileActionTriggered(bool checked)
+{
+    mViewer->clear();
+    mEditor->clear();
 }
