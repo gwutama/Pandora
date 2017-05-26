@@ -8,25 +8,30 @@ MarkdownEditorHighlighter::MarkdownEditorHighlighter(QTextDocument* parent) :
     // Formats
     mDefaultFmt.setForeground(QColor(68, 68, 68)); // 444444
 
-    mBoldFmt.setForeground(QColor(34, 34, 34)); // 222222
-    mBoldFmt.setFontWeight(QFont::Bold);
+    mEmphasisFmt.setForeground(QColor(68, 68, 68)); // 444444
+    mEmphasisFmt.setFontWeight(QFont::Bold);
+
+    mEmphasisMoreFmt.setForeground(QColor(68, 68, 68)); // 444444
+    mEmphasisMoreFmt.setFontWeight(QFont::Bold);
+    mEmphasisMoreFmt.setFontItalic(true);
 
     mHeadingFmt.setForeground(Qt::black);
     mHeadingFmt.setFontWeight(QFont::Bold);
     mHeadingFmt.setFontLetterSpacingType(QFont::PercentageSpacing);
-    mHeadingFmt.setFontLetterSpacing(125);
+    mHeadingFmt.setFontLetterSpacing(130);
 
-    mItalicFmt.setForeground(QColor(34, 34, 34));
+    mItalicFmt.setForeground(QColor(68, 68, 68)); // 444444
     mItalicFmt.setFontItalic(true);
 
+    mStrikeOutFmt.setForeground(QColor(204, 204, 204)); // CCCCCC
+    mStrikeOutFmt.setFontStrikeOut(true);
 
-    // bold
-    mBoldStartRx = QRegExp("\\*\\*\\S");
-    mBoldEndRx = QRegExp("\\S\\*\\*");
+    mInvertFmt.setBackground(QColor(221, 221, 221)); // DDDDDD
+    mInvertFmt.setForeground(QColor(204, 204, 204)); // CCCCCC
 
-    // italic
-    mItalicStartRx = QRegExp("\\*\\S");
-    mItalicEndRx = QRegExp("\\S\\*");
+    mLinkFmt.setForeground(Qt::black); // 000000
+    mLinkFmt.setFontItalic(true);
+
 
     // h1
     rule.pattern = QRegExp("^# .*$");
@@ -45,12 +50,33 @@ MarkdownEditorHighlighter::MarkdownEditorHighlighter(QTextDocument* parent) :
 
     // h4
     rule.pattern = QRegExp("^#### .*$");
-    rule.format = mBoldFmt;
+    rule.format = mEmphasisFmt;
     highlightingRules.append(rule);
 
     // h5
     rule.pattern = QRegExp("^##### .*$");
-    rule.format = mBoldFmt;
+    rule.format = mEmphasisFmt;
+    highlightingRules.append(rule);
+
+    // table lines and horizontal rules
+    rule.pattern = QRegExp("^--[ -]+$");
+    rule.format = mInvertFmt;
+    highlightingRules.append(rule);
+
+    // asterisk horizontal rules
+    rule.pattern = QRegExp("^\\*\\*[\\*]+$");
+    rule.format = mInvertFmt;
+    highlightingRules.append(rule);
+
+    // strike-out
+    // must be done here because it clashes with delimiter block
+    rule.pattern = QRegExp("~~(?!~).*~~");
+    rule.format = mStrikeOutFmt;
+    highlightingRules.append(rule);
+
+    // link
+    rule.pattern = QRegExp("!?\\[.*\\]\\(.*\\)");
+    rule.format = mLinkFmt;
     highlightingRules.append(rule);
 }
 
@@ -73,10 +99,26 @@ void MarkdownEditorHighlighter::highlightBlock(const QString& text)
     }
 
     // bold
-    distanceHightlightBlockHelper(text, mBoldStartRx, mBoldEndRx, mBoldFmt);
+    distanceHightlightBlockHelper(text, cBoldAsteriskStartRx, cBoldAsteriskEndRx, mEmphasisFmt);
+    // TODO: Doesn't work!
+    distanceHightlightBlockHelper(text, cBoldUnderlineStartRx, cBoldUnderlineEndRx, mEmphasisFmt);
 
     // italic
-    distanceHightlightBlockHelper(text, mItalicStartRx, mItalicEndRx, mItalicFmt);
+    distanceHightlightBlockHelper(text, cItalicAsteriskStartRx, cItalicAsteriskEndRx, mItalicFmt);
+    distanceHightlightBlockHelper(text, cItalicUnderlineStartRx, cItalicUnderlineEndRx, mItalicFmt);
+
+    // bold italic
+    distanceHightlightBlockHelper(text, cBoldItalicAsteriskStartRx, cBoldItalicAsteriskEndRx,
+                                  mEmphasisMoreFmt);
+    distanceHightlightBlockHelper(text, cBoldItalicUnderlineStartRx, cBoldItalicUnderlineEndRx,
+                                  mEmphasisMoreFmt);
+
+    // strike-out
+    // Cannot be done here because it clashes with delimiter block
+    // distanceHightlightBlockHelper(text, cStrikeOutStartRx, cStrikeOutEndRx, mStrikeOutFmt);
+
+    // delimiter block
+    distanceHightlightBlockHelper(text, cDelimiterStartRx, cDelimiterEndRx, mInvertFmt);
 }
 
 
