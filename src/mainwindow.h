@@ -34,6 +34,7 @@ private slots:
     void onOpenActionTriggered(bool checked);
     void onCloseActionTriggered(bool checked);
     void onSaveActionTriggered(bool checked);
+    void onSaveAsActionTriggered(bool checked);
 
 private:
     Ui::MainWindow* mUi;

@@ -37,6 +37,7 @@ MainWindow::MainWindow(QWidget* parent) :
     connect(mUi->actionOpen, &QAction::triggered, this, &MainWindow::onOpenActionTriggered);
     connect(mUi->actionClose, &QAction::triggered, this, &MainWindow::onCloseActionTriggered);
     connect(mUi->actionSave, &QAction::triggered, this, &MainWindow::onSaveActionTriggered);
+    connect(mUi->actionSaveAs, &QAction::triggered, this, &MainWindow::onSaveAsActionTriggered);
 
     // Set window size and position
     setMinimumSize(800, 800);
@@ -55,10 +56,11 @@ MainWindow::~MainWindow()
 
 void MainWindow::uiStateNoFileOpen()
 {
-    // Disable menus File->Close, File->Save
+    // Disable menus File->Close, File->Save, File->Save As
     // Disable editor
     mUi->actionClose->setDisabled(true);
     mUi->actionSave->setDisabled(true);
+    mUi->actionSaveAs->setDisabled(true);
     mEditor->setDisabled(true);
 }
 
@@ -67,6 +69,7 @@ void MainWindow::uiStateFileOpened()
 {
     mUi->actionClose->setEnabled(true);
     mUi->actionSave->setEnabled(true);
+    mUi->actionSaveAs->setEnabled(true);
     mEditor->setEnabled(true);
 }
 
@@ -130,25 +133,35 @@ void MainWindow::onSaveActionTriggered(bool checked)
     // Otherwise, just save the file.
     if (!mTmpMarkdownFile.isNull())
     {
-        QString file = QFileDialog::getSaveFileName(this, tr("Markdown File"), "",
-                                                    "Markdown file (*.md)");
-
-        if (file.isEmpty())
-        {
-            qWarning() << sTag << "No file selected";
-            return;
-        }
-
-        // open the just saved file and remove temporary file
-        if (mEditor->saveAs(file))
-        {
-            openFileHelper(file);
-            mTmpMarkdownFile.clear();
-        }
+        onSaveAsActionTriggered(checked);
     }
     else
     {
         mEditor->save();
+    }
+}
+
+
+void MainWindow::onSaveAsActionTriggered(bool /*checked*/)
+{
+    QString file = QFileDialog::getSaveFileName(this, tr("Save Markdown File As..."), "",
+                                                "Markdown file (*.md)");
+
+    if (file.isEmpty())
+    {
+        qWarning() << sTag << "No file selected";
+        return;
+    }
+
+    // open the just saved file and remove temporary file (if any)
+    if (mEditor->saveAs(file))
+    {
+        openFileHelper(file);
+
+        if (!mTmpMarkdownFile.isNull())
+        {
+            mTmpMarkdownFile.clear();
+        }
     }
 }
 
