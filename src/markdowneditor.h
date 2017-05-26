@@ -34,7 +34,7 @@ private:
     void setupEditor();
 
 private:
-    Ui::MarkdownEditor* ui;
+    Ui::MarkdownEditor* mUi;
     QSharedPointer<AppConfig> mConfig;
     MarkdownEditorHighlighter* mHighlighter;
 };

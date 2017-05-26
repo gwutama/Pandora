@@ -1,20 +1,21 @@
 #include "markdowneditor.h"
 #include "ui_markdowneditor.h"
+#include <QTextEdit>
 
 MarkdownEditor::MarkdownEditor(QSharedPointer<AppConfig> config,
                                QWidget* parent) :
     QWidget(parent),
     mConfig(config),
-    ui(new Ui::MarkdownEditor)
+    mUi(new Ui::MarkdownEditor)
 {
-    ui->setupUi(this);
+    mUi->setupUi(this);
     setupEditor();
 }
 
 
 MarkdownEditor::~MarkdownEditor()
 {
-    delete ui;
+    delete mUi;
 }
 
 
@@ -26,7 +27,7 @@ void MarkdownEditor::load()
 
 void MarkdownEditor::newFile()
 {
-    ui->textEdit->clear();
+    mUi->textEdit->clear();
 }
 
 
@@ -36,21 +37,29 @@ void MarkdownEditor::openFile(const QString& path)
 
     if (file.open(QFile::ReadOnly | QFile::Text))
     {
-        QByteArray read = file.readAll();
-        ui->textEdit->setText(read);
+        QByteArray content = file.readAll();
+        QTextDocument* doc = mUi->textEdit->document();
+        doc->setPlainText(content);
+        doc->setDocumentMargin(80);
+        doc->setPlainText(content);
     }
 }
 
 
 void MarkdownEditor::setupEditor()
 {
-    mHighlighter = new MarkdownEditorHighlighter(ui->textEdit->document());
+    QFont font;
+    font.setFamily("Courier");
+    font.setFixedPitch(true);
+    font.setPointSize(18);
+    mUi->textEdit->setFont(font);
+
+    mHighlighter = new MarkdownEditorHighlighter(mUi->textEdit->document());
 
     QFile file("mainwindow.h");
 
     if (file.open(QFile::ReadOnly | QFile::Text))
     {
-        ui->textEdit->setPlainText(file.readAll());
+        mUi->textEdit->setPlainText(file.readAll());
     }
 }
-

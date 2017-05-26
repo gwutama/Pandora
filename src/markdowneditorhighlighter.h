@@ -36,7 +36,9 @@ private:
     QRegExp mItalicStartRx;
     QRegExp mItalicEndRx;
 
+    QTextCharFormat mDefaultFmt;
     QTextCharFormat mBoldFmt;
+    QTextCharFormat mHeadingFmt;
     QTextCharFormat mItalicFmt;
 };
 

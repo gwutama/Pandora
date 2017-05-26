@@ -5,28 +5,37 @@ MarkdownEditorHighlighter::MarkdownEditorHighlighter(QTextDocument* parent) :
 {
     HighlightingRule rule;
 
+    // Formats
+    mDefaultFmt.setForeground(QColor(68, 68, 68)); // 444444
+
+    mBoldFmt.setForeground(QColor(34, 34, 34)); // 222222
+    mBoldFmt.setFontWeight(QFont::Bold);
+
+    mHeadingFmt.setForeground(Qt::black);
+    mHeadingFmt.setFontWeight(QFont::Bold);
+    mHeadingFmt.setFontLetterSpacingType(QFont::PercentageSpacing);
+    mHeadingFmt.setFontLetterSpacing(125);
+
+    mItalicFmt.setForeground(QColor(34, 34, 34));
+    mItalicFmt.setFontItalic(true);
+
+
     // bold
     mBoldStartRx = QRegExp("\\*\\*.");
     mBoldEndRx = QRegExp(".\\*\\*");
-
-    mBoldFmt.setForeground(Qt::black);
-    mBoldFmt.setFontWeight(QFont::ExtraBold);
 
     // italic
     mItalicStartRx = QRegExp("\\*.");
     mItalicEndRx = QRegExp(".\\*");
 
-    mItalicFmt.setForeground(Qt::black);
-    mItalicFmt.setFontItalic(true);
-
     // h1
     rule.pattern = QRegExp("^# .*$");
-    rule.format = mBoldFmt;
+    rule.format = mHeadingFmt;
     highlightingRules.append(rule);
 
     // h2
     rule.pattern = QRegExp("^## .*$");
-    rule.format = mBoldFmt;
+    rule.format = mHeadingFmt;
     highlightingRules.append(rule);
 
     // h3
@@ -48,6 +57,8 @@ MarkdownEditorHighlighter::MarkdownEditorHighlighter(QTextDocument* parent) :
 
 void MarkdownEditorHighlighter::highlightBlock(const QString& text)
 {
+    setFormat(0, text.length(), mDefaultFmt); // apply default format for all text first
+
     foreach (const HighlightingRule& rule, highlightingRules)
     {
         QRegExp expression(rule.pattern);
