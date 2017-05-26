@@ -1,6 +1,7 @@
 #include "markdowneditor.h"
 #include "ui_markdowneditor.h"
 #include <QTextEdit>
+#include <QFileInfo>
 #include <QDebug>
 
 const char* MarkdownEditor::sTag = "[MarkdownEditor]";
@@ -36,17 +37,23 @@ void MarkdownEditor::close()
 
 bool MarkdownEditor::save()
 {
-    if (mConfig->markdownFile().isEmpty())
+    return saveAs(mConfig->markdownFile());
+}
+
+
+bool MarkdownEditor::saveAs(const QString& path)
+{
+    if (path.isEmpty())
     {
-        qWarning() << sTag << "Cannot save because markdown file is not loaded";
+        qWarning() << sTag << "Cannot save because file path is empty";
         return false;
     }
 
-    QFile file(mConfig->markdownFile());
+    QFile file(path);
 
     if (!file.open(QFile::WriteOnly | QFile::Text))
     {
-        qWarning() << sTag << "Cannot open markdown file for writing:" << mConfig->markdownFile();
+        qWarning() << sTag << "Cannot open file for writing:" << path;
         return false;
     }
 
@@ -65,7 +72,7 @@ bool MarkdownEditor::openFile(const QString& path)
 
     if (!file.open(QFile::ReadOnly | QFile::Text))
     {
-        qWarning() << sTag << "Cannot open markdown file for reading:" << mConfig->markdownFile();
+        qWarning() << sTag << "Cannot open file for reading:" << mConfig->markdownFile();
         return false;
     }
 

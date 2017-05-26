@@ -30,6 +30,7 @@ public slots:
     bool open();
     void close();
     bool save();
+    bool saveAs(const QString& path);
 
 private:
     void setupEditor();

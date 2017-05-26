@@ -3,6 +3,7 @@
 
 #include <QMainWindow>
 #include <QSharedPointer>
+#include <QTemporaryFile>
 #include "appconfig.h"
 #include "preferencesdialog.h"
 #include "markdowneditor.h"
@@ -25,6 +26,8 @@ private:
     void uiStateNoFileOpen();
     void uiStateFileOpened();
     void closeEvent(QCloseEvent* event);
+    bool openFileHelper(const QString& file);
+    void closeFileHelper();
 
 private slots:
     void onNewActionTriggered(bool checked);
@@ -33,11 +36,12 @@ private slots:
     void onSaveActionTriggered(bool checked);
 
 private:
-    Ui::MainWindow* mUi;    
+    Ui::MainWindow* mUi;
     PreferencesDialog* mCfgDialog;
     MarkdownViewer* mViewer;
     MarkdownEditor* mEditor;
     QSharedPointer<AppConfig> mConfig;
+    QSharedPointer<QTemporaryFile> mTmpMarkdownFile; // for "new" file (not saved yet)
 
     static const char* sTag;
 };
