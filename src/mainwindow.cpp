@@ -40,6 +40,8 @@ MainWindow::MainWindow(QWidget* parent) :
     connect(mUi->actionClose, &QAction::triggered, this, &MainWindow::onCloseActionTriggered);
     connect(mUi->actionSave, &QAction::triggered, this, &MainWindow::onSaveActionTriggered);
     connect(mUi->actionSaveAs, &QAction::triggered, this, &MainWindow::onSaveAsActionTriggered);
+    connect(mUi->actionFindReplace, &QAction::triggered,
+            mEditor, &MarkdownEditor::showFindReplaceWidget);
 
     // Set window size and position
     setMinimumSize(800, 800);
@@ -63,6 +65,7 @@ void MainWindow::uiStateNoFileOpen()
     mUi->actionClose->setDisabled(true);
     mUi->actionSave->setDisabled(true);
     mUi->actionSaveAs->setDisabled(true);
+    mUi->menuEdit->setDisabled(true);
     mEditor->setDisabled(true);
 }
 
@@ -72,6 +75,7 @@ void MainWindow::uiStateFileOpened()
     mUi->actionClose->setEnabled(true);
     mUi->actionSave->setEnabled(true);
     mUi->actionSaveAs->setEnabled(true);
+    mUi->menuEdit->setEnabled(true);
     mEditor->setEnabled(true);
 }
 

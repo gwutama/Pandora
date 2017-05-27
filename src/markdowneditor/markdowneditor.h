@@ -5,7 +5,8 @@
 #include <QSharedPointer>
 #include <QTimer>
 #include "common/appconfig.h"
-#include "markdowneditor/markdowneditorhighlighter.h"
+#include "markdowneditorhighlighter.h"
+#include "findreplacewidget.h"
 
 namespace Ui
 {
@@ -33,11 +34,13 @@ public slots:
     void close();
     bool save();
     bool saveAs(const QString& path);
+    void showFindReplaceWidget();
 
 signals:
     void contentChanged(const QString& contents);
 
 private slots:
+    void onEscKeyActivated();
     void checkContentChanged();
 
 private:
@@ -50,6 +53,7 @@ private:
     QSharedPointer<MarkdownEditorHighlighter> mHighlighter;
     QTimer mContentChangeTimer;
     QString mOldContent;
+    FindReplaceWidget* mFindReplaceWidget;
 
     static const char* sTag;
 };

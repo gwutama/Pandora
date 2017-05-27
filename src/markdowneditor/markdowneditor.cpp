@@ -3,6 +3,7 @@
 #include <QTextEdit>
 #include <QFileInfo>
 #include <QDebug>
+#include <QShortcut>
 
 const char* MarkdownEditor::sTag = "[MarkdownEditor]";
 
@@ -14,8 +15,12 @@ MarkdownEditor::MarkdownEditor(QSharedPointer<AppConfig> config,
 {
     mUi->setupUi(this);
     setupEditor();
+    mUi->findReplaceWidget->hide();
 
     connect(&mContentChangeTimer, &QTimer::timeout, this, &MarkdownEditor::checkContentChanged);
+
+    QShortcut* escKeyShortcut = new QShortcut(Qt::Key_Escape, parent);
+    connect(escKeyShortcut, &QShortcut::activated, this, &MarkdownEditor::onEscKeyActivated);
 }
 
 
@@ -24,6 +29,19 @@ MarkdownEditor::~MarkdownEditor()
     delete mUi;
 }
 
+
+void MarkdownEditor::onEscKeyActivated()
+{
+    if (!isEnabled())
+    {
+        return;
+    }
+
+    if (!mUi->findReplaceWidget->isHidden())
+    {
+        mUi->findReplaceWidget->hide();
+    }
+}
 
 void MarkdownEditor::checkContentChanged()
 {
@@ -130,4 +148,14 @@ void MarkdownEditor::setupEditor()
 
     MarkdownEditorHighlighter* mhPtr = new MarkdownEditorHighlighter(mUi->textEdit->document());
     mHighlighter = QSharedPointer<MarkdownEditorHighlighter>(mhPtr);
+}
+
+
+void MarkdownEditor::showFindReplaceWidget()
+{
+    if (isEnabled())
+    {
+        mUi->findReplaceWidget->show();
+        mUi->findReplaceWidget->setFocus();
+    }
 }

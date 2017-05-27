@@ -10,18 +10,12 @@
     <height>300</height>
    </rect>
   </property>
-  <property name="font">
-   <font>
-    <family>Courier</family>
-    <pointsize>18</pointsize>
-   </font>
-  </property>
   <property name="windowTitle">
    <string>Form</string>
   </property>
-  <layout class="QHBoxLayout" name="horizontalLayout">
+  <layout class="QVBoxLayout" name="verticalLayout">
    <property name="spacing">
-    <number>-1</number>
+    <number>0</number>
    </property>
    <property name="leftMargin">
     <number>0</number>
@@ -37,11 +31,6 @@
    </property>
    <item>
     <widget class="QTextEdit" name="textEdit">
-     <property name="font">
-      <font>
-       <pointsize>13</pointsize>
-      </font>
-     </property>
      <property name="styleSheet">
       <string notr="true">QTextEdit { background-color: #fafafa }</string>
      </property>
@@ -62,8 +51,26 @@
      </property>
     </widget>
    </item>
+   <item>
+    <widget class="FindReplaceWidget" name="findReplaceWidget" native="true">
+     <property name="font">
+      <font>
+       <family>.SF NS Text</family>
+       <pointsize>13</pointsize>
+      </font>
+     </property>
+    </widget>
+   </item>
   </layout>
  </widget>
+ <customwidgets>
+  <customwidget>
+   <class>FindReplaceWidget</class>
+   <extends>QWidget</extends>
+   <header>markdowneditor/findreplacewidget.h</header>
+   <container>1</container>
+  </customwidget>
+ </customwidgets>
  <resources/>
  <connections/>
 </ui>
