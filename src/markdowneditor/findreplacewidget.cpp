@@ -10,9 +10,9 @@ FindReplaceWidget::FindReplaceWidget(QWidget* parent) :
     connect(mUi->findLineEdit, &QLineEdit::returnPressed,
             this, &FindReplaceWidget::onReturnPressed);
 
-    connect(mUi->findNextButton, &QPushButton::clicked,
+    connect(mUi->findNextButton, &QToolButton::clicked,
             this, &FindReplaceWidget::nextButtonClicked);
-    connect(mUi->findPreviousButton, &QPushButton::clicked,
+    connect(mUi->findPreviousButton, &QToolButton::clicked,
             this, &FindReplaceWidget::previousButtonClicked);
 }
 
