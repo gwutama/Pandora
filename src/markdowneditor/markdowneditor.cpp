@@ -14,6 +14,8 @@ MarkdownEditor::MarkdownEditor(QSharedPointer<AppConfig> config,
 {
     mUi->setupUi(this);
     setupEditor();
+
+    connect(&mContentChangeTimer, &QTimer::timeout, this, &MarkdownEditor::checkContentChanged);
 }
 
 
@@ -23,15 +25,42 @@ MarkdownEditor::~MarkdownEditor()
 }
 
 
+void MarkdownEditor::checkContentChanged()
+{
+    QString content = mUi->textEdit->document()->toPlainText();
+
+    if (mOldContent != content)
+    {
+        emit contentChanged(content);
+        mOldContent = content;
+    }
+}
+
+
+void MarkdownEditor::refocusEditor()
+{
+    mUi->textEdit->setFocus();
+}
+
 bool MarkdownEditor::open()
 {
-    return openFile(mConfig->markdownFile());
+    if (openFile(mConfig->markdownFile()))
+    {
+        qDebug() << sTag << "Content has been changed";
+        mContentChangeTimer.setSingleShot(false);
+        mContentChangeTimer.start(3000); // 3 seconds
+        checkContentChanged();
+        return true;
+    }
+
+    return false;
 }
 
 
 void MarkdownEditor::close()
 {
     mUi->textEdit->clear();
+    mContentChangeTimer.stop();
 }
 
 
@@ -57,10 +86,10 @@ bool MarkdownEditor::saveAs(const QString& path)
         return false;
     }
 
-    QString contents = mUi->textEdit->document()->toPlainText();
-    qDebug() << sTag << "Saving contents to file:" << contents;
+    QString content = mUi->textEdit->document()->toPlainText();
+    qDebug() << sTag << "Saving content to file:" << content;
 
-    file.write(contents.toUtf8());
+    file.write(content.toUtf8());
     file.close();
     return true;
 }
@@ -72,7 +101,7 @@ bool MarkdownEditor::openFile(const QString& path)
 
     if (!file.open(QFile::ReadOnly | QFile::Text))
     {
-        qWarning() << sTag << "Cannot open file for reading:" << mConfig->markdownFile();
+        qWarning() << sTag << "Cannot open file for reading:" << path;
         return false;
     }
 

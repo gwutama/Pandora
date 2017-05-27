@@ -2,20 +2,16 @@
 #include <QDebug>
 #include <QStringList>
 #include <QFileInfo>
-#include "common/processrunner.h"
+#include <QProcess>
 
 const char* DocumentGenerator::sTag = "[DocumentGenerator]";
 
-DocumentGenerator::DocumentGenerator(const QString& markdownFile,
-                                     QObject* parent) :
-    QObject(parent),
-    mMarkdownFile(markdownFile)
+DocumentGenerator::DocumentGenerator(QObject* parent) :
+    QObject(parent)
 {
-    // Setup file watcher
-    connect(&mFsWatcher, &QFileSystemWatcher::fileChanged,
-            this, &DocumentGenerator::generate);
-
-    watchFile(markdownFile);
+    mExecProc.setProgram("pandoc");
+    connect(&mExecProc, static_cast<void (QProcess::*)(int, QProcess::ExitStatus)>(&QProcess::finished),
+            this, &DocumentGenerator::processFinished);
 }
 
 
@@ -24,84 +20,72 @@ DocumentGenerator::~DocumentGenerator()
 }
 
 
-bool DocumentGenerator::generate(const QString& path)
+void DocumentGenerator::setContent(const QString& content)
 {
-    // Extra check, for ease of mind
-    if (path != mMarkdownFile)
+    if (!content.isEmpty())
     {
-        return false;
+        if (!mTmpMarkdownFile.open())
+        {
+            qDebug() << sTag << "Cannot open temp file:" << mTmpMarkdownFile.fileName();
+            return;
+        }
+
+        mTmpMarkdownFile.write(content.toUtf8());
+        mTmpMarkdownFile.close();
     }
 
-    qDebug() << sTag << "Executing pandoc because file has been changed:" << path;
-    QByteArray output;
+}
 
-    if (!executePandoc(output))
+void DocumentGenerator::processFinished(int exitCode, QProcess::ExitStatus exitStatus)
+{
+    if (exitCode != 0 || exitStatus != QProcess::NormalExit)
     {
-        qWarning() << sTag << "Error generating html file:" << path;
-        return false;
+        qWarning() << sTag << "Error generating html file:" << mTmpMarkdownFile.fileName();
+        return;
     }
 
     emit generated(mOutputFile);
-    return true;
 }
 
 
-void DocumentGenerator::watchFile(const QString& path)
+void DocumentGenerator::generate()
 {
-    if (path.isEmpty())
+    if (mExecProc.state() != QProcess::NotRunning)
     {
-        qWarning() << sTag << "Cannot add path because it is empty";
+        qDebug() << sTag << "Not generating content because process is busy";
         return;
     }
 
-    QFileInfo finfo(path);
-
-    if (!finfo.exists() || !finfo.isReadable())
-    {
-        qWarning() << sTag << "Cannot add path because it does not exist or not readable";
-        return;
-    }
-
-    // Unwatch old files first
-    QStringList oldPaths = mFsWatcher.files();
-
-    if (oldPaths.size())
-    {
-        mFsWatcher.removePaths(oldPaths);
-    }
-
-    // Then watch requested file
-    qDebug() << sTag << "Watching path" << path;
-    mFsWatcher.addPath(path);
-
-    mMarkdownFile = path;
+    executePandoc(mTmpMarkdownFile.fileName(), mOutputFile, mCssFile, mBibtexFile);
 }
 
 
-bool DocumentGenerator::executePandoc(QByteArray& output)
+void DocumentGenerator::executePandoc(const QString& markdownFile,
+                                      const QString& outputFile,
+                                      const QString& cssFile,
+                                      const QString& bibtextFile)
 {
     // Build command line.
     // Execute pandoc -Ss draft.md --css=pandoc.css --bibliography=bibliography.bib -o out.html
     // --bibliography is optional
+    QStringList args;
 
     // Basic
-    QString cmd("pandoc -Ss '%1' -o '%2'");
-    cmd = cmd.arg(mMarkdownFile).arg(mOutputFile);
+    args << "-Ss" << markdownFile << "-o" << outputFile;
 
     // CSS theme
-    if (!mCssFile.isNull())
+    if (!cssFile.isNull())
     {
-        cmd.append(" --css='%1'");
-        cmd = cmd.arg(mCssFile);
+        args << "-c" << cssFile;
     }
 
     // Bibtex
-    if (!mBibtexFile.isEmpty())
+    if (!bibtextFile.isEmpty())
     {
-        cmd.append(" --bibliography='%1'");
-        cmd = cmd.arg(mBibtexFile);
+        args << "--bibliography=" + bibtextFile;
     }
 
-    qDebug() << sTag << "Executing pandoc" << cmd;
-    return ProcessRunner::run(cmd, output);
+    qDebug() << sTag << "Executing pandoc" << args;
+    mExecProc.setArguments(args);
+    mExecProc.start();
 }

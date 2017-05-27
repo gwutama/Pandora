@@ -26,10 +26,12 @@ MainWindow::MainWindow(QWidget* parent) :
     mViewer->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
     mUi->horizontalLayout->addWidget(mViewer);
 
+    connect(mEditor, &MarkdownEditor::contentChanged, mViewer, &MarkdownViewer::load);
+    connect(mViewer, &MarkdownViewer::loaded, mEditor, &MarkdownEditor::refocusEditor);
+
     // Setup preferences dialog
     mCfgDialog = new PreferencesDialog(mConfig, this);
     connect(mUi->actionPreferences, &QAction::triggered, mCfgDialog, &PreferencesDialog::show);
-    connect(mCfgDialog, &PreferencesDialog::saved, mViewer, &MarkdownViewer::load);
     connect(mCfgDialog, &PreferencesDialog::saved, mEditor, &MarkdownEditor::open);
 
     // Menu signals slots
@@ -176,30 +178,18 @@ bool MainWindow::openFileHelper(const QString& file)
 
     QFileInfo finfo(file);
 
-    if (!finfo.isFile())
+    if (!finfo.isFile() || !finfo.isReadable() || !finfo.isWritable())
     {
-        qWarning() << sTag << "Not a file:" << file;
-        return false;
-    }
-
-    if (!finfo.isReadable())
-    {
-        qWarning() << sTag << "File is not readable:" << file;
-        return false;
-    }
-
-    if (!finfo.isWritable())
-    {
-        qWarning() << sTag << "File is not writable:" << file;
+        qWarning() << sTag << "File is not readable and/or writable" << file;
         return false;
     }
 
     mConfig->setMarkdownFile(file);
     mConfig->save();
 
-    if (!mViewer->load() || !mEditor->open())
+    if (!mEditor->open())
     {
-        qWarning() << sTag << "Cannot open file:" << file;
+        qWarning() << sTag << "Cannot load file:" << file;
         return false;
     }
 

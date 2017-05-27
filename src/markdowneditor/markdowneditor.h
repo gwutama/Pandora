@@ -3,6 +3,7 @@
 
 #include <QWidget>
 #include <QSharedPointer>
+#include <QTimer>
 #include "common/appconfig.h"
 #include "markdowneditor/markdowneditorhighlighter.h"
 
@@ -27,10 +28,17 @@ public:
     ~MarkdownEditor();
 
 public slots:
+    void refocusEditor();
     bool open();
     void close();
     bool save();
     bool saveAs(const QString& path);
+
+signals:
+    void contentChanged(const QString& contents);
+
+private slots:
+    void checkContentChanged();
 
 private:
     void setupEditor();
@@ -40,6 +48,8 @@ private:
     Ui::MarkdownEditor* mUi;
     QSharedPointer<AppConfig> mConfig;
     QSharedPointer<MarkdownEditorHighlighter> mHighlighter;
+    QTimer mContentChangeTimer;
+    QString mOldContent;
 
     static const char* sTag;
 };

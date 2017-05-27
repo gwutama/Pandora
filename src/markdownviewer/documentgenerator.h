@@ -1,15 +1,15 @@
 #ifndef DOCUMENTGENERATOR_H
 #define DOCUMENTGENERATOR_H
 
-#include <QFileSystemWatcher>
+#include <QTemporaryFile>
+#include <QProcess>
 
 class DocumentGenerator : public QObject
 {
     Q_OBJECT
 
 public:
-    explicit DocumentGenerator(const QString& markdownFile,
-                               QObject* parent = 0);
+    explicit DocumentGenerator(QObject* parent = 0);
     virtual ~DocumentGenerator();
 
     inline void setCssFile(const QString& cssFile)
@@ -21,24 +21,29 @@ public:
     inline void setBibtexFile(const QString& bibtexFile)
     { mBibtexFile = bibtexFile; }
 
+    void setContent(const QString& content);
+
 public slots:
-    bool generate(const QString& path);
+    void generate();
 
 private:
-    void watchFile(const QString& path);
-    bool executePandoc(QByteArray& output);
+    void executePandoc(const QString& markdownFile,
+                       const QString& outputFile,
+                       const QString& cssFile = "",
+                       const QString& bibtextFile = "");
+
+private slots:
+    void processFinished(int exitCode, QProcess::ExitStatus exitStatus);
 
 signals:
-    void fileChanged(const QString& path);
     void generated(const QString& path);
 
 private:
-    QString mMarkdownFile;
+    QProcess mExecProc;
+    QTemporaryFile mTmpMarkdownFile;
     QString mCssFile;
     QString mOutputFile;
     QString mBibtexFile;
-    QFileSystemWatcher mFsWatcher;
-
     static const char* sTag;
 };
 

@@ -19,13 +19,15 @@ MarkdownViewer::MarkdownViewer(QSharedPointer<AppConfig> config,
     layout->setMargin(0);
     layout->addWidget(mWebView);
     setLayout(layout);
-
-    close();
 }
 
 
 MarkdownViewer::~MarkdownViewer()
 {
+    if (!mGenerator.isNull())
+    {
+        mGenerator.clear();
+    }
 }
 
 
@@ -34,21 +36,31 @@ void MarkdownViewer::close()
     QUrl url("qrc:/markdownviewer/emptymarkdownviewer.html");
     mWebView->load(url);
     mScrollPos = QPointF();
+
+    if (!mGenerator.isNull())
+    {
+        mGenerator.clear();
+    }
 }
 
 
-bool MarkdownViewer::load()
+void MarkdownViewer::load(const QString& content)
 {
     // Directly generate the html so that we have something to display on the screen
-    initDocumentGenerator();
-    return mGenerator->generate(mConfig->markdownFile());
+    if (mGenerator.isNull())
+    {
+        initDocumentGenerator();
+    }
+
+    mGenerator->setContent(content);
+    mGenerator->generate();
 }
 
 
 void MarkdownViewer::initDocumentGenerator()
 {
     // Setup document generator component
-    mGenerator = QSharedPointer<DocumentGenerator>(new DocumentGenerator(mConfig->markdownFile()));
+    mGenerator = QSharedPointer<DocumentGenerator>(new DocumentGenerator);
     mGenerator->setBibtexFile(mConfig->bibtexFile());
 
     if (mConfig->outputFile())
@@ -61,12 +73,13 @@ void MarkdownViewer::initDocumentGenerator()
         mGenerator->setCssFile(mConfig->cssFile()->fileName());
     }
 
-    connect(mGenerator.data(), &DocumentGenerator::generated, this, &MarkdownViewer::loadPage,
+    connect(mGenerator.data(), &DocumentGenerator::generated,
+            this, &MarkdownViewer::loadPageInWebView,
             Qt::UniqueConnection);
 }
 
 
-void MarkdownViewer::loadPage(const QString& path)
+void MarkdownViewer::loadPageInWebView(const QString& path)
 {
     qDebug() << sTag << "Loading page" << path;
     QUrl url("file://" + path);
@@ -88,5 +101,6 @@ void MarkdownViewer::onPageLoaded(bool ok)
         QString scrollJs("window.scrollTo(%1, %2);");
         scrollJs = scrollJs.arg(mScrollPos.x()).arg(mScrollPos.y());
         mWebView->page()->runJavaScript(scrollJs);
+        emit loaded();
     }
 }

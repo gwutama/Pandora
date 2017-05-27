@@ -10,7 +10,6 @@ set(SOURCE_FILES
     main.cpp
     mainwindow.cpp
     common/appconfig.cpp
-    common/processrunner.cpp
     preferences/preferencesdialog.cpp
     preferences/filebrowserinputwidget.cpp
     markdownviewer/documentgenerator.cpp

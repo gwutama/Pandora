@@ -25,15 +25,18 @@ public:
 
 public slots:
     void close();
-    bool load();
+    void load(const QString& content);
 
 private slots:
     void onScrollPositionChanged(const QPointF pos);
     void onPageLoaded(bool ok);
 
+signals:
+    void loaded();
+
 private:
     void initDocumentGenerator();
-    void loadPage(const QString& path);
+    void loadPageInWebView(const QString& path);
 
 private:
     QSharedPointer<AppConfig> mConfig;
