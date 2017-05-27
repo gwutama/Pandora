@@ -120,9 +120,13 @@ void MarkdownEditor::setupEditor()
 {
     QFont font;
     font.setFamily("Courier");
+    font.setStyleHint(QFont::Monospace);
     font.setFixedPitch(true);
     font.setPointSize(18);
     mUi->textEdit->setFont(font);
+
+    QFontMetrics metrics(font);
+    mUi->textEdit->setTabStopWidth(4 * metrics.width(' ')); // replace tab with 4 spaces
 
     MarkdownEditorHighlighter* mhPtr = new MarkdownEditorHighlighter(mUi->textEdit->document());
     mHighlighter = QSharedPointer<MarkdownEditorHighlighter>(mhPtr);
