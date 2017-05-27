@@ -63,7 +63,6 @@
    <addaction name="menuFile"/>
    <addaction name="menuEdit"/>
   </widget>
-  <widget class="QStatusBar" name="statusBar"/>
   <action name="actionPreferences">
    <property name="text">
     <string>Preferences</string>
