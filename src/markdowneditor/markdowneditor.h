@@ -4,6 +4,7 @@
 #include <QWidget>
 #include <QSharedPointer>
 #include <QTimer>
+#include <QTextEdit>
 #include "common/appconfig.h"
 #include "markdowneditorhighlighter.h"
 #include "findreplacewidget.h"
@@ -44,6 +45,8 @@ private slots:
     void checkContentChanged();
     void highlightFoundText(const QString& searchString);
     void removeHighlightFoundText();
+    void goToNextFoundText();
+    void goToPreviousFoundText();
 
 private:
     void setupEditor();
@@ -56,6 +59,7 @@ private:
     QTimer mContentChangeTimer;
     QString mOldContent;
     FindReplaceWidget* mFindReplaceWidget;
+    QList<QTextEdit::ExtraSelection> mFoundTextSelections;
 
     static const char* sTag;
 };

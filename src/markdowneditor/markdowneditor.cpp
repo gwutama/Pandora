@@ -20,6 +20,11 @@ MarkdownEditor::MarkdownEditor(QSharedPointer<AppConfig> config,
 
     connect(mUi->findReplaceWidget, &FindReplaceWidget::textChanged,
             this, &MarkdownEditor::highlightFoundText);
+    connect(mUi->findReplaceWidget, &FindReplaceWidget::nextButtonClicked,
+            this, &MarkdownEditor::goToNextFoundText);
+    connect(mUi->findReplaceWidget, &FindReplaceWidget::previousButtonClicked,
+            this, &MarkdownEditor::goToPreviousFoundText);
+
     connect(&mContentChangeTimer, &QTimer::timeout, this, &MarkdownEditor::checkContentChanged);
 
     QShortcut* escKeyShortcut = new QShortcut(Qt::Key_Escape, parent);
@@ -172,9 +177,10 @@ void MarkdownEditor::highlightFoundText(const QString& searchString)
         return;
     }
 
+    // https://stackoverflow.com/questions/7624196/find-all-strings-wanted-and-select-them-with-qplaintexteditsetextraselections
     qDebug() << sTag << "Searching string in document:" << searchString;
 
-    QList<QTextEdit::ExtraSelection> extraSelections;
+    mFoundTextSelections.clear();
     mUi->textEdit->moveCursor(QTextCursor::Start);
 
     QTextCharFormat colorFormat;
@@ -185,16 +191,71 @@ void MarkdownEditor::highlightFoundText(const QString& searchString)
         QTextEdit::ExtraSelection extra;
         extra.cursor = mUi->textEdit->textCursor();
         extra.format = colorFormat;
-        extraSelections.append(extra);
+        mFoundTextSelections.append(extra);
     }
 
-    mUi->textEdit->setExtraSelections(extraSelections);
-    mUi->findReplaceWidget->setFoundNumber(extraSelections.size());
+    mUi->textEdit->setExtraSelections(mFoundTextSelections);
+    mUi->findReplaceWidget->setFoundNumber(mFoundTextSelections.size());
 }
 
 
 void MarkdownEditor::removeHighlightFoundText()
 {
-    mUi->textEdit->setExtraSelections(QList<QTextEdit::ExtraSelection>());
-    mUi->findReplaceWidget->setFoundNumber(0);
+    mFoundTextSelections.clear();
+    mUi->textEdit->setExtraSelections(mFoundTextSelections);
+}
+
+
+void MarkdownEditor::goToNextFoundText()
+{
+    if (!mFoundTextSelections.size())
+    {
+        qDebug() << sTag << "Text not found. Not going to next found text";
+        return;
+    }
+
+    QTextCursor cursor = mUi->textEdit->textCursor();
+
+    foreach (QTextEdit::ExtraSelection selection, mFoundTextSelections)
+    {
+        QTextCursor selectionCursor = selection.cursor;
+
+        if (selectionCursor.position() > cursor.position())
+        {
+            mUi->textEdit->setTextCursor(selectionCursor);
+            return;
+        }
+    }
+
+    // Cursor hasn't been set. cycle to first selection in the list.
+    QTextCursor firstPos = mFoundTextSelections.at(0).cursor;
+    mUi->textEdit->setTextCursor(firstPos);
+}
+
+
+void MarkdownEditor::goToPreviousFoundText()
+{
+    if (!mFoundTextSelections.size())
+    {
+        qDebug() << sTag << "Text not found. Not going to previous found text";
+        return;
+    }
+
+    QTextCursor cursor = mUi->textEdit->textCursor();
+    QList<QTextEdit::ExtraSelection>::iterator iter;
+
+    for(iter = mFoundTextSelections.end() - 1; iter != mFoundTextSelections.begin() - 1; --iter)
+    {
+        QTextCursor selectionCursor = iter->cursor;
+
+        if (selectionCursor.position() < cursor.position())
+        {
+            mUi->textEdit->setTextCursor(selectionCursor);
+            return;
+        }
+    }
+
+    // Cursor hasn't been set. cycle to last selection in the list.
+    QTextCursor lastPos = mFoundTextSelections.at(mFoundTextSelections.size() - 1).cursor;
+    mUi->textEdit->setTextCursor(lastPos);
 }

@@ -26,6 +26,8 @@ private slots:
 
 signals:
     void textChanged(const QString& text);
+    void nextButtonClicked();
+    void previousButtonClicked();
 
 private:
     Ui::FindReplaceWidget* mUi;
