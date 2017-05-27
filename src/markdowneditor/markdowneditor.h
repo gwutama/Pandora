@@ -42,6 +42,8 @@ signals:
 private slots:
     void onEscKeyActivated();
     void checkContentChanged();
+    void highlightFoundText(const QString& searchString);
+    void removeHighlightFoundText();
 
 private:
     void setupEditor();

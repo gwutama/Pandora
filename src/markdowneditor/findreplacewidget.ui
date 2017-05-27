@@ -41,6 +41,16 @@
         <widget class="QLineEdit" name="findLineEdit"/>
        </item>
        <item>
+        <widget class="QLabel" name="foundLabel">
+         <property name="lineWidth">
+          <number>1</number>
+         </property>
+         <property name="text">
+          <string>0 found</string>
+         </property>
+        </widget>
+       </item>
+       <item>
         <widget class="QPushButton" name="findPreviousButton">
          <property name="text">
           <string>Find Previous</string>

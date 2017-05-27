@@ -15,8 +15,11 @@ MarkdownEditor::MarkdownEditor(QSharedPointer<AppConfig> config,
 {
     mUi->setupUi(this);
     setupEditor();
+
     mUi->findReplaceWidget->hide();
 
+    connect(mUi->findReplaceWidget, &FindReplaceWidget::textChanged,
+            this, &MarkdownEditor::highlightFoundText);
     connect(&mContentChangeTimer, &QTimer::timeout, this, &MarkdownEditor::checkContentChanged);
 
     QShortcut* escKeyShortcut = new QShortcut(Qt::Key_Escape, parent);
@@ -40,6 +43,7 @@ void MarkdownEditor::onEscKeyActivated()
     if (!mUi->findReplaceWidget->isHidden())
     {
         mUi->findReplaceWidget->hide();
+        removeHighlightFoundText();
     }
 }
 
@@ -127,7 +131,6 @@ bool MarkdownEditor::openFile(const QString& path)
     QTextDocument* doc = mUi->textEdit->document();
     doc->setPlainText(content);
     doc->setDocumentMargin(70);
-    doc->setPlainText(content);
 
     file.close();
     return true;
@@ -158,4 +161,40 @@ void MarkdownEditor::showFindReplaceWidget()
         mUi->findReplaceWidget->show();
         mUi->findReplaceWidget->setFocus();
     }
+}
+
+
+void MarkdownEditor::highlightFoundText(const QString& searchString)
+{
+
+    if (searchString.isNull())
+    {
+        return;
+    }
+
+    qDebug() << sTag << "Searching string in document:" << searchString;
+
+    QList<QTextEdit::ExtraSelection> extraSelections;
+    mUi->textEdit->moveCursor(QTextCursor::Start);
+
+    QTextCharFormat colorFormat;
+    colorFormat.setBackground(Qt::yellow);
+
+    while (mUi->textEdit->find(searchString))
+    {
+        QTextEdit::ExtraSelection extra;
+        extra.cursor = mUi->textEdit->textCursor();
+        extra.format = colorFormat;
+        extraSelections.append(extra);
+    }
+
+    mUi->textEdit->setExtraSelections(extraSelections);
+    mUi->findReplaceWidget->setFoundNumber(extraSelections.size());
+}
+
+
+void MarkdownEditor::removeHighlightFoundText()
+{
+    mUi->textEdit->setExtraSelections(QList<QTextEdit::ExtraSelection>());
+    mUi->findReplaceWidget->setFoundNumber(0);
 }
