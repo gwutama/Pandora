@@ -26,6 +26,10 @@ MainToolbar::MainToolbar(QWidget* parent) :
             this, &MainToolbar::italicSelectionButtonClicked);
     connect(mUi->strikeoutSelectionButton, &QPushButton::clicked,
             this, &MainToolbar::strikeoutSelectionButtonClicked);
+
+    // Others
+    connect(mUi->horizontalLineButton, &QPushButton::clicked,
+            this, &MainToolbar::horizontalLineButtonClicked);
 }
 
 

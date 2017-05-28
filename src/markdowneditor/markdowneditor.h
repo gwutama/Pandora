@@ -55,6 +55,8 @@ public slots:
     void undo();
     void redo();
 
+    void insertHorizontalLine();
+
 signals:
     void contentChanged(const QString& content);
 

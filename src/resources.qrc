@@ -10,5 +10,10 @@
         <file>icons/redo.svg</file>
         <file>icons/savedocument.svg</file>
         <file>icons/undo.svg</file>
+        <file>icons/blockquote.svg</file>
+        <file>icons/horizontalline.svg</file>
+        <file>icons/link.svg</file>
+        <file>icons/orderedlist.svg</file>
+        <file>icons/unorderedlist.svg</file>
     </qresource>
 </RCC>

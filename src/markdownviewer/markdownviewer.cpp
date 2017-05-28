@@ -11,6 +11,7 @@ MarkdownViewer::MarkdownViewer(QSharedPointer<AppConfig> config,
 {
     // Setup web engine
     mWebView = new QWebEngineView(this);
+    mWebView->setMinimumSize(600, 600);
     connect(mWebView->page(), &QWebEnginePage::scrollPositionChanged,
             this, &MarkdownViewer::onScrollPositionChanged);
     connect(mWebView, &QWebEngineView::loadFinished, this, &MarkdownViewer::onPageLoaded);

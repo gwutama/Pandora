@@ -523,3 +523,10 @@ void MarkdownEditor::redo()
 {
     mUi->textEdit->redo();
 }
+
+
+void MarkdownEditor::insertHorizontalLine()
+{
+    QTextCursor currentCursor = mUi->textEdit->textCursor();
+    currentCursor.insertText("\n\n-------------------------------------------\n\n");
+}

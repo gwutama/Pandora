@@ -52,27 +52,28 @@ MainWindow::MainWindow(QWidget* parent) :
     connect(mUi->actionRedo, &QAction::triggered, mEditor, &MarkdownEditor::redo);
 
     // Set window size and position
-    setMinimumSize(800, 800);
+    setMinimumSize(1200, 800);
     restoreGeometry(mConfig->settings().value("geometry").toByteArray());
     restoreState(mConfig->settings().value("state").toByteArray());
 
-    // Setup formatting toolbar
+    // Setup main toolbar
     mMainToolbar = new MainToolbar(this);
     mUi->toolBar->addWidget(mMainToolbar);
-    connect(mMainToolbar, &MainToolbar::boldSelectionButtonClicked,
-            mEditor, &MarkdownEditor::toggleSelectionBold);
-    connect(mMainToolbar, &MainToolbar::italicSelectionButtonClicked,
-            mEditor, &MarkdownEditor::toggleSelectionItalic);
-    connect(mMainToolbar, &MainToolbar::strikeoutSelectionButtonClicked,
-            mEditor, &MarkdownEditor::toggleSelectionStrikeout);
 
-    // Toolbar signals slots
     connect(mMainToolbar, &MainToolbar::newDocumentButtonClicked,
             this, &MainWindow::onNewActionTriggered);
     connect(mMainToolbar, &MainToolbar::saveDocumentButtonClicked,
             this, &MainWindow::onSaveActionTriggered);
     connect(mMainToolbar, &MainToolbar::undoButtonClicked, mEditor, &MarkdownEditor::undo);
     connect(mMainToolbar, &MainToolbar::redoButtonClicked, mEditor, &MarkdownEditor::redo);
+    connect(mMainToolbar, &MainToolbar::boldSelectionButtonClicked,
+            mEditor, &MarkdownEditor::toggleSelectionBold);
+    connect(mMainToolbar, &MainToolbar::italicSelectionButtonClicked,
+            mEditor, &MarkdownEditor::toggleSelectionItalic);
+    connect(mMainToolbar, &MainToolbar::strikeoutSelectionButtonClicked,
+            mEditor, &MarkdownEditor::toggleSelectionStrikeout);
+    connect(mMainToolbar, &MainToolbar::horizontalLineButtonClicked,
+            mEditor, &MarkdownEditor::insertHorizontalLine);
 
 
     // Default ui set: no file open

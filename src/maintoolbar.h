@@ -30,6 +30,9 @@ signals:
     void italicSelectionButtonClicked(bool checked);
     void strikeoutSelectionButtonClicked(bool checked);
 
+    // Others
+    void horizontalLineButtonClicked(bool checked);
+
 private:
     Ui::FormattingToolbar* mUi;
 };
