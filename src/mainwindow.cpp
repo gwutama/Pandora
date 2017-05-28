@@ -57,22 +57,22 @@ MainWindow::MainWindow(QWidget* parent) :
     restoreState(mConfig->settings().value("state").toByteArray());
 
     // Setup formatting toolbar
-    mToolbar = new FormattingToolbar(this);
-    mUi->toolBar->addWidget(mToolbar);
-    connect(mToolbar, &FormattingToolbar::boldSelectionButtonClicked,
+    mMainToolbar = new MainToolbar(this);
+    mUi->toolBar->addWidget(mMainToolbar);
+    connect(mMainToolbar, &MainToolbar::boldSelectionButtonClicked,
             mEditor, &MarkdownEditor::toggleSelectionBold);
-    connect(mToolbar, &FormattingToolbar::italicSelectionButtonClicked,
+    connect(mMainToolbar, &MainToolbar::italicSelectionButtonClicked,
             mEditor, &MarkdownEditor::toggleSelectionItalic);
-    connect(mToolbar, &FormattingToolbar::strikeoutSelectionButtonClicked,
+    connect(mMainToolbar, &MainToolbar::strikeoutSelectionButtonClicked,
             mEditor, &MarkdownEditor::toggleSelectionStrikeout);
 
     // Toolbar signals slots
-    connect(mToolbar, &FormattingToolbar::newDocumentButtonClicked,
+    connect(mMainToolbar, &MainToolbar::newDocumentButtonClicked,
             this, &MainWindow::onNewActionTriggered);
-    connect(mToolbar, &FormattingToolbar::saveDocumentButtonClicked,
+    connect(mMainToolbar, &MainToolbar::saveDocumentButtonClicked,
             this, &MainWindow::onSaveActionTriggered);
-    connect(mToolbar, &FormattingToolbar::undoButtonClicked, mEditor, &MarkdownEditor::undo);
-    connect(mToolbar, &FormattingToolbar::redoButtonClicked, mEditor, &MarkdownEditor::redo);
+    connect(mMainToolbar, &MainToolbar::undoButtonClicked, mEditor, &MarkdownEditor::undo);
+    connect(mMainToolbar, &MainToolbar::redoButtonClicked, mEditor, &MarkdownEditor::redo);
 
 
     // Default ui set: no file open

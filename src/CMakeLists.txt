@@ -9,6 +9,7 @@ set(CMAKE_INCLUDE_CURRENT_DIR ON)
 set(SOURCE_FILES
     main.cpp
     mainwindow.cpp
+    maintoolbar.cpp
     common/appconfig.cpp
     preferences/preferencesdialog.cpp
     preferences/filebrowserinputwidget.cpp
@@ -17,18 +18,17 @@ set(SOURCE_FILES
     markdowneditor/markdowneditor.cpp
     markdowneditor/markdowneditorhighlighter.cpp
     markdowneditor/findreplacewidget.cpp
-    markdowneditor/formattingtoolbar.cpp
 )
 
 qt5_add_resources(RESOURCE_FILES resources.qrc)
 
 qt5_wrap_ui(UI_FILES
     mainwindow.ui
+    maintoolbar.ui
     preferences/preferencesdialog.ui 
     preferences/filebrowserinputwidget.ui
     markdowneditor/markdowneditor.ui
     markdowneditor/findreplacewidget.ui
-    markdowneditor/formattingtoolbar.ui
 )
 
 find_package(Qt5Core REQUIRED)

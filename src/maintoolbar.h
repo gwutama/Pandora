@@ -8,13 +8,13 @@ namespace Ui
 class FormattingToolbar;
 }
 
-class FormattingToolbar : public QWidget
+class MainToolbar : public QWidget
 {
     Q_OBJECT
 
 public:
-    explicit FormattingToolbar(QWidget* parent = 0);
-    ~FormattingToolbar();
+    explicit MainToolbar(QWidget* parent = 0);
+    ~MainToolbar();
 
 signals:
     // Document

@@ -8,7 +8,7 @@
 #include "preferences/preferencesdialog.h"
 #include "markdowneditor/markdowneditor.h"
 #include "markdownviewer/markdownviewer.h"
-#include "markdowneditor/formattingtoolbar.h"
+#include "maintoolbar.h"
 
 namespace Ui
 {
@@ -43,7 +43,7 @@ private:
     PreferencesDialog* mCfgDialog;
     MarkdownViewer* mViewer;
     MarkdownEditor* mEditor;
-    FormattingToolbar* mToolbar;
+    MainToolbar* mMainToolbar;
     QSharedPointer<AppConfig> mConfig;
     QSharedPointer<QTemporaryFile> mTmpMarkdownFile; // for "new" file (not saved yet)
 
