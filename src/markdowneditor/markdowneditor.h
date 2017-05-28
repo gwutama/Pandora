@@ -47,6 +47,7 @@ private slots:
     bool goToNextMatch();
     bool goToPreviousMatch();
     bool goToNthMatch(unsigned int index);
+    bool goToNearestMatch(const QTextCursor& cursor);
     bool replaceMatch();
     bool replaceMatchGoToNextOne();
     bool replaceMatches();

@@ -9,6 +9,8 @@ FindReplaceWidget::FindReplaceWidget(QWidget* parent) :
 
     connect(mUi->findLineEdit, &QLineEdit::returnPressed,
             this, &FindReplaceWidget::wantToExecuteSearch);
+    connect(mUi->findLineEdit, &QLineEdit::textChanged,
+            this, &FindReplaceWidget::searchTermChanged);
 
     connect(mUi->findNextButton, &QToolButton::clicked,
             this, &FindReplaceWidget::nextButtonClicked);

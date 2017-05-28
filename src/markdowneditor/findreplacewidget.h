@@ -29,6 +29,7 @@ public slots:
 
 signals:
     void wantToExecuteSearch();
+    void searchTermChanged(const QString& term);
     void nextButtonClicked();
     void previousButtonClicked();
     void replaceButtonClicked();

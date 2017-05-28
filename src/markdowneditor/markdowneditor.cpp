@@ -20,6 +20,8 @@ MarkdownEditor::MarkdownEditor(QSharedPointer<AppConfig> config,
 
     connect(mUi->findReplaceWidget, &FindReplaceWidget::wantToExecuteSearch,
             this, &MarkdownEditor::searchAndHighlightMatches);
+    connect(mUi->findReplaceWidget, &FindReplaceWidget::searchTermChanged,
+            this, &MarkdownEditor::searchAndHighlightMatches);
     connect(mUi->findReplaceWidget, &FindReplaceWidget::nextButtonClicked,
             this, &MarkdownEditor::goToNextMatch);
     connect(mUi->findReplaceWidget, &FindReplaceWidget::previousButtonClicked,
@@ -188,6 +190,7 @@ void MarkdownEditor::searchAndHighlightMatches()
     qDebug() << sTag << "Searching string in document:" << searchString;
 
     mMatchTextSelections.clear();
+    QTextCursor currentCursor = mUi->textEdit->textCursor();
     mUi->textEdit->moveCursor(QTextCursor::Start);
 
     QTextCharFormat colorFormat;
@@ -204,8 +207,8 @@ void MarkdownEditor::searchAndHighlightMatches()
     mUi->textEdit->setExtraSelections(mMatchTextSelections);
     mUi->findReplaceWidget->setNumMatches(mMatchTextSelections.size());
 
-    // go directly to the first match
-    goToNthMatch(0);
+    // go directly to the next nearest match
+    goToNearestMatch(currentCursor);
 }
 
 
@@ -224,13 +227,13 @@ bool MarkdownEditor::goToNextMatch()
         return false;
     }
 
-    QTextCursor cursor = mUi->textEdit->textCursor();
+    QTextCursor currentCursor = mUi->textEdit->textCursor();
 
     foreach (QTextEdit::ExtraSelection selection, mMatchTextSelections)
     {
         QTextCursor selectionCursor = selection.cursor;
 
-        if (selectionCursor.position() > cursor.position())
+        if (selectionCursor.position() > currentCursor.position())
         {
             mUi->textEdit->setTextCursor(selectionCursor);
             return true;
@@ -250,14 +253,14 @@ bool MarkdownEditor::goToPreviousMatch()
         return false;
     }
 
-    QTextCursor cursor = mUi->textEdit->textCursor();
+    QTextCursor currentCursor = mUi->textEdit->textCursor();
     QList<QTextEdit::ExtraSelection>::iterator iter;
 
     for (iter = mMatchTextSelections.end() - 1; iter != mMatchTextSelections.begin() - 1; --iter)
     {
         QTextCursor selectionCursor = iter->cursor;
 
-        if (selectionCursor.position() < cursor.position())
+        if (selectionCursor.position() < currentCursor.position())
         {
             mUi->textEdit->setTextCursor(selectionCursor);
             return true;
@@ -279,6 +282,34 @@ bool MarkdownEditor::goToNthMatch(unsigned int index)
 
     QTextCursor firstPos = mMatchTextSelections.at(index).cursor;
     mUi->textEdit->setTextCursor(firstPos);
+    return true;
+}
+
+
+bool MarkdownEditor::goToNearestMatch(const QTextCursor& cursor)
+{
+    if (!mMatchTextSelections.size()) // ignore if we havent searched
+    {
+        qWarning() << sTag << "No matches found. Not going to replace match";
+        return false;
+    }
+
+    int delta = mUi->textEdit->toPlainText().size();
+    QTextCursor nearestMatchCursor;
+
+    foreach (QTextEdit::ExtraSelection selection, mMatchTextSelections)
+    {
+        QTextCursor selectionCursor = selection.cursor;
+        int tmpDelta = abs(selectionCursor.position() - cursor.position());
+
+        if (tmpDelta < delta)
+        {
+            delta = tmpDelta;
+            nearestMatchCursor = selectionCursor;
+        }
+    }
+
+    mUi->textEdit->setTextCursor(nearestMatchCursor);
     return true;
 }
 
