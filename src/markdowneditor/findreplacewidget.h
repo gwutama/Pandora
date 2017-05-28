@@ -16,21 +16,28 @@ public:
     explicit FindReplaceWidget(QWidget* parent = 0);
     ~FindReplaceWidget();
 
-    void setFoundNumber(int found);
+    void setNumMatches(int numMatches);
+
+    inline int numMatches()
+    { return mNumMatches; }
+
+    QString searchTerm();
+    QString replacementText();
 
 public slots:
     void setFocus();
 
-private slots:
-    void onReturnPressed();
-
 signals:
-    void textChanged(const QString& text);
+    void wantToExecuteSearch();
     void nextButtonClicked();
     void previousButtonClicked();
+    void replaceButtonClicked();
+    void replaceFindButtonClicked();
+    void replaceAllButtonClicked();
 
 private:
     Ui::FindReplaceWidget* mUi;
+    int mNumMatches;
 };
 
 #endif // FINDREPLACEWIDGET_H

@@ -32,7 +32,10 @@
    <item>
     <widget class="QTextEdit" name="textEdit">
      <property name="styleSheet">
-      <string notr="true">QTextEdit { background-color: #f3f3f3 }</string>
+      <string notr="true">QTextEdit {
+	background-color: #f3f3f3;
+	selection-background-color: rgb(155, 206, 255);
+}</string>
      </property>
      <property name="frameShape">
       <enum>QFrame::NoFrame</enum>

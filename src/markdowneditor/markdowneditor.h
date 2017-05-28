@@ -7,7 +7,6 @@
 #include <QTextEdit>
 #include "common/appconfig.h"
 #include "markdowneditorhighlighter.h"
-#include "findreplacewidget.h"
 
 namespace Ui
 {
@@ -43,10 +42,14 @@ signals:
 private slots:
     void onEscKeyActivated();
     void checkContentChanged();
-    void highlightFoundText(const QString& searchString);
-    void removeHighlightFoundText();
-    void goToNextFoundText();
-    void goToPreviousFoundText();
+    void searchAndHighlightMatches();
+    void removeHighlightMatches();
+    bool goToNextMatch();
+    bool goToPreviousMatch();
+    bool goToNthMatch(unsigned int index);
+    bool replaceMatch();
+    bool replaceMatchGoToNextOne();
+    bool replaceMatches();
 
 private:
     void setupEditor();
@@ -58,8 +61,7 @@ private:
     QSharedPointer<MarkdownEditorHighlighter> mHighlighter;
     QTimer mContentChangeTimer;
     QString mOldContent;
-    FindReplaceWidget* mFindReplaceWidget;
-    QList<QTextEdit::ExtraSelection> mFoundTextSelections;
+    QList<QTextEdit::ExtraSelection> mMatchTextSelections;
 
     static const char* sTag;
 };
