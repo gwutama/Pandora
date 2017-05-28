@@ -7,11 +7,11 @@ FormattingToolbar::FormattingToolbar(QWidget* parent) :
 {
     mUi->setupUi(this);
 
-    connect(mUi->boldSelectionButton, &QToolButton::clicked,
+    connect(mUi->boldSelectionButton, &QPushButton::clicked,
             this, &FormattingToolbar::boldSelectionButtonClicked);
-    connect(mUi->italicSelectionButton, &QToolButton::clicked,
+    connect(mUi->italicSelectionButton, &QPushButton::clicked,
             this, &FormattingToolbar::italicSelectionButtonClicked);
-    connect(mUi->strikeoutSelectionButton, &QToolButton::clicked,
+    connect(mUi->strikeoutSelectionButton, &QPushButton::clicked,
             this, &FormattingToolbar::strikeoutSelectionButtonClicked);
 }
 

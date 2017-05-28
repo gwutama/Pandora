@@ -2,5 +2,8 @@
     <qresource prefix="/">
         <file>themes/default.css</file>
         <file>markdownviewer/emptymarkdownviewer.html</file>
+        <file>icons/bold.svg</file>
+        <file>icons/italic.svg</file>
+        <file>icons/strikethrough.svg</file>
     </qresource>
 </RCC>

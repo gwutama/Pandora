@@ -9,6 +9,7 @@ int main(int argc, char* argv[])
         putenv((char*) "PATH=/usr/local/sbin:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin");
     }
 
+    QApplication::setAttribute(Qt::AA_UseHighDpiPixmaps);
     QApplication a(argc, argv);
     MainWindow w;
     w.show();

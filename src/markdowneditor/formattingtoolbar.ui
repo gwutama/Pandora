@@ -18,37 +18,121 @@
     <number>0</number>
    </property>
    <property name="leftMargin">
-    <number>5</number>
+    <number>10</number>
    </property>
    <property name="topMargin">
-    <number>5</number>
+    <number>0</number>
    </property>
    <property name="rightMargin">
-    <number>5</number>
+    <number>10</number>
    </property>
    <property name="bottomMargin">
-    <number>5</number>
+    <number>0</number>
    </property>
    <item>
     <layout class="QHBoxLayout" name="horizontalLayout">
+     <property name="spacing">
+      <number>0</number>
+     </property>
      <item>
-      <widget class="QToolButton" name="boldSelectionButton">
+      <widget class="QPushButton" name="boldSelectionButton">
+       <property name="sizePolicy">
+        <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+         <horstretch>0</horstretch>
+         <verstretch>0</verstretch>
+        </sizepolicy>
+       </property>
+       <property name="maximumSize">
+        <size>
+         <width>32</width>
+         <height>32</height>
+        </size>
+       </property>
+       <property name="toolTip">
+        <string>Bold selection</string>
+       </property>
        <property name="text">
-        <string>Bold</string>
+        <string/>
+       </property>
+       <property name="icon">
+        <iconset resource="../resources.qrc">
+         <normaloff>:/icons/bold.svg</normaloff>:/icons/bold.svg</iconset>
+       </property>
+       <property name="iconSize">
+        <size>
+         <width>16</width>
+         <height>16</height>
+        </size>
+       </property>
+       <property name="shortcut">
+        <string>Ctrl+B</string>
+       </property>
+       <property name="checkable">
+        <bool>false</bool>
+       </property>
+       <property name="flat">
+        <bool>true</bool>
        </property>
       </widget>
      </item>
      <item>
-      <widget class="QToolButton" name="italicSelectionButton">
+      <widget class="QPushButton" name="italicSelectionButton">
+       <property name="sizePolicy">
+        <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+         <horstretch>0</horstretch>
+         <verstretch>0</verstretch>
+        </sizepolicy>
+       </property>
+       <property name="maximumSize">
+        <size>
+         <width>32</width>
+         <height>32</height>
+        </size>
+       </property>
+       <property name="toolTip">
+        <string>Italicised selection</string>
+       </property>
        <property name="text">
-        <string>Italic</string>
+        <string/>
+       </property>
+       <property name="icon">
+        <iconset resource="../resources.qrc">
+         <normaloff>:/icons/italic.svg</normaloff>:/icons/italic.svg</iconset>
+       </property>
+       <property name="shortcut">
+        <string>Ctrl+I</string>
+       </property>
+       <property name="flat">
+        <bool>true</bool>
        </property>
       </widget>
      </item>
      <item>
-      <widget class="QToolButton" name="strikeoutSelectionButton">
+      <widget class="QPushButton" name="strikeoutSelectionButton">
+       <property name="sizePolicy">
+        <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+         <horstretch>0</horstretch>
+         <verstretch>0</verstretch>
+        </sizepolicy>
+       </property>
+       <property name="maximumSize">
+        <size>
+         <width>32</width>
+         <height>32</height>
+        </size>
+       </property>
+       <property name="toolTip">
+        <string>Strikethrough selection</string>
+       </property>
        <property name="text">
-        <string>Strikeout</string>
+        <string/>
+       </property>
+       <property name="icon">
+        <iconset resource="../resources.qrc">
+         <normaloff>:/icons/strikethrough.svg</normaloff>:/icons/strikethrough.svg</iconset>
+       </property>
+       <property name="flat">
+        <bool>true</bool>
        </property>
       </widget>
      </item>
@@ -69,6 +153,8 @@
    </item>
   </layout>
  </widget>
- <resources/>
+ <resources>
+  <include location="../resources.qrc"/>
+ </resources>
  <connections/>
 </ui>
