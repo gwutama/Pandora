@@ -46,6 +46,13 @@ MarkdownEditor::~MarkdownEditor()
 }
 
 
+void MarkdownEditor::setMargin(unsigned int size)
+{
+    QTextDocument* doc = mUi->textEdit->document();
+    doc->setDocumentMargin(size);
+}
+
+
 void MarkdownEditor::onEscKeyActivated()
 {
     if (!isEnabled())
@@ -143,7 +150,6 @@ bool MarkdownEditor::openFile(const QString& path)
     QByteArray content = file.readAll();
     QTextDocument* doc = mUi->textEdit->document();
     doc->setPlainText(content);
-    doc->setDocumentMargin(70);
 
     file.close();
     return true;
@@ -164,6 +170,8 @@ void MarkdownEditor::setupEditor()
 
     MarkdownEditorHighlighter* mhPtr = new MarkdownEditorHighlighter(mUi->textEdit->document());
     mHighlighter = QSharedPointer<MarkdownEditorHighlighter>(mhPtr);
+
+    setNarrowMargin(); // default margin
 }
 
 

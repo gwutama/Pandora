@@ -28,6 +28,8 @@ public:
                             QWidget* parent = 0);
     ~MarkdownEditor();
 
+    void setMargin(unsigned int size);
+
 public slots:
     void refocusEditor();
     bool open();
@@ -35,6 +37,12 @@ public slots:
     bool save();
     bool saveAs(const QString& path);
     void showFindReplaceWidget();
+
+    inline void setNarrowMargin()
+    { setMargin(80); }
+
+    inline void setWideMargin()
+    { setMargin(150); }
 
 signals:
     void contentChanged(const QString& contents);

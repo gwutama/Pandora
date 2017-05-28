@@ -42,6 +42,8 @@ MainWindow::MainWindow(QWidget* parent) :
     connect(mUi->actionSaveAs, &QAction::triggered, this, &MainWindow::onSaveAsActionTriggered);
     connect(mUi->actionFindReplace, &QAction::triggered,
             mEditor, &MarkdownEditor::showFindReplaceWidget);
+    connect(mUi->actionTogglePreview, &QAction::triggered,
+            this, &MainWindow::onTogglePreviewActionTriggered);
 
     // Set window size and position
     setMinimumSize(800, 800);
@@ -208,4 +210,19 @@ void MainWindow::closeFileHelper()
     mViewer->close();
     mEditor->close();
     uiStateNoFileOpen();
+}
+
+
+void MainWindow::onTogglePreviewActionTriggered(bool /*checked*/)
+{
+    if (mViewer->isVisible())
+    {
+        mViewer->hide();
+        mEditor->setWideMargin();
+    }
+    else
+    {
+        mViewer->show();
+        mEditor->setNarrowMargin();
+    }
 }
