@@ -44,6 +44,10 @@ MainWindow::MainWindow(QWidget* parent) :
             mEditor, &MarkdownEditor::showFindReplaceWidget);
     connect(mUi->actionTogglePreview, &QAction::triggered,
             this, &MainWindow::onTogglePreviewActionTriggered);
+    connect(mUi->actionIncreaseFontSize, &QAction::triggered,
+            mEditor, &MarkdownEditor::increaseFontSize);
+    connect(mUi->actionDecreaseFontSize, &QAction::triggered,
+            mEditor, &MarkdownEditor::decreaseFontSize);
 
     // Set window size and position
     setMinimumSize(800, 800);

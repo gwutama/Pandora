@@ -6,14 +6,15 @@ const char* AppConfig::sTag = "[AppConfig]";
 
 AppConfig::AppConfig()
 {
-    setTheme("default");
-
     // Prepare tmp output file
     mOutputFile = QSharedPointer<QTemporaryFile>(new QTemporaryFile);
     mOutputFile->open();
 
     // Finally load the values from permanent config storage
     load();
+
+    // Default values
+    setTheme("default");
 }
 
 
@@ -27,6 +28,7 @@ void AppConfig::load()
     // Actual options
     setMarkdownFile(mSettings.value("App/markdownFile").toString());
     setBibtexFile(mSettings.value("App/bibtexFile").toString());
+    setEditorFontPointSize(mSettings.value("Editor/fontPointSize", 18).toInt());
 }
 
 
@@ -35,6 +37,7 @@ void AppConfig::save()
     // Actual options
     mSettings.setValue("App/markdownFile", mMarkdownFile);
     mSettings.setValue("App/bibtexFile", mBibtexFile);
+    mSettings.setValue("Editor/fontPointSize", mEditorFontPointSize);
 
     mSettings.sync();
 }

@@ -12,6 +12,7 @@ class AppConfig
 {
     friend class PreferencesDialog;
     friend class MainWindow;
+    friend class MarkdownEditor;
 
 public:
     explicit AppConfig();
@@ -32,6 +33,9 @@ public:
     inline QSharedPointer<QTemporaryFile> outputFile()
     { return mOutputFile; }
 
+    inline int editorFontPointSize()
+    { return mEditorFontPointSize; }
+
     QSettings& settings()
     { return mSettings; }
 
@@ -47,6 +51,9 @@ private:
     inline void setBibtexFile(const QString& bibtexFile)
     { mBibtexFile = bibtexFile; }
 
+    inline void setEditorFontPointSize(int size)
+    { mEditorFontPointSize = size; }
+
     QTemporaryFile* extractThemeFromResources(const QString& cssTheme);
 
 private:
@@ -56,6 +63,7 @@ private:
     QString mMarkdownFile;
     QString mTheme;
     QString mBibtexFile; // optional
+    int mEditorFontPointSize;
 
     // Auto generated based on other properties
     QSharedPointer<QTemporaryFile> mCssFile;

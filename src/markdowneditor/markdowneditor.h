@@ -45,6 +45,9 @@ public slots:
     inline void setWideMargin()
     { setMargin(150); }
 
+    void increaseFontSize();
+    void decreaseFontSize();
+
 signals:
     void contentChanged(const QString& content);
 

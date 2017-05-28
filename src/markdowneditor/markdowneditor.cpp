@@ -168,7 +168,7 @@ void MarkdownEditor::setupEditor()
     font.setFamily("Courier");
     font.setStyleHint(QFont::Monospace);
     font.setFixedPitch(true);
-    font.setPointSize(18);
+    font.setPointSize(mConfig->editorFontPointSize());
     mUi->textEdit->setFont(font);
 
     QFontMetrics metrics(font);
@@ -178,6 +178,30 @@ void MarkdownEditor::setupEditor()
     mHighlighter = QSharedPointer<MarkdownEditorHighlighter>(mhPtr);
 
     setNarrowMargin(); // default margin
+}
+
+
+void MarkdownEditor::increaseFontSize()
+{
+    QFont font = mUi->textEdit->font();
+    font.setPointSize(font.pointSize() + 1);
+    mUi->textEdit->setFont(font);
+
+    // Save
+    mConfig->setEditorFontPointSize(mUi->textEdit->font().pointSize());
+    mConfig->save();
+}
+
+
+void MarkdownEditor::decreaseFontSize()
+{
+    QFont font = mUi->textEdit->font();
+    font.setPointSize(font.pointSize() - 1);
+    mUi->textEdit->setFont(font);
+
+    // Save
+    mConfig->setEditorFontPointSize(mUi->textEdit->font().pointSize());
+    mConfig->save();
 }
 
 
