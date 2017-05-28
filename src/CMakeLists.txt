@@ -17,6 +17,7 @@ set(SOURCE_FILES
     markdowneditor/markdowneditor.cpp
     markdowneditor/markdowneditorhighlighter.cpp
     markdowneditor/findreplacewidget.cpp
+    markdowneditor/formattingtoolbar.cpp
 )
 
 qt5_add_resources(RESOURCE_FILES resources.qrc)
@@ -27,6 +28,7 @@ qt5_wrap_ui(UI_FILES
     preferences/filebrowserinputwidget.ui
     markdowneditor/markdowneditor.ui
     markdowneditor/findreplacewidget.ui
+    markdowneditor/formattingtoolbar.ui
 )
 
 find_package(Qt5Core REQUIRED)

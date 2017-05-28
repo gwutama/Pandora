@@ -18,6 +18,7 @@ MarkdownEditor::MarkdownEditor(QSharedPointer<AppConfig> config,
 
     mUi->findReplaceWidget->hide();
 
+    // Find/replace widget
     connect(mUi->findReplaceWidget, &FindReplaceWidget::wantToExecuteSearch,
             this, &MarkdownEditor::searchAndHighlightMatches);
     connect(mUi->findReplaceWidget, &FindReplaceWidget::searchTermChanged,
@@ -425,4 +426,88 @@ bool MarkdownEditor::replaceMatches()
     mMatchTextSelections.clear();
     mUi->findReplaceWidget->setNumMatches(0);
     return true;
+}
+
+
+void MarkdownEditor::toggleSelectionBold()
+{
+    QTextCursor currentCursor = mUi->textEdit->textCursor();
+    QString text = currentCursor.selectedText();
+
+    if (text.isEmpty())
+    {
+        return;
+    }
+
+    QString newText;
+
+    QRegExp boldAsteriskRx("\\*{2}.*\\*{2}");
+    QRegExp boldUnderlineRx("_{2}.*_{2}");
+
+    if (text.indexOf(boldAsteriskRx) > -1 || text.indexOf(boldUnderlineRx) > -1)
+    {
+        newText = text.mid(2, text.size() - 4);
+    }
+    else
+    {
+        newText = "**" + text + "**";
+    }
+
+    currentCursor.insertText(newText);
+}
+
+
+void MarkdownEditor::toggleSelectionItalic()
+{
+    QTextCursor currentCursor = mUi->textEdit->textCursor();
+    QString text = currentCursor.selectedText();
+
+    if (text.isEmpty())
+    {
+        return;
+    }
+
+    QString newText;
+
+    QRegExp italicAsteriskRx("\\*.*\\*");
+    QRegExp italicUnderlineRx("_.*_");
+
+    if (text.indexOf(italicAsteriskRx) > -1 || text.indexOf(italicUnderlineRx) > -1)
+    {
+        newText = text.mid(1, text.size() - 2);
+    }
+    else
+    {
+        newText = "*" + text + "*";
+    }
+
+    currentCursor.insertText(newText);
+}
+
+
+void MarkdownEditor::toggleSelectionStrikeout()
+{
+    QTextCursor currentCursor = mUi->textEdit->textCursor();
+    QString text = currentCursor.selectedText();
+
+    if (text.isEmpty())
+    {
+        return;
+    }
+
+    QString newText;
+
+    // Toggle bold
+    QRegExp strikeoutRx("~{2}.*~{2}");
+
+    if (text.indexOf(strikeoutRx) > -1)
+    {
+        newText = text.mid(2, text.size() - 4);
+    }
+    else
+    {
+        newText = "~~" + text + "~~";
+    }
+
+    currentCursor.insertText(newText);
 }

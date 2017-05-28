@@ -3,6 +3,7 @@
 #include <QDebug>
 #include <QFileInfo>
 #include <QFileDialog>
+#include "markdowneditor/formattingtoolbar.h"
 
 const char* MainWindow::sTag = "[MainWindow]";
 
@@ -54,6 +55,17 @@ MainWindow::MainWindow(QWidget* parent) :
     restoreGeometry(mConfig->settings().value("geometry").toByteArray());
     restoreState(mConfig->settings().value("state").toByteArray());
 
+    // Setup formatting toolbar
+    FormattingToolbar* fmtToolbar = new FormattingToolbar(this);
+    mUi->toolBar->addWidget(fmtToolbar);
+    connect(fmtToolbar, &FormattingToolbar::boldSelectionButtonClicked,
+            mEditor, &MarkdownEditor::toggleSelectionBold);
+    connect(fmtToolbar, &FormattingToolbar::italicSelectionButtonClicked,
+            mEditor, &MarkdownEditor::toggleSelectionItalic);
+    connect(fmtToolbar, &FormattingToolbar::strikeoutSelectionButtonClicked,
+            mEditor, &MarkdownEditor::toggleSelectionStrikeout);
+
+    // Default ui set: no file open
     uiStateNoFileOpen();
 }
 
@@ -73,6 +85,7 @@ void MainWindow::uiStateNoFileOpen()
     mUi->actionSaveAs->setDisabled(true);
     mUi->menuEdit->setDisabled(true);
     mEditor->setDisabled(true);
+    mUi->toolBar->setDisabled(true);
 }
 
 
@@ -83,6 +96,7 @@ void MainWindow::uiStateFileOpened()
     mUi->actionSaveAs->setEnabled(true);
     mUi->menuEdit->setEnabled(true);
     mEditor->setEnabled(true);
+    mUi->toolBar->setEnabled(true);
 }
 
 

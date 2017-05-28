@@ -48,12 +48,17 @@ public slots:
     void increaseFontSize();
     void decreaseFontSize();
 
+    void toggleSelectionBold();
+    void toggleSelectionItalic();
+    void toggleSelectionStrikeout();
+
 signals:
     void contentChanged(const QString& content);
 
 private slots:
     void onEscKeyActivated();
     void checkContentChanged();
+
     void searchAndHighlightMatches();
     void removeHighlightMatches();
     bool goToNextMatch();
