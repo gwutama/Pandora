@@ -46,6 +46,12 @@ void MarkdownViewer::close()
 
 void MarkdownViewer::load(const QString& content)
 {
+    // Ignore preview generation if widget is disabled
+    if (!isEnabled())
+    {
+        return;
+    }
+
     // Directly generate the html so that we have something to display on the screen
     if (mGenerator.isNull())
     {

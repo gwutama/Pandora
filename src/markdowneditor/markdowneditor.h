@@ -28,6 +28,7 @@ public:
                             QWidget* parent = 0);
     ~MarkdownEditor();
 
+    QString content();
     void setMargin(unsigned int size);
 
 public slots:
@@ -45,7 +46,7 @@ public slots:
     { setMargin(150); }
 
 signals:
-    void contentChanged(const QString& contents);
+    void contentChanged(const QString& content);
 
 private slots:
     void onEscKeyActivated();

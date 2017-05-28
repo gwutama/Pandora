@@ -218,11 +218,16 @@ void MainWindow::onTogglePreviewActionTriggered(bool /*checked*/)
     if (mViewer->isVisible())
     {
         mViewer->hide();
+        mViewer->setDisabled(true);
         mEditor->setWideMargin();
     }
     else
     {
         mViewer->show();
+        mViewer->setEnabled(true);
         mEditor->setNarrowMargin();
+
+        // Directly load preview
+        mViewer->load(mEditor->content());
     }
 }

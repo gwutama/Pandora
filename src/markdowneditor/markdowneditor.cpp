@@ -46,6 +46,12 @@ MarkdownEditor::~MarkdownEditor()
 }
 
 
+QString MarkdownEditor::content()
+{
+    return mUi->textEdit->document()->toPlainText();
+}
+
+
 void MarkdownEditor::setMargin(unsigned int size)
 {
     QTextDocument* doc = mUi->textEdit->document();
