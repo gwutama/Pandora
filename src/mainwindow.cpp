@@ -3,7 +3,6 @@
 #include <QDebug>
 #include <QFileInfo>
 #include <QFileDialog>
-#include "markdowneditor/formattingtoolbar.h"
 
 const char* MainWindow::sTag = "[MainWindow]";
 
@@ -49,6 +48,8 @@ MainWindow::MainWindow(QWidget* parent) :
             mEditor, &MarkdownEditor::increaseFontSize);
     connect(mUi->actionDecreaseFontSize, &QAction::triggered,
             mEditor, &MarkdownEditor::decreaseFontSize);
+    connect(mUi->actionUndo, &QAction::triggered, mEditor, &MarkdownEditor::undo);
+    connect(mUi->actionRedo, &QAction::triggered, mEditor, &MarkdownEditor::redo);
 
     // Set window size and position
     setMinimumSize(800, 800);
@@ -56,14 +57,23 @@ MainWindow::MainWindow(QWidget* parent) :
     restoreState(mConfig->settings().value("state").toByteArray());
 
     // Setup formatting toolbar
-    FormattingToolbar* fmtToolbar = new FormattingToolbar(this);
-    mUi->toolBar->addWidget(fmtToolbar);
-    connect(fmtToolbar, &FormattingToolbar::boldSelectionButtonClicked,
+    mToolbar = new FormattingToolbar(this);
+    mUi->toolBar->addWidget(mToolbar);
+    connect(mToolbar, &FormattingToolbar::boldSelectionButtonClicked,
             mEditor, &MarkdownEditor::toggleSelectionBold);
-    connect(fmtToolbar, &FormattingToolbar::italicSelectionButtonClicked,
+    connect(mToolbar, &FormattingToolbar::italicSelectionButtonClicked,
             mEditor, &MarkdownEditor::toggleSelectionItalic);
-    connect(fmtToolbar, &FormattingToolbar::strikeoutSelectionButtonClicked,
+    connect(mToolbar, &FormattingToolbar::strikeoutSelectionButtonClicked,
             mEditor, &MarkdownEditor::toggleSelectionStrikeout);
+
+    // Toolbar signals slots
+    connect(mToolbar, &FormattingToolbar::newDocumentButtonClicked,
+            this, &MainWindow::onNewActionTriggered);
+    connect(mToolbar, &FormattingToolbar::saveDocumentButtonClicked,
+            this, &MainWindow::onSaveActionTriggered);
+    connect(mToolbar, &FormattingToolbar::undoButtonClicked, mEditor, &MarkdownEditor::undo);
+    connect(mToolbar, &FormattingToolbar::redoButtonClicked, mEditor, &MarkdownEditor::redo);
+
 
     // Default ui set: no file open
     uiStateNoFileOpen();

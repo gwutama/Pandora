@@ -511,3 +511,15 @@ void MarkdownEditor::toggleSelectionStrikeout()
 
     currentCursor.insertText(newText);
 }
+
+
+void MarkdownEditor::undo()
+{
+    mUi->textEdit->undo();
+}
+
+
+void MarkdownEditor::redo()
+{
+    mUi->textEdit->redo();
+}

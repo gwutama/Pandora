@@ -7,6 +7,19 @@ FormattingToolbar::FormattingToolbar(QWidget* parent) :
 {
     mUi->setupUi(this);
 
+    // Document
+    connect(mUi->newDocumentButton, &QPushButton::clicked,
+            this, &FormattingToolbar::newDocumentButtonClicked);
+    connect(mUi->saveDocumentButton, &QPushButton::clicked,
+            this, &FormattingToolbar::saveDocumentButtonClicked);
+
+    // Undo / redo
+    connect(mUi->undoButton, &QPushButton::clicked,
+            this, &FormattingToolbar::undoButtonClicked);
+    connect(mUi->redoButton, &QPushButton::clicked,
+            this, &FormattingToolbar::redoButtonClicked);
+
+    // Formatting
     connect(mUi->boldSelectionButton, &QPushButton::clicked,
             this, &FormattingToolbar::boldSelectionButtonClicked);
     connect(mUi->italicSelectionButton, &QPushButton::clicked,

@@ -52,6 +52,9 @@ public slots:
     void toggleSelectionItalic();
     void toggleSelectionStrikeout();
 
+    void undo();
+    void redo();
+
 signals:
     void contentChanged(const QString& content);
 

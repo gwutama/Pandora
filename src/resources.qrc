@@ -5,5 +5,10 @@
         <file>icons/bold.svg</file>
         <file>icons/italic.svg</file>
         <file>icons/strikethrough.svg</file>
+        <file>icons/image.svg</file>
+        <file>icons/newdocument.svg</file>
+        <file>icons/redo.svg</file>
+        <file>icons/savedocument.svg</file>
+        <file>icons/undo.svg</file>
     </qresource>
 </RCC>

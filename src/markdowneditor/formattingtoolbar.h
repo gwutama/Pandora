@@ -17,9 +17,18 @@ public:
     ~FormattingToolbar();
 
 signals:
-    void boldSelectionButtonClicked();
-    void italicSelectionButtonClicked();
-    void strikeoutSelectionButtonClicked();
+    // Document
+    void newDocumentButtonClicked(bool checked);
+    void saveDocumentButtonClicked(bool checked);
+
+    // Undo/redo
+    void undoButtonClicked(bool checked);
+    void redoButtonClicked(bool checked);
+
+    // Formatting
+    void boldSelectionButtonClicked(bool checked);
+    void italicSelectionButtonClicked(bool checked);
+    void strikeoutSelectionButtonClicked(bool checked);
 
 private:
     Ui::FormattingToolbar* mUi;
