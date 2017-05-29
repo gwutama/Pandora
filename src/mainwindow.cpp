@@ -72,6 +72,8 @@ MainWindow::MainWindow(QWidget* parent) :
             mEditor, &MarkdownEditor::toggleSelectionItalic);
     connect(mMainToolbar, &MainToolbar::strikeoutSelectionButtonClicked,
             mEditor, &MarkdownEditor::toggleSelectionStrikeout);
+    connect(mMainToolbar, &MainToolbar::linkButtonClicked,
+            mEditor, &MarkdownEditor::insertModifyLink);
     connect(mMainToolbar, &MainToolbar::horizontalLineButtonClicked,
             mEditor, &MarkdownEditor::insertHorizontalLine);
 

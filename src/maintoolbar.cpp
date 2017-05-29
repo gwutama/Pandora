@@ -14,10 +14,8 @@ MainToolbar::MainToolbar(QWidget* parent) :
             this, &MainToolbar::saveDocumentButtonClicked);
 
     // Undo / redo
-    connect(mUi->undoButton, &QPushButton::clicked,
-            this, &MainToolbar::undoButtonClicked);
-    connect(mUi->redoButton, &QPushButton::clicked,
-            this, &MainToolbar::redoButtonClicked);
+    connect(mUi->undoButton, &QPushButton::clicked, this, &MainToolbar::undoButtonClicked);
+    connect(mUi->redoButton, &QPushButton::clicked, this, &MainToolbar::redoButtonClicked);
 
     // Formatting
     connect(mUi->boldSelectionButton, &QPushButton::clicked,
@@ -28,6 +26,7 @@ MainToolbar::MainToolbar(QWidget* parent) :
             this, &MainToolbar::strikeoutSelectionButtonClicked);
 
     // Others
+    connect(mUi->linkButton, &QPushButton::clicked, this, &MainToolbar::linkButtonClicked);
     connect(mUi->horizontalLineButton, &QPushButton::clicked,
             this, &MainToolbar::horizontalLineButtonClicked);
 }

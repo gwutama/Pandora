@@ -4,6 +4,7 @@
 #include <QFileInfo>
 #include <QDebug>
 #include <QShortcut>
+#include "insertmodifylinkdialog.h"
 
 const char* MarkdownEditor::sTag = "[MarkdownEditor]";
 
@@ -528,5 +529,27 @@ void MarkdownEditor::redo()
 void MarkdownEditor::insertHorizontalLine()
 {
     QTextCursor currentCursor = mUi->textEdit->textCursor();
-    currentCursor.insertText("\n\n-------------------------------------------\n\n");
+    currentCursor.insertBlock();
+    currentCursor.insertText("-------------------------------------------");
+    currentCursor.insertBlock();
+}
+
+
+void MarkdownEditor::insertModifyLink()
+{
+    QTextCursor currentCursor = mUi->textEdit->textCursor();
+    QString selectedText = currentCursor.selectedText();
+
+    InsertModifyLinkDialog dialog(this);
+    dialog.fromMarkdownFormat(selectedText);
+
+    if (dialog.exec())
+    {
+        QString fmt = dialog.toMarkdownFormat();
+
+        if (!fmt.isEmpty())
+        {
+            currentCursor.insertText(fmt);
+        }
+    }
 }
