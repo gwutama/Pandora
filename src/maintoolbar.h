@@ -30,6 +30,11 @@ signals:
     void italicSelectionButtonClicked(bool checked);
     void strikeoutSelectionButtonClicked(bool checked);
 
+    // Heading
+    void h1ButtonClicked(bool checked);
+    void h2ButtonClicked(bool checked);
+    void h3ButtonClicked(bool checked);
+
     // Others
     void horizontalLineButtonClicked(bool checked);
     void linkButtonClicked(bool checked);

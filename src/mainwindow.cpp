@@ -72,6 +72,9 @@ MainWindow::MainWindow(QWidget* parent) :
             mEditor, &MarkdownEditor::toggleSelectionItalic);
     connect(mToolbar, &MainToolbar::strikeoutSelectionButtonClicked,
             mEditor, &MarkdownEditor::toggleSelectionStrikeout);
+    connect(mToolbar, &MainToolbar::h1ButtonClicked, mEditor, &MarkdownEditor::toggleH1);
+    connect(mToolbar, &MainToolbar::h2ButtonClicked, mEditor, &MarkdownEditor::toggleH2);
+    connect(mToolbar, &MainToolbar::h3ButtonClicked, mEditor, &MarkdownEditor::toggleH3);
     connect(mToolbar, &MainToolbar::linkButtonClicked, mEditor, &MarkdownEditor::insertModifyLink);
     connect(mToolbar, &MainToolbar::imageButtonClicked,
             mEditor, &MarkdownEditor::insertModifyImage);

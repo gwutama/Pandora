@@ -52,6 +52,15 @@ public slots:
     void toggleSelectionItalic();
     void toggleSelectionStrikeout();
 
+    inline void toggleH1()
+    { toggleHeadingHelper(1); }
+
+    inline void toggleH2()
+    { toggleHeadingHelper(2); }
+
+    inline void toggleH3()
+    { toggleHeadingHelper(3); }
+
     void undo();
     void redo();
 
@@ -83,6 +92,7 @@ private slots:
 private:
     void setupEditor();
     bool openFile(const QString& path = QString());
+    void toggleHeadingHelper(int level);
 
 private:
     Ui::MarkdownEditor* mUi;

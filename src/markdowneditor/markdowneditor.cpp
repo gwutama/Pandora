@@ -649,3 +649,37 @@ void MarkdownEditor::toggleSelectionOrderedList()
 
     currentCursor.insertText(newText);
 }
+
+
+void MarkdownEditor::toggleHeadingHelper(int level)
+{
+    QTextCursor currentCursor = mUi->textEdit->textCursor();
+    currentCursor.select(QTextCursor::LineUnderCursor);
+    QString line = currentCursor.selectedText();
+
+    QString newLine;
+    int firstSpaceIndex = line.indexOf(" ");
+    QString left = line.left(firstSpaceIndex);
+    QString headingStart = QString("#").repeated(level);
+
+    if (line.startsWith("#")) // line is a heading
+    {
+        line.replace(QRegExp("#+ "), "");
+
+        if (left == headingStart) // case 1: same level we are expecting
+        {
+            newLine = line;
+        }
+        else // case 2: different levels
+        {
+            newLine = headingStart + " " + line;
+        }
+    }
+    else // line is not a heading
+    {
+        newLine = headingStart + " " + line;
+    }
+
+    currentCursor.insertText(newLine);
+}
+

@@ -25,6 +25,11 @@ MainToolbar::MainToolbar(QWidget* parent) :
     connect(mUi->strikeoutSelectionButton, &QPushButton::clicked,
             this, &MainToolbar::strikeoutSelectionButtonClicked);
 
+    // Heading
+    connect(mUi->h1Button, &QPushButton::clicked, this, &MainToolbar::h1ButtonClicked);
+    connect(mUi->h2Button, &QPushButton::clicked, this, &MainToolbar::h2ButtonClicked);
+    connect(mUi->h3Button, &QPushButton::clicked, this, &MainToolbar::h3ButtonClicked);
+
     // Others
     connect(mUi->linkButton, &QPushButton::clicked, this, &MainToolbar::linkButtonClicked);
     connect(mUi->imageButton, &QPushButton::clicked, this, &MainToolbar::imageButtonClicked);
