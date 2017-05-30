@@ -159,8 +159,9 @@ bool MarkdownEditor::openFile(const QString& path)
     QByteArray content = file.readAll();
     QTextDocument* doc = mUi->textEdit->document();
     doc->setPlainText(content);
-
+    mUi->textEdit->moveCursor(QTextCursor::Start);
     file.close();
+
     return true;
 }
 
