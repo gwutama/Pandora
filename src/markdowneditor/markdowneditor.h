@@ -59,6 +59,8 @@ public slots:
     void insertModifyLink();
     void insertModifyImage();
 
+    void toggleSelectionUnorderedList();
+
 signals:
     void contentChanged(const QString& content);
 
@@ -66,6 +68,7 @@ private slots:
     void onEscKeyActivated();
     void checkContentChanged();
 
+    // Find and replace methods
     void searchAndHighlightMatches();
     void removeHighlightMatches();
     bool goToNextMatch();

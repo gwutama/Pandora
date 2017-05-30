@@ -43,7 +43,7 @@ private:
     PreferencesDialog* mCfgDialog;
     MarkdownViewer* mViewer;
     MarkdownEditor* mEditor;
-    MainToolbar* mMainToolbar;
+    MainToolbar* mToolbar;
     QSharedPointer<AppConfig> mConfig;
     QSharedPointer<QTemporaryFile> mTmpMarkdownFile; // for "new" file (not saved yet)
 

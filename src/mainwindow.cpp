@@ -57,28 +57,28 @@ MainWindow::MainWindow(QWidget* parent) :
     restoreState(mConfig->settings().value("state").toByteArray());
 
     // Setup main toolbar
-    mMainToolbar = new MainToolbar(this);
-    mUi->toolBar->addWidget(mMainToolbar);
+    mToolbar = new MainToolbar(this);
+    mUi->toolBar->addWidget(mToolbar);
 
-    connect(mMainToolbar, &MainToolbar::newDocumentButtonClicked,
+    connect(mToolbar, &MainToolbar::newDocumentButtonClicked,
             this, &MainWindow::onNewActionTriggered);
-    connect(mMainToolbar, &MainToolbar::saveDocumentButtonClicked,
+    connect(mToolbar, &MainToolbar::saveDocumentButtonClicked,
             this, &MainWindow::onSaveActionTriggered);
-    connect(mMainToolbar, &MainToolbar::undoButtonClicked, mEditor, &MarkdownEditor::undo);
-    connect(mMainToolbar, &MainToolbar::redoButtonClicked, mEditor, &MarkdownEditor::redo);
-    connect(mMainToolbar, &MainToolbar::boldSelectionButtonClicked,
+    connect(mToolbar, &MainToolbar::undoButtonClicked, mEditor, &MarkdownEditor::undo);
+    connect(mToolbar, &MainToolbar::redoButtonClicked, mEditor, &MarkdownEditor::redo);
+    connect(mToolbar, &MainToolbar::boldSelectionButtonClicked,
             mEditor, &MarkdownEditor::toggleSelectionBold);
-    connect(mMainToolbar, &MainToolbar::italicSelectionButtonClicked,
+    connect(mToolbar, &MainToolbar::italicSelectionButtonClicked,
             mEditor, &MarkdownEditor::toggleSelectionItalic);
-    connect(mMainToolbar, &MainToolbar::strikeoutSelectionButtonClicked,
+    connect(mToolbar, &MainToolbar::strikeoutSelectionButtonClicked,
             mEditor, &MarkdownEditor::toggleSelectionStrikeout);
-    connect(mMainToolbar, &MainToolbar::linkButtonClicked,
-            mEditor, &MarkdownEditor::insertModifyLink);
-    connect(mMainToolbar, &MainToolbar::imageButtonClicked,
+    connect(mToolbar, &MainToolbar::linkButtonClicked, mEditor, &MarkdownEditor::insertModifyLink);
+    connect(mToolbar, &MainToolbar::imageButtonClicked,
             mEditor, &MarkdownEditor::insertModifyImage);
-    connect(mMainToolbar, &MainToolbar::horizontalLineButtonClicked,
+    connect(mToolbar, &MainToolbar::horizontalLineButtonClicked,
             mEditor, &MarkdownEditor::insertHorizontalLine);
-
+    connect(mToolbar, &MainToolbar::unorderedListButtonClicked,
+            mEditor, &MarkdownEditor::toggleSelectionUnorderedList);
 
     // Default ui set: no file open
     uiStateNoFileOpen();

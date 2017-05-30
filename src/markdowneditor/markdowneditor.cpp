@@ -574,3 +574,40 @@ void MarkdownEditor::insertModifyImage()
         }
     }
 }
+
+
+void MarkdownEditor::toggleSelectionUnorderedList()
+{
+    QTextCursor currentCursor = mUi->textEdit->textCursor();
+
+    // note that paragraphs are separated by QChar::ParagraphSeparator,
+    // or unicode U+2029 instead of line break characters.
+    QString text = currentCursor.selectedText();
+
+    if (text.isEmpty())
+    {
+        return;
+    }
+
+    QString newText;
+
+    QRegExp unorderedListkRx("^( )+\\* .*\u2029(( )+\\* .*\u2029)*");
+
+    if (text.indexOf(unorderedListkRx) > -1) // match
+    {
+        newText = text.replace(QRegExp(" ( )+\\* "), "");
+    }
+    else
+    {
+        QStringList lines = text.split(QChar::ParagraphSeparator);
+
+        foreach(QString line, lines)
+        {
+            newText += "  * " + line + "\n";
+        }
+
+        newText.chop(1); // remove the last new line from the text
+    }
+
+    currentCursor.insertText(newText);
+}

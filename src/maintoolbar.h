@@ -34,6 +34,7 @@ signals:
     void horizontalLineButtonClicked(bool checked);
     void linkButtonClicked(bool checked);
     void imageButtonClicked(bool clicked);
+    void unorderedListButtonClicked(bool clicked);
 
 private:
     Ui::FormattingToolbar* mUi;
