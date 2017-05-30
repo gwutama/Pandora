@@ -594,7 +594,7 @@ void MarkdownEditor::toggleSelectionUnorderedList()
 
     if (text.indexOf(unorderedListkRx) > -1) // match
     {
-        newText = text.replace(QRegExp(" ( )+\\* "), "");
+        newText = text.replace(QRegExp("( )+\\* "), "");
     }
     else
     {
@@ -631,7 +631,7 @@ void MarkdownEditor::toggleSelectionOrderedList()
 
     if (text.indexOf(orderedListkRx) > -1) // match ordered list
     {
-        newText = text.replace(QRegExp(" ( )+[0-9]+\\. "), "");
+        newText = text.replace(QRegExp("( )+[0-9]+\\. "), "");
     }
     else // not a list
     {
