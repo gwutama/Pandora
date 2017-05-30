@@ -30,6 +30,8 @@ MainToolbar::MainToolbar(QWidget* parent) :
     connect(mUi->imageButton, &QPushButton::clicked, this, &MainToolbar::imageButtonClicked);
     connect(mUi->horizontalLineButton, &QPushButton::clicked,
             this, &MainToolbar::horizontalLineButtonClicked);
+    connect(mUi->orderedListButton, &QPushButton::clicked,
+            this, &MainToolbar::orderedListButtonClicked);
     connect(mUi->unorderedListButton, &QPushButton::clicked,
             this, &MainToolbar::unorderedListButtonClicked);
 }

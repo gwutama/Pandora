@@ -339,6 +339,9 @@
          <height>16</height>
         </size>
        </property>
+       <property name="shortcut">
+        <string>Ctrl+Shift+L</string>
+       </property>
        <property name="flat">
         <bool>true</bool>
        </property>
@@ -380,6 +383,9 @@
          <height>18</height>
         </size>
        </property>
+       <property name="shortcut">
+        <string>Ctrl+Shift+I</string>
+       </property>
        <property name="flat">
         <bool>true</bool>
        </property>
@@ -399,7 +405,7 @@
       </widget>
      </item>
      <item>
-      <widget class="QPushButton" name="pushButton_3">
+      <widget class="QPushButton" name="orderedListButton">
        <property name="sizePolicy">
         <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
          <horstretch>0</horstretch>
@@ -421,6 +427,9 @@
        <property name="icon">
         <iconset resource="resources.qrc">
          <normaloff>:/icons/orderedlist.svg</normaloff>:/icons/orderedlist.svg</iconset>
+       </property>
+       <property name="shortcut">
+        <string>Ctrl+Shift+O</string>
        </property>
        <property name="flat">
         <bool>true</bool>
@@ -451,6 +460,9 @@
         <iconset resource="resources.qrc">
          <normaloff>:/icons/unorderedlist.svg</normaloff>:/icons/unorderedlist.svg</iconset>
        </property>
+       <property name="shortcut">
+        <string>Ctrl+Shift+U</string>
+       </property>
        <property name="flat">
         <bool>true</bool>
        </property>
@@ -473,6 +485,9 @@
        <property name="icon">
         <iconset resource="resources.qrc">
          <normaloff>:/icons/horizontalline.svg</normaloff>:/icons/horizontalline.svg</iconset>
+       </property>
+       <property name="shortcut">
+        <string>Ctrl+Shift+H</string>
        </property>
        <property name="flat">
         <bool>true</bool>

@@ -60,6 +60,7 @@ public slots:
     void insertModifyImage();
 
     void toggleSelectionUnorderedList();
+    void toggleSelectionOrderedList();
 
 signals:
     void contentChanged(const QString& content);

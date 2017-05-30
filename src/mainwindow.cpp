@@ -77,6 +77,8 @@ MainWindow::MainWindow(QWidget* parent) :
             mEditor, &MarkdownEditor::insertModifyImage);
     connect(mToolbar, &MainToolbar::horizontalLineButtonClicked,
             mEditor, &MarkdownEditor::insertHorizontalLine);
+    connect(mToolbar, &MainToolbar::orderedListButtonClicked,
+            mEditor, &MarkdownEditor::toggleSelectionOrderedList);
     connect(mToolbar, &MainToolbar::unorderedListButtonClicked,
             mEditor, &MarkdownEditor::toggleSelectionUnorderedList);
 

@@ -175,7 +175,7 @@ void MarkdownEditor::setupEditor()
     mUi->textEdit->setFont(font);
 
     QFontMetrics metrics(font);
-    mUi->textEdit->setTabStopWidth(4 * metrics.width(' ')); // replace tab with 4 spaces
+    mUi->textEdit->setTabStopWidth(2 * metrics.width(' ')); // replace tab with 2 spaces
 
     MarkdownEditorHighlighter* mhPtr = new MarkdownEditorHighlighter(mUi->textEdit->document());
     mHighlighter = QSharedPointer<MarkdownEditorHighlighter>(mhPtr);
@@ -590,7 +590,6 @@ void MarkdownEditor::toggleSelectionUnorderedList()
     }
 
     QString newText;
-
     QRegExp unorderedListkRx("^( )+\\* .*\u2029(( )+\\* .*\u2029)*");
 
     if (text.indexOf(unorderedListkRx) > -1) // match
@@ -601,9 +600,47 @@ void MarkdownEditor::toggleSelectionUnorderedList()
     {
         QStringList lines = text.split(QChar::ParagraphSeparator);
 
-        foreach(QString line, lines)
+        foreach (QString line, lines)
         {
-            newText += "  * " + line + "\n";
+            QString tmp("  * %1\n");
+            newText += tmp.arg(line);
+        }
+
+        newText.chop(1); // remove the last new line from the text
+    }
+
+    currentCursor.insertText(newText);
+}
+
+
+void MarkdownEditor::toggleSelectionOrderedList()
+{
+    QTextCursor currentCursor = mUi->textEdit->textCursor();
+
+    // note that paragraphs are separated by QChar::ParagraphSeparator,
+    // or unicode U+2029 instead of line break characters.
+    QString text = currentCursor.selectedText();
+
+    if (text.isEmpty())
+    {
+        return;
+    }
+
+    QString newText;
+    QRegExp orderedListkRx("^( )+[0-9]+\\. .*\u2029(( )+[0-9]+\\. .*\u2029)*");
+
+    if (text.indexOf(orderedListkRx) > -1) // match ordered list
+    {
+        newText = text.replace(QRegExp(" ( )+[0-9]+\\. "), "");
+    }
+    else // not a list
+    {
+        QStringList lines = text.split(QChar::ParagraphSeparator);
+
+        for (int i = 0; i < lines.size(); i++)
+        {
+            QString tmp("  %1. %2\n");
+            newText += tmp.arg(i + 1).arg(lines.at(i));
         }
 
         newText.chop(1); // remove the last new line from the text
