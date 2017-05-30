@@ -16,27 +16,27 @@ InsertModifyLinkDialog::~InsertModifyLinkDialog()
 }
 
 
-void InsertModifyLinkDialog::setText(const QString& text)
+void InsertModifyLinkDialog::setAnchor(const QString& anchor)
 {
-    mUi->textLineEdit->setText(text);
+    mUi->anchorEdit->setText(anchor);
 }
 
 
 void InsertModifyLinkDialog::setLink(const QString& link)
 {
-    mUi->linkLineEdit->setText(link);
+    mUi->linkEdit->setText(link);
 }
 
 
-QString InsertModifyLinkDialog::text()
+QString InsertModifyLinkDialog::anchor()
 {
-    return mUi->textLineEdit->text();
+    return mUi->anchorEdit->text();
 }
 
 
 QString InsertModifyLinkDialog::link()
 {
-    return mUi->linkLineEdit->text();
+    return mUi->linkEdit->text();
 }
 
 
@@ -53,8 +53,8 @@ void InsertModifyLinkDialog::fromMarkdownFormat(const QString& fmt)
             return;
         }
 
-        QString text = matches.at(1);
-        setText(text);
+        QString anchor = matches.at(1);
+        setAnchor(anchor);
 
         QString link = matches.at(2);
         setLink(link);
@@ -66,14 +66,14 @@ QString InsertModifyLinkDialog::toMarkdownFormat()
 {
     // Build e.g. [a website](http://foo.bar)
     QString fmt("[%1](%2)");
-    fmt = fmt.arg(text()).arg(link());
+    fmt = fmt.arg(anchor()).arg(link());
     return fmt;
 }
 
 
 int InsertModifyLinkDialog::exec()
 {
-    if (text().isEmpty() && link().isEmpty())
+    if (anchor().isEmpty() && link().isEmpty())
     {
         setWindowTitle("Insert Link");
     }

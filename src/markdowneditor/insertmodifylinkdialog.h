@@ -16,10 +16,10 @@ public:
     explicit InsertModifyLinkDialog(QWidget* parent = 0);
     ~InsertModifyLinkDialog();
 
-    void setText(const QString& text);
+    void setAnchor(const QString& anchor);
     void setLink(const QString& link);
 
-    QString text();
+    QString anchor();
     QString link();
 
     void fromMarkdownFormat(const QString& fmt);

@@ -33,6 +33,7 @@ signals:
     // Others
     void horizontalLineButtonClicked(bool checked);
     void linkButtonClicked(bool checked);
+    void imageButtonClicked(bool clicked);
 
 private:
     Ui::FormattingToolbar* mUi;

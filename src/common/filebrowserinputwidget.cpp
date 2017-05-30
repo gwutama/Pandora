@@ -32,6 +32,7 @@ void FileBrowserInputWidget::onBrowsePushButtonClicked(bool /*checked*/)
         {
             QString fileName = fileNames.at(0);
             setFileName(fileName);
+            emit accepted();
         }
     }
 }

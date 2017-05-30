@@ -12,13 +12,14 @@ set(SOURCE_FILES
     maintoolbar.cpp
     common/appconfig.cpp
     preferences/preferencesdialog.cpp
-    preferences/filebrowserinputwidget.cpp
+    common/filebrowserinputwidget.cpp
     markdownviewer/documentgenerator.cpp
     markdownviewer/markdownviewer.cpp
     markdowneditor/markdowneditor.cpp
     markdowneditor/markdowneditorhighlighter.cpp
     markdowneditor/findreplacewidget.cpp
     markdowneditor/insertmodifylinkdialog.cpp
+    markdowneditor/insertmodifyimagedialog.cpp
 )
 
 qt5_add_resources(RESOURCE_FILES resources.qrc)
@@ -27,10 +28,11 @@ qt5_wrap_ui(UI_FILES
     mainwindow.ui
     maintoolbar.ui
     preferences/preferencesdialog.ui 
-    preferences/filebrowserinputwidget.ui
+    common/filebrowserinputwidget.ui
     markdowneditor/markdowneditor.ui
     markdowneditor/findreplacewidget.ui
     markdowneditor/insertmodifylinkdialog.ui
+    markdowneditor/insertmodifyimagedialog.ui
 )
 
 find_package(Qt5Core REQUIRED)

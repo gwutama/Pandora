@@ -57,6 +57,7 @@ public slots:
 
     void insertHorizontalLine();
     void insertModifyLink();
+    void insertModifyImage();
 
 signals:
     void contentChanged(const QString& content);

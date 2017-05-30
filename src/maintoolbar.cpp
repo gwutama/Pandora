@@ -27,6 +27,7 @@ MainToolbar::MainToolbar(QWidget* parent) :
 
     // Others
     connect(mUi->linkButton, &QPushButton::clicked, this, &MainToolbar::linkButtonClicked);
+    connect(mUi->imageButton, &QPushButton::clicked, this, &MainToolbar::imageButtonClicked);
     connect(mUi->horizontalLineButton, &QPushButton::clicked,
             this, &MainToolbar::horizontalLineButtonClicked);
 }

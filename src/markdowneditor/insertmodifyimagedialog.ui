@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ui version="4.0">
- <class>PreferencesDialog</class>
- <widget class="QDialog" name="PreferencesDialog">
+ <class>InsertModifyImageDialog</class>
+ <widget class="QDialog" name="InsertModifyImageDialog">
   <property name="geometry">
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>627</width>
-    <height>126</height>
+    <width>404</width>
+    <height>144</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -16,21 +16,56 @@
   <layout class="QVBoxLayout" name="verticalLayout">
    <item>
     <layout class="QFormLayout" name="formLayout">
-     <property name="sizeConstraint">
-      <enum>QLayout::SetNoConstraint</enum>
-     </property>
-     <property name="fieldGrowthPolicy">
-      <enum>QFormLayout::ExpandingFieldsGrow</enum>
-     </property>
      <item row="0" column="0">
-      <widget class="QLabel" name="bibtexFileLabel">
+      <widget class="QLabel" name="label">
        <property name="text">
-        <string>Bibtex File</string>
+        <string>Anchor</string>
        </property>
       </widget>
      </item>
      <item row="0" column="1">
-      <widget class="FileBrowserInputWidget" name="bibtexFileBrowse" native="true"/>
+      <widget class="QLineEdit" name="anchorEdit">
+       <property name="minimumSize">
+        <size>
+         <width>300</width>
+         <height>0</height>
+        </size>
+       </property>
+      </widget>
+     </item>
+     <item row="1" column="0">
+      <widget class="QLabel" name="label_2">
+       <property name="text">
+        <string>Description</string>
+       </property>
+      </widget>
+     </item>
+     <item row="1" column="1">
+      <widget class="QLineEdit" name="descriptionEdit">
+       <property name="minimumSize">
+        <size>
+         <width>300</width>
+         <height>0</height>
+        </size>
+       </property>
+      </widget>
+     </item>
+     <item row="2" column="0">
+      <widget class="QLabel" name="label_3">
+       <property name="text">
+        <string>Image</string>
+       </property>
+      </widget>
+     </item>
+     <item row="2" column="1">
+      <widget class="FileBrowserInputWidget" name="imageBrowser" native="true">
+       <property name="minimumSize">
+        <size>
+         <width>300</width>
+         <height>0</height>
+        </size>
+       </property>
+      </widget>
      </item>
     </layout>
    </item>
@@ -59,7 +94,7 @@
   <connection>
    <sender>buttonBox</sender>
    <signal>accepted()</signal>
-   <receiver>PreferencesDialog</receiver>
+   <receiver>InsertModifyImageDialog</receiver>
    <slot>accept()</slot>
    <hints>
     <hint type="sourcelabel">
@@ -75,7 +110,7 @@
   <connection>
    <sender>buttonBox</sender>
    <signal>rejected()</signal>
-   <receiver>PreferencesDialog</receiver>
+   <receiver>InsertModifyImageDialog</receiver>
    <slot>reject()</slot>
    <hints>
     <hint type="sourcelabel">

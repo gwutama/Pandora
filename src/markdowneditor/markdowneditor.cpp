@@ -5,6 +5,7 @@
 #include <QDebug>
 #include <QShortcut>
 #include "insertmodifylinkdialog.h"
+#include "insertmodifyimagedialog.h"
 
 const char* MarkdownEditor::sTag = "[MarkdownEditor]";
 
@@ -541,6 +542,26 @@ void MarkdownEditor::insertModifyLink()
     QString selectedText = currentCursor.selectedText();
 
     InsertModifyLinkDialog dialog(this);
+    dialog.fromMarkdownFormat(selectedText);
+
+    if (dialog.exec())
+    {
+        QString fmt = dialog.toMarkdownFormat();
+
+        if (!fmt.isEmpty())
+        {
+            currentCursor.insertText(fmt);
+        }
+    }
+}
+
+
+void MarkdownEditor::insertModifyImage()
+{
+    QTextCursor currentCursor = mUi->textEdit->textCursor();
+    QString selectedText = currentCursor.selectedText();
+
+    InsertModifyImageDialog dialog(this);
     dialog.fromMarkdownFormat(selectedText);
 
     if (dialog.exec())

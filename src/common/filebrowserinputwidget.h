@@ -22,6 +22,9 @@ public:
 private slots:
     void onBrowsePushButtonClicked(bool checked);
 
+signals:
+    void accepted();
+
 private:
     Ui::FileBrowserInputWidget* mUi;
 };
