@@ -84,6 +84,8 @@ MainWindow::MainWindow(QWidget* parent) :
             mEditor, &MarkdownEditor::toggleSelectionOrderedList);
     connect(mToolbar, &MainToolbar::unorderedListButtonClicked,
             mEditor, &MarkdownEditor::toggleSelectionUnorderedList);
+    connect(mToolbar, &MainToolbar::blockquoteButtonClicked,
+            mEditor, &MarkdownEditor::toggleSelectionBlockquote);
 
     // Default ui set: no file open
     uiStateNoFileOpen();

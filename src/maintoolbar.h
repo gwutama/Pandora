@@ -1,11 +1,11 @@
-#ifndef FORMATTINGTOOLBAR_H
-#define FORMATTINGTOOLBAR_H
+#ifndef MAINTOOLBAR_H
+#define MAINTOOLBAR_H
 
 #include <QWidget>
 
 namespace Ui
 {
-class FormattingToolbar;
+class MainToolbar;
 }
 
 class MainToolbar : public QWidget
@@ -41,9 +41,10 @@ signals:
     void imageButtonClicked(bool clicked);
     void orderedListButtonClicked(bool clicked);
     void unorderedListButtonClicked(bool clicked);
+    void blockquoteButtonClicked(bool clicked);
 
 private:
-    Ui::FormattingToolbar* mUi;
+    Ui::MainToolbar* mUi;
 };
 
-#endif // FORMATTINGTOOLBAR_H
+#endif // MAINTOOLBAR_H

@@ -71,6 +71,8 @@ public slots:
     void toggleSelectionUnorderedList();
     void toggleSelectionOrderedList();
 
+    void toggleSelectionBlockquote();
+
 signals:
     void contentChanged(const QString& content);
 

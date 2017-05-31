@@ -3,7 +3,7 @@
 
 MainToolbar::MainToolbar(QWidget* parent) :
     QWidget(parent),
-    mUi(new Ui::FormattingToolbar)
+    mUi(new Ui::MainToolbar)
 {
     mUi->setupUi(this);
 
@@ -39,6 +39,8 @@ MainToolbar::MainToolbar(QWidget* parent) :
             this, &MainToolbar::orderedListButtonClicked);
     connect(mUi->unorderedListButton, &QPushButton::clicked,
             this, &MainToolbar::unorderedListButtonClicked);
+    connect(mUi->blockquoteButton, &QPushButton::clicked,
+            this, &MainToolbar::blockquoteButtonClicked);
 }
 
 
