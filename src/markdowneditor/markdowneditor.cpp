@@ -13,7 +13,8 @@ MarkdownEditor::MarkdownEditor(QSharedPointer<AppConfig> config,
                                QWidget* parent) :
     QWidget(parent),
     mConfig(config),
-    mUi(new Ui::MarkdownEditor)
+    mUi(new Ui::MarkdownEditor),
+    mImagePreviewDialog(new ImagePreviewDialog(this))
 {
     mUi->setupUi(this);
     setupEditor();
@@ -35,6 +36,8 @@ MarkdownEditor::MarkdownEditor(QSharedPointer<AppConfig> config,
             this, &MarkdownEditor::replaceMatchGoToNextOne);
     connect(mUi->findReplaceWidget, &FindReplaceWidget::replaceAllButtonClicked,
             this, &MarkdownEditor::replaceMatches);
+    connect(mUi->textEdit, &QTextEdit::cursorPositionChanged, this,
+            &MarkdownEditor::toggleImagePreviewModal);
 
     connect(&mContentChangeTimer, &QTimer::timeout, this, &MarkdownEditor::checkContentChanged);
 
@@ -46,6 +49,25 @@ MarkdownEditor::MarkdownEditor(QSharedPointer<AppConfig> config,
 MarkdownEditor::~MarkdownEditor()
 {
     delete mUi;
+}
+
+
+void MarkdownEditor::setupEditor()
+{
+    QFont font;
+    font.setFamily("Courier");
+    font.setStyleHint(QFont::Monospace);
+    font.setFixedPitch(true);
+    font.setPointSize(mConfig->editorFontPointSize());
+    mUi->textEdit->setFont(font);
+
+    QFontMetrics metrics(font);
+    mUi->textEdit->setTabStopWidth(2 * metrics.width(' ')); // replace tab with 2 spaces
+
+    MarkdownEditorHighlighter* mhPtr = new MarkdownEditorHighlighter(mUi->textEdit->document());
+    mHighlighter = QSharedPointer<MarkdownEditorHighlighter>(mhPtr);
+
+    setNarrowMargin(); // default margin
 }
 
 
@@ -75,6 +97,53 @@ void MarkdownEditor::onEscKeyActivated()
         removeHighlightMatches();
     }
 }
+
+
+void MarkdownEditor::toggleImagePreviewModal()
+{
+    if (!mImagePreviewDialog->isHidden())
+    {
+        mImagePreviewDialog->hide();
+    }
+
+    QTextCursor cursor = mUi->textEdit->textCursor();
+    int cursorPosInBlock = cursor.positionInBlock();
+    cursor.select(QTextCursor::BlockUnderCursor);
+    QString selectedText = cursor.selectedText();
+
+    // detect whether current cursor is within a path
+    QString path = parseFirstPathInText(selectedText);
+
+    int idxStart = selectedText.indexOf(path);
+    int idxEnd = idxStart + path.size();
+
+    if (!path.isEmpty() && idxStart != -1 &&
+            cursorPosInBlock >= idxStart && cursorPosInBlock <= idxEnd)
+    {
+        qDebug() << sTag << "Detected a path in block:" << path;
+        mImagePreviewDialog->previewImage(path);
+    }
+}
+
+
+QString MarkdownEditor::parseFirstPathInText(const QString& text)
+{
+    QString firstMatch;
+    QRegExp pathRx(".*((/?[\\w ]/?)+/[\\w ]+\\.(gif|jpeg|jpg|png)).*"); // *nix only!
+
+    if (pathRx.indexIn(text) > -1) // we have match
+    {
+        QStringList matches = pathRx.capturedTexts();
+
+        if (matches.size())
+        {
+            firstMatch = matches.at(1);
+        }
+    }
+
+    return firstMatch;
+}
+
 
 void MarkdownEditor::checkContentChanged()
 {
@@ -162,26 +231,9 @@ bool MarkdownEditor::openFile(const QString& path)
     mUi->textEdit->moveCursor(QTextCursor::Start);
     file.close();
 
+    mImagePreviewDialog->hide();
+
     return true;
-}
-
-
-void MarkdownEditor::setupEditor()
-{
-    QFont font;
-    font.setFamily("Courier");
-    font.setStyleHint(QFont::Monospace);
-    font.setFixedPitch(true);
-    font.setPointSize(mConfig->editorFontPointSize());
-    mUi->textEdit->setFont(font);
-
-    QFontMetrics metrics(font);
-    mUi->textEdit->setTabStopWidth(2 * metrics.width(' ')); // replace tab with 2 spaces
-
-    MarkdownEditorHighlighter* mhPtr = new MarkdownEditorHighlighter(mUi->textEdit->document());
-    mHighlighter = QSharedPointer<MarkdownEditorHighlighter>(mhPtr);
-
-    setNarrowMargin(); // default margin
 }
 
 

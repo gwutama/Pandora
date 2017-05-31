@@ -20,6 +20,7 @@ set(SOURCE_FILES
     markdowneditor/findreplacewidget.cpp
     markdowneditor/insertmodifylinkdialog.cpp
     markdowneditor/insertmodifyimagedialog.cpp
+    markdowneditor/imagepreviewdialog.cpp
 )
 
 qt5_add_resources(RESOURCE_FILES resources.qrc)
@@ -33,6 +34,7 @@ qt5_wrap_ui(UI_FILES
     markdowneditor/findreplacewidget.ui
     markdowneditor/insertmodifylinkdialog.ui
     markdowneditor/insertmodifyimagedialog.ui
+    markdowneditor/imagepreviewdialog.ui
 )
 
 find_package(Qt5Core REQUIRED)

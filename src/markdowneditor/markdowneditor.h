@@ -5,8 +5,10 @@
 #include <QSharedPointer>
 #include <QTimer>
 #include <QTextEdit>
+#include <QDialog>
 #include "common/appconfig.h"
 #include "markdowneditorhighlighter.h"
+#include "imagepreviewdialog.h"
 
 namespace Ui
 {
@@ -78,6 +80,7 @@ signals:
 
 private slots:
     void onEscKeyActivated();
+    void toggleImagePreviewModal();
     void checkContentChanged();
 
     // Find and replace methods
@@ -93,6 +96,7 @@ private slots:
 
 private:
     void setupEditor();
+    QString parseFirstPathInText(const QString& text);
     bool openFile(const QString& path = QString());
     void toggleHeadingHelper(int level);
 
@@ -103,6 +107,7 @@ private:
     QTimer mContentChangeTimer;
     QString mOldContent;
     QList<QTextEdit::ExtraSelection> mMatchTextSelections;
+    ImagePreviewDialog* mImagePreviewDialog;
 
     static const char* sTag;
 };
