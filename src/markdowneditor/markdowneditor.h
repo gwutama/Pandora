@@ -80,6 +80,7 @@ signals:
 
 private slots:
     void onEscKeyActivated();
+    void onMagicShortcutActivated();
     void toggleImagePreviewModal();
     void checkContentChanged();
 

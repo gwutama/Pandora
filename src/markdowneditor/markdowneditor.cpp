@@ -36,13 +36,14 @@ MarkdownEditor::MarkdownEditor(QSharedPointer<AppConfig> config,
             this, &MarkdownEditor::replaceMatchGoToNextOne);
     connect(mUi->findReplaceWidget, &FindReplaceWidget::replaceAllButtonClicked,
             this, &MarkdownEditor::replaceMatches);
-    connect(mUi->textEdit, &QTextEdit::cursorPositionChanged, this,
-            &MarkdownEditor::toggleImagePreviewModal);
 
     connect(&mContentChangeTimer, &QTimer::timeout, this, &MarkdownEditor::checkContentChanged);
 
     QShortcut* escKeyShortcut = new QShortcut(Qt::Key_Escape, parent);
     connect(escKeyShortcut, &QShortcut::activated, this, &MarkdownEditor::onEscKeyActivated);
+
+    QShortcut* magicShortcut = new QShortcut(QKeySequence(tr("Ctrl+M")), parent);
+    connect(magicShortcut, &QShortcut::activated, this, &MarkdownEditor::onMagicShortcutActivated);
 }
 
 
@@ -96,6 +97,12 @@ void MarkdownEditor::onEscKeyActivated()
         mUi->findReplaceWidget->hide();
         removeHighlightMatches();
     }
+}
+
+
+void MarkdownEditor::onMagicShortcutActivated()
+{
+    toggleImagePreviewModal();
 }
 
 
