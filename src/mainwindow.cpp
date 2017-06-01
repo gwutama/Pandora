@@ -40,6 +40,7 @@ MainWindow::MainWindow(QWidget* parent) :
     connect(mUi->actionClose, &QAction::triggered, this, &MainWindow::onCloseActionTriggered);
     connect(mUi->actionSave, &QAction::triggered, this, &MainWindow::onSaveActionTriggered);
     connect(mUi->actionSaveAs, &QAction::triggered, this, &MainWindow::onSaveAsActionTriggered);
+    connect(mUi->actionExportAs, &QAction::triggered, this, &MainWindow::onExportAsActionTriggered);
     connect(mUi->actionFindReplace, &QAction::triggered,
             mEditor, &MarkdownEditor::showFindReplaceWidget);
     connect(mUi->actionTogglePreview, &QAction::triggered,
@@ -105,6 +106,7 @@ void MainWindow::uiStateNoFileOpen()
     mUi->actionClose->setDisabled(true);
     mUi->actionSave->setDisabled(true);
     mUi->actionSaveAs->setDisabled(true);
+    mUi->actionExportAs->setDisabled(true);
     mUi->menuEdit->setDisabled(true);
     mEditor->setDisabled(true);
     mUi->toolBar->setDisabled(true);
@@ -116,6 +118,7 @@ void MainWindow::uiStateFileOpened()
     mUi->actionClose->setEnabled(true);
     mUi->actionSave->setEnabled(true);
     mUi->actionSaveAs->setEnabled(true);
+    mUi->actionExportAs->setEnabled(true);
     mUi->menuEdit->setEnabled(true);
     mEditor->setEnabled(true);
     mUi->toolBar->setEnabled(true);
@@ -211,6 +214,31 @@ void MainWindow::onSaveAsActionTriggered(bool /*checked*/)
             mTmpMarkdownFile.clear();
         }
     }
+}
+
+
+void MainWindow::onExportAsActionTriggered(bool /*checked*/)
+{
+    QString file = QFileDialog::getSaveFileName(this, tr("Save Markdown File As..."), "",
+                                                "Supported file");
+
+    if (file.isEmpty())
+    {
+        qWarning() << sTag << "No file selected";
+        return;
+    }
+
+    qDebug() << sTag << "Exporting" << file;
+
+    DocumentGenerator gen;
+    gen.setBibtexFile(mConfig->bibtexFile());
+    gen.setCssFile(mConfig->cssFile().data()->fileName());
+    gen.setOutputFile(file);
+    gen.setContent(mEditor->content());
+    gen.generate(false);
+
+    // If we are generating html output, copy css file to the output directory as well
+    // since pandoc cannot embed this css file inside the html.
 }
 
 

@@ -24,13 +24,14 @@ public:
     void setContent(const QString& content);
 
 public slots:
-    void generate();
+    void generate(bool async = true);
 
 private:
     void executePandoc(const QString& markdownFile,
                        const QString& outputFile,
                        const QString& cssFile = "",
-                       const QString& bibtextFile = "");
+                       const QString& bibtextFile = "",
+                       bool async = true);
 
 private slots:
     void processFinished(int exitCode, QProcess::ExitStatus exitStatus);

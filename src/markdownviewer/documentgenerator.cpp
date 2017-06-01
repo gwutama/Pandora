@@ -41,6 +41,7 @@ void DocumentGenerator::processFinished(int exitCode, QProcess::ExitStatus exitS
     if (exitCode != 0 || exitStatus != QProcess::NormalExit)
     {
         qWarning() << sTag << "Error generating html file:" << mTmpMarkdownFile.fileName();
+        qWarning() << sTag << "Error generating html file:" << mExecProc.readAllStandardError();
         return;
     }
 
@@ -48,7 +49,7 @@ void DocumentGenerator::processFinished(int exitCode, QProcess::ExitStatus exitS
 }
 
 
-void DocumentGenerator::generate()
+void DocumentGenerator::generate(bool async)
 {
     if (mExecProc.state() != QProcess::NotRunning)
     {
@@ -56,14 +57,15 @@ void DocumentGenerator::generate()
         return;
     }
 
-    executePandoc(mTmpMarkdownFile.fileName(), mOutputFile, mCssFile, mBibtexFile);
+    executePandoc(mTmpMarkdownFile.fileName(), mOutputFile, mCssFile, mBibtexFile, async);
 }
 
 
 void DocumentGenerator::executePandoc(const QString& markdownFile,
                                       const QString& outputFile,
                                       const QString& cssFile,
-                                      const QString& bibtextFile)
+                                      const QString& bibtextFile,
+                                      bool async)
 {
     // Build command line.
     // Execute pandoc -Ss draft.md --css=pandoc.css --bibliography=bibliography.bib -o out.html
@@ -71,7 +73,7 @@ void DocumentGenerator::executePandoc(const QString& markdownFile,
     QStringList args;
 
     // Basic
-    args << "-Ss" << markdownFile << "-o" << outputFile;
+    args << "-Ss" << markdownFile << "--self-contained" << "-o" << outputFile;
 
     // CSS theme
     if (!cssFile.isNull())
@@ -88,4 +90,9 @@ void DocumentGenerator::executePandoc(const QString& markdownFile,
     qDebug() << sTag << "Executing pandoc" << args;
     mExecProc.setArguments(args);
     mExecProc.start();
+
+    if (!async)
+    {
+        mExecProc.waitForFinished();
+    }
 }

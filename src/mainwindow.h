@@ -36,6 +36,7 @@ private slots:
     void onCloseActionTriggered(bool checked);
     void onSaveActionTriggered(bool checked);
     void onSaveAsActionTriggered(bool checked);
+    void onExportAsActionTriggered(bool checked);
     void onTogglePreviewActionTriggered(bool checked);
 
 private:
