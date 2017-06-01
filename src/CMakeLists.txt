@@ -21,6 +21,7 @@ set(SOURCE_FILES
     markdowneditor/insertmodifylinkdialog.cpp
     markdowneditor/insertmodifyimagedialog.cpp
     markdowneditor/imagepreviewdialog.cpp
+    markdowneditor/markdowntextedit.cpp
 )
 
 qt5_add_resources(RESOURCE_FILES resources.qrc)

@@ -39,7 +39,7 @@
     <number>0</number>
    </property>
    <item>
-    <widget class="QPlainTextEdit" name="textEdit">
+    <widget class="MarkdownTextEdit" name="textEdit">
      <property name="styleSheet">
       <string notr="true">QPlainTextEdit {
 	background-color: #f9f9f9;
@@ -82,6 +82,11 @@
    <extends>QWidget</extends>
    <header>markdowneditor/findreplacewidget.h</header>
    <container>1</container>
+  </customwidget>
+  <customwidget>
+   <class>MarkdownTextEdit</class>
+   <extends>QPlainTextEdit</extends>
+   <header>markdowneditor/markdowntextedit.h</header>
   </customwidget>
  </customwidgets>
  <resources/>
