@@ -39,9 +39,9 @@
     <number>0</number>
    </property>
    <item>
-    <widget class="QTextEdit" name="textEdit">
+    <widget class="QPlainTextEdit" name="textEdit">
      <property name="styleSheet">
-      <string notr="true">QTextEdit {
+      <string notr="true">QPlainTextEdit {
 	background-color: #f9f9f9;
 	selection-background-color: rgb(155, 206, 255);
 	border-bottom: 1px solid #BBB;
