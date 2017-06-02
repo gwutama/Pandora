@@ -9,6 +9,7 @@
 #include "common/appconfig.h"
 #include "markdowneditorhighlighter.h"
 #include "imagepreviewdialog.h"
+#include "documentstatisticsdialog.h"
 
 namespace Ui
 {
@@ -75,6 +76,9 @@ public slots:
 
     void toggleSelectionBlockquote();
 
+    inline void showDocumentStatsDialog()
+    { mDocStatsDialog->show(); }
+
 signals:
     void contentChanged(const QString& content);
 
@@ -109,6 +113,7 @@ private:
     QString mOldContent;
     QList<QTextEdit::ExtraSelection> mMatchTextSelections;
     ImagePreviewDialog* mImagePreviewDialog;
+    DocumentStatisticsDialog* mDocStatsDialog;
 
     static const char* sTag;
 };

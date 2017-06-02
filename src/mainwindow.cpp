@@ -51,6 +51,8 @@ MainWindow::MainWindow(QWidget* parent) :
             mEditor, &MarkdownEditor::decreaseFontSize);
     connect(mUi->actionUndo, &QAction::triggered, mEditor, &MarkdownEditor::undo);
     connect(mUi->actionRedo, &QAction::triggered, mEditor, &MarkdownEditor::redo);
+    connect(mUi->actionDocumentStatistics, &QAction::triggered,
+            mEditor, &MarkdownEditor::showDocumentStatsDialog);
 
     // Set window size and position
     setMinimumSize(1200, 800);

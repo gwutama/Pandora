@@ -82,6 +82,7 @@
     <addaction name="actionTogglePreview"/>
     <addaction name="separator"/>
     <addaction name="menuEditor"/>
+    <addaction name="actionDocumentStatistics"/>
    </widget>
    <addaction name="menuFile"/>
    <addaction name="menuEdit"/>
@@ -214,6 +215,11 @@
   <action name="actionExportAs">
    <property name="text">
     <string>Export As...</string>
+   </property>
+  </action>
+  <action name="actionDocumentStatistics">
+   <property name="text">
+    <string>Document Statistics</string>
    </property>
   </action>
  </widget>

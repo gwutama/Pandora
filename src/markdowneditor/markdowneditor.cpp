@@ -19,6 +19,7 @@ MarkdownEditor::MarkdownEditor(QSharedPointer<AppConfig> config,
     mUi->setupUi(this);
     setupEditor();
 
+    mDocStatsDialog = new DocumentStatisticsDialog(mUi->textEdit->document(), this);
     mUi->findReplaceWidget->hide();
 
     // Find/replace widget

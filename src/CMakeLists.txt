@@ -22,6 +22,7 @@ set(SOURCE_FILES
     markdowneditor/insertmodifyimagedialog.cpp
     markdowneditor/imagepreviewdialog.cpp
     markdowneditor/markdowntextedit.cpp
+    markdowneditor/documentstatisticsdialog.cpp
 )
 
 qt5_add_resources(RESOURCE_FILES resources.qrc)
@@ -36,6 +37,7 @@ qt5_wrap_ui(UI_FILES
     markdowneditor/insertmodifylinkdialog.ui
     markdowneditor/insertmodifyimagedialog.ui
     markdowneditor/imagepreviewdialog.ui
+    markdowneditor/documentstatisticsdialog.ui
 )
 
 find_package(Qt5Core REQUIRED)
