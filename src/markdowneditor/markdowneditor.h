@@ -80,6 +80,7 @@ public slots:
     { mDocStatsDialog->show(); }
 
     void spellcheckDocument();
+    void showSugggestionContextMenu(const QPoint& point);
 
 signals:
     void contentChanged(const QString& content);

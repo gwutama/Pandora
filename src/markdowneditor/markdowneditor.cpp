@@ -23,6 +23,8 @@ MarkdownEditor::MarkdownEditor(QSharedPointer<AppConfig> config,
     mUi->findReplaceWidget->hide();
 
     // Setup spell checker
+    connect(mUi->textEdit, &MarkdownTextEdit::customContextMenuRequested,
+            this, &MarkdownEditor::showSugggestionContextMenu);
     mSpellCheck = QSharedPointer<SpellCheck>(new SpellCheck(mConfig));
 
     // Find/replace widget
@@ -810,4 +812,35 @@ void MarkdownEditor::spellcheckDocument()
 
     mUi->textEdit->setExtraSelections(mSpellCheckSelections);
     mUi->textEdit->setTextCursor(currentCursor);
+}
+
+
+void MarkdownEditor::showSugggestionContextMenu(const QPoint& point)
+{
+    // Get word under cursor
+    QTextCursor cursor = mUi->textEdit->textCursor();
+    cursor.select(QTextCursor::WordUnderCursor);
+    QString word = cursor.selectedText();
+
+    // Are we on one of the possibly incorrect words?
+    bool showSuggestions = false;
+
+    foreach (QTextEdit::ExtraSelection selection, mSpellCheckSelections)
+    {
+        if (word == selection.cursor.selectedText())
+        {
+            showSuggestions = true;
+            break;
+        }
+    }
+
+    // Retrieve suggestions and show context menu with suggestions
+    QStringList suggestions;
+
+    if (showSuggestions)
+    {
+        suggestions = mSpellCheck->suggest(word);
+    }
+
+    mUi->textEdit->showContextMenu(suggestions, point);
 }

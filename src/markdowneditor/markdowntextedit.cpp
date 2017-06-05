@@ -1,16 +1,39 @@
 #include "markdowntextedit.h"
 #include <QDebug>
+#include <QMenu>
 
 const char* MarkdownTextEdit::sTag = "[MarkdownTextEdit]";
 
 MarkdownTextEdit::MarkdownTextEdit(QWidget* parent) :
     QPlainTextEdit(parent)
 {
+    setContextMenuPolicy(Qt::CustomContextMenu);
 }
 
 
 MarkdownTextEdit::~MarkdownTextEdit()
 {
+}
+
+
+void MarkdownTextEdit::showContextMenu(const QStringList& suggestions,
+                                       const QPoint& point)
+{
+    QMenu* menu = createStandardContextMenu();
+    menu->addSeparator();
+
+    for (int i = 0; i < suggestions.size(); i++)
+    {
+        menu->addAction(suggestions.at(i));
+
+        if (i >= 4) // show max 5 suggestions
+        {
+            break;
+        }
+    }
+
+    menu->exec(mapToGlobal(point));
+    delete menu;
 }
 
 
@@ -60,7 +83,7 @@ void MarkdownTextEdit::indent(QKeyEvent* event)
 }
 
 
-void MarkdownTextEdit::outdent(QKeyEvent *event)
+void MarkdownTextEdit::outdent(QKeyEvent* event)
 {
     QTextCursor currentCursor = textCursor();
     QString currentText = currentCursor.selectedText();

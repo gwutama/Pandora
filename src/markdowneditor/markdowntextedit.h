@@ -2,6 +2,7 @@
 #define MARKDOWNTEXTEDIT_H
 
 #include <QPlainTextEdit>
+#include <QStringList>
 
 class MarkdownTextEdit : public QPlainTextEdit
 {
@@ -10,6 +11,10 @@ class MarkdownTextEdit : public QPlainTextEdit
 public:
     explicit MarkdownTextEdit(QWidget* parent = 0);
     virtual ~MarkdownTextEdit();
+
+public slots:
+    void showContextMenu(const QStringList& suggestions,
+                         const QPoint& point);
 
 protected slots:
     void keyPressEvent(QKeyEvent* event);
