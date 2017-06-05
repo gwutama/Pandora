@@ -19,12 +19,19 @@ MarkdownTextEdit::~MarkdownTextEdit()
 void MarkdownTextEdit::showContextMenu(const QStringList& suggestions,
                                        const QPoint& point)
 {
+    mSuggestionActions.clear();
+
     QMenu* menu = createStandardContextMenu();
     menu->addSeparator();
 
     for (int i = 0; i < suggestions.size(); i++)
     {
-        menu->addAction(suggestions.at(i));
+        QAction* action = menu->addAction(suggestions.at(i));
+        action->setData(suggestions.at(i));
+
+        connect(action, &QAction::triggered, this, &MarkdownTextEdit::onSuggestionActionTriggered);
+
+        mSuggestionActions.append(action);
 
         if (i >= 4) // show max 5 suggestions
         {
@@ -34,6 +41,15 @@ void MarkdownTextEdit::showContextMenu(const QStringList& suggestions,
 
     menu->exec(mapToGlobal(point));
     delete menu;
+}
+
+
+void MarkdownTextEdit::onSuggestionActionTriggered()
+{
+    QObject* obj = sender();
+    QAction* action = qobject_cast<QAction*>(obj);
+    QString replacement = action->data().toString();
+    emit replaceSelection(replacement);
 }
 
 

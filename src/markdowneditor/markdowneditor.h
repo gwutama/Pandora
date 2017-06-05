@@ -80,7 +80,7 @@ public slots:
     { mDocStatsDialog->show(); }
 
     void spellcheckDocument();
-    void showSugggestionContextMenu(const QPoint& point);
+    void showCustomContextMenu(const QPoint& point);
 
 signals:
     void contentChanged(const QString& content);
@@ -101,6 +101,8 @@ private slots:
     bool replaceMatch();
     bool replaceMatchGoToNextOne();
     bool replaceMatches();
+
+    void replaceSelection(const QString& replacement);
 
 private:
     void setupEditor();

@@ -19,11 +19,18 @@ public slots:
 protected slots:
     void keyPressEvent(QKeyEvent* event);
 
+private slots:
+    void onSuggestionActionTriggered();
+
+signals:
+    void replaceSelection(const QString& word);
+
 private:
     void indent(QKeyEvent* event);
     void outdent(QKeyEvent* event);
 
 private:
+    QList<QAction*> mSuggestionActions;
     static const char* sTag;
 };
 
