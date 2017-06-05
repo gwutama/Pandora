@@ -5,13 +5,11 @@
 #include <QSharedPointer>
 #include <QTimer>
 #include <QTextEdit>
-#include <QDialog>
-#include <QVector>
-#include <hunspell/hunspell.hxx>
 #include "common/appconfig.h"
 #include "markdowneditorhighlighter.h"
 #include "imagepreviewdialog.h"
 #include "documentstatisticsdialog.h"
+#include "spellcheck.h"
 
 namespace Ui
 {
@@ -81,8 +79,6 @@ public slots:
     inline void showDocumentStatsDialog()
     { mDocStatsDialog->show(); }
 
-    bool spellcheck(const QString& word);
-    QStringList spellcheckSuggest(const QString& word);
     void spellcheckDocument();
 
 signals:
@@ -121,7 +117,7 @@ private:
     QList<QTextEdit::ExtraSelection> mSpellCheckSelections;
     ImagePreviewDialog* mImagePreviewDialog;
     DocumentStatisticsDialog* mDocStatsDialog;
-    QSharedPointer<Hunspell> mSpellCheck;
+    QSharedPointer<SpellCheck> mSpellCheck;
 
     static const char* sTag;
 };

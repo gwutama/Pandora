@@ -1,6 +1,5 @@
 #include "markdowneditor.h"
 #include "ui_markdowneditor.h"
-#include <QTextEdit>
 #include <QFileInfo>
 #include <QDebug>
 #include <QShortcut>
@@ -24,10 +23,7 @@ MarkdownEditor::MarkdownEditor(QSharedPointer<AppConfig> config,
     mUi->findReplaceWidget->hide();
 
     // Setup spell checker
-    QMap< QString, QSharedPointer<QTemporaryFile> > dicts = mConfig->dictionaryFiles();
-    Hunspell* hsPtr = new Hunspell(dicts.value("aff")->fileName().toStdString().c_str(),
-                                   dicts.value("dic")->fileName().toStdString().c_str());
-    mSpellCheck = QSharedPointer<Hunspell>(hsPtr);
+    mSpellCheck = QSharedPointer<SpellCheck>(new SpellCheck(mConfig));
 
     // Find/replace widget
     connect(mUi->findReplaceWidget, &FindReplaceWidget::wantToExecuteSearch,
@@ -789,28 +785,6 @@ void MarkdownEditor::toggleSelectionBlockquote()
 }
 
 
-bool MarkdownEditor::spellcheck(const QString& word)
-{
-    std::string wordStr = word.toStdString();
-    return mSpellCheck->spell(wordStr);
-}
-
-
-QStringList MarkdownEditor::spellcheckSuggest(const QString& word)
-{
-    QStringList out;
-    std::string wordStr = word.toStdString();
-    std::vector<std::string> vec = mSpellCheck->suggest(wordStr);
-
-    for (int i = 0; i < vec.size(); i++)
-    {
-        out.append(QString::fromStdString(vec.at(i)));
-    }
-
-    return out;
-}
-
-
 void MarkdownEditor::spellcheckDocument()
 {
     mSpellCheckSelections.clear();
@@ -825,7 +799,7 @@ void MarkdownEditor::spellcheckDocument()
     {
         QString word = mUi->textEdit->textCursor().selectedText();
 
-        if (!spellcheck(word))
+        if (!mSpellCheck->spellcheck(word))
         {
             QTextEdit::ExtraSelection extra;
             extra.cursor = mUi->textEdit->textCursor();

@@ -23,6 +23,7 @@ set(SOURCE_FILES
     markdowneditor/imagepreviewdialog.cpp
     markdowneditor/markdowntextedit.cpp
     markdowneditor/documentstatisticsdialog.cpp
+    markdowneditor/spellcheck.cpp
 )
 
 qt5_add_resources(RESOURCE_FILES resources.qrc)
