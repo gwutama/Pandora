@@ -6,6 +6,8 @@
 #include <QTimer>
 #include <QTextEdit>
 #include <QDialog>
+#include <QVector>
+#include <hunspell/hunspell.hxx>
 #include "common/appconfig.h"
 #include "markdowneditorhighlighter.h"
 #include "imagepreviewdialog.h"
@@ -79,6 +81,10 @@ public slots:
     inline void showDocumentStatsDialog()
     { mDocStatsDialog->show(); }
 
+    bool spellcheck(const QString& word);
+    QStringList spellcheckSuggest(const QString& word);
+    void spellcheckDocument();
+
 signals:
     void contentChanged(const QString& content);
 
@@ -112,8 +118,10 @@ private:
     QTimer mContentChangeTimer;
     QString mOldContent;
     QList<QTextEdit::ExtraSelection> mMatchTextSelections;
+    QList<QTextEdit::ExtraSelection> mSpellCheckSelections;
     ImagePreviewDialog* mImagePreviewDialog;
     DocumentStatisticsDialog* mDocStatsDialog;
+    QSharedPointer<Hunspell> mSpellCheck;
 
     static const char* sTag;
 };

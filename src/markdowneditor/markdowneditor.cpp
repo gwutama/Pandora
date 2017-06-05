@@ -4,6 +4,7 @@
 #include <QFileInfo>
 #include <QDebug>
 #include <QShortcut>
+#include <hunspell/hunspell.hxx>
 #include "insertmodifylinkdialog.h"
 #include "insertmodifyimagedialog.h"
 
@@ -21,6 +22,12 @@ MarkdownEditor::MarkdownEditor(QSharedPointer<AppConfig> config,
 
     mDocStatsDialog = new DocumentStatisticsDialog(mUi->textEdit->document(), this);
     mUi->findReplaceWidget->hide();
+
+    // Setup spell checker
+    QMap< QString, QSharedPointer<QTemporaryFile> > dicts = mConfig->dictionaryFiles();
+    Hunspell* hsPtr = new Hunspell(dicts.value("aff")->fileName().toStdString().c_str(),
+                                   dicts.value("dic")->fileName().toStdString().c_str());
+    mSpellCheck = QSharedPointer<Hunspell>(hsPtr);
 
     // Find/replace widget
     connect(mUi->findReplaceWidget, &FindReplaceWidget::wantToExecuteSearch,
@@ -178,6 +185,7 @@ bool MarkdownEditor::open()
         mContentChangeTimer.setSingleShot(false);
         mContentChangeTimer.start(3000); // 3 seconds
         checkContentChanged();
+        spellcheckDocument();
         return true;
     }
 
@@ -780,3 +788,52 @@ void MarkdownEditor::toggleSelectionBlockquote()
     currentCursor.insertText(newText);
 }
 
+
+bool MarkdownEditor::spellcheck(const QString& word)
+{
+    std::string wordStr = word.toStdString();
+    return mSpellCheck->spell(wordStr);
+}
+
+
+QStringList MarkdownEditor::spellcheckSuggest(const QString& word)
+{
+    QStringList out;
+    std::string wordStr = word.toStdString();
+    std::vector<std::string> vec = mSpellCheck->suggest(wordStr);
+
+    for (int i = 0; i < vec.size(); i++)
+    {
+        out.append(QString::fromStdString(vec.at(i)));
+    }
+
+    return out;
+}
+
+
+void MarkdownEditor::spellcheckDocument()
+{
+    mSpellCheckSelections.clear();
+    QTextCursor currentCursor = mUi->textEdit->textCursor();
+    mUi->textEdit->moveCursor(QTextCursor::Start);
+
+    QTextCharFormat fmt;
+    fmt.setUnderlineStyle(QTextCharFormat::DashDotDotLine);
+    fmt.setUnderlineColor(Qt::red);
+
+    while (mUi->textEdit->find(QRegExp("((?!_)\\w)+")))
+    {
+        QString word = mUi->textEdit->textCursor().selectedText();
+
+        if (!spellcheck(word))
+        {
+            QTextEdit::ExtraSelection extra;
+            extra.cursor = mUi->textEdit->textCursor();
+            extra.format = fmt;
+            mSpellCheckSelections.append(extra);
+        }
+    }
+
+    mUi->textEdit->setExtraSelections(mSpellCheckSelections);
+    mUi->textEdit->setTextCursor(currentCursor);
+}

@@ -15,5 +15,7 @@
         <file>icons/link.svg</file>
         <file>icons/orderedlist.svg</file>
         <file>icons/unorderedlist.svg</file>
+        <file>dictionaries/en_US.aff</file>
+        <file>dictionaries/en_US.dic</file>
     </qresource>
 </RCC>

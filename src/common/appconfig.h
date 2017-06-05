@@ -5,8 +5,6 @@
 #include <QTemporaryFile>
 #include <QSharedPointer>
 #include <QSettings>
-#include <QSize>
-#include <QPoint>
 
 class AppConfig
 {
@@ -36,6 +34,12 @@ public:
     inline int editorFontPointSize()
     { return mEditorFontPointSize; }
 
+    inline QString dictionaryLang()
+    { return mDictionaryLang; }
+
+    inline QMap< QString, QSharedPointer<QTemporaryFile> > dictionaryFiles()
+    { return mDictionaryFiles; }
+
     QSettings& settings()
     { return mSettings; }
 
@@ -54,7 +58,9 @@ private:
     inline void setEditorFontPointSize(int size)
     { mEditorFontPointSize = size; }
 
-    QTemporaryFile* extractThemeFromResources(const QString& cssTheme);
+    void setDictionaryLang(const QString& dictionaryLang);
+
+    QTemporaryFile* extractResourceFile(const QString& file);
 
 private:
     QSettings mSettings;
@@ -64,10 +70,12 @@ private:
     QString mTheme;
     QString mBibtexFile; // optional
     int mEditorFontPointSize;
+    QString mDictionaryLang;
 
     // Auto generated based on other properties
     QSharedPointer<QTemporaryFile> mCssFile;
     QSharedPointer<QTemporaryFile> mOutputFile;
+    QMap< QString, QSharedPointer<QTemporaryFile> > mDictionaryFiles;
 
     static const char* sTag;
 };
