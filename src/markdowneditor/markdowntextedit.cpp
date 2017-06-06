@@ -152,3 +152,17 @@ void MarkdownTextEdit::outdent(QKeyEvent* event)
         return;
     }
 }
+
+
+void MarkdownTextEdit::mousePressEvent(QMouseEvent* event)
+{
+    if (event->button() == Qt::RightButton)
+    {
+        // move cursor to the nearest position on right click
+        QTextCursor nearestCursor = cursorForPosition(event->pos());
+        setTextCursor(nearestCursor);
+        qDebug() << sTag << nearestCursor.position();
+    }
+
+    QPlainTextEdit::mousePressEvent(event);
+}
