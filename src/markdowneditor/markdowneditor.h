@@ -103,7 +103,13 @@ private slots:
     void replaceSelection(const QString& replacement);
 
     // Spell checker and grammar tools
+    /**
+     * @brief spellcheckDocument
+     * @deprecated
+     * @see spellcheckVisibleText()
+     */
     void spellcheckDocument();
+    void spellcheckVisibleText(int scrollbarPosition);
     void showContextMenuWithWordSuggestions(const QPoint& point);
     void grammarCheckDocument();
     void grammarCheckFinished();

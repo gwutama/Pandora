@@ -1,13 +1,24 @@
 #include "markdowntextedit.h"
 #include <QDebug>
 #include <QMenu>
+#include <QScrollBar>
 
 const char* MarkdownTextEdit::sTag = "[MarkdownTextEdit]";
 
 MarkdownTextEdit::MarkdownTextEdit(QWidget* parent) :
-    QPlainTextEdit(parent)
+    QPlainTextEdit(parent),
+    mVerticalScrollPos(0)
 {
     setContextMenuPolicy(Qt::CustomContextMenu);
+
+    connect(verticalScrollBar(), &QScrollBar::valueChanged,
+            &mVerticalScrollTimer, static_cast<void (QTimer::*)(void)>(&QTimer::start));
+
+    mVerticalScrollTimer.setInterval(1000);
+    mVerticalScrollTimer.setSingleShot(true);
+
+    connect(&mVerticalScrollTimer, &QTimer::timeout,
+            this, &MarkdownTextEdit::emitVerticalScrollEnd);
 }
 
 
@@ -49,7 +60,19 @@ void MarkdownTextEdit::onSuggestionActionTriggered()
     QObject* obj = sender();
     QAction* action = qobject_cast<QAction*>(obj);
     QString replacement = action->data().toString();
-    emit replaceSelection(replacement);
+    emit suggestionActionTriggered(replacement);
+}
+
+
+void MarkdownTextEdit::emitVerticalScrollEnd()
+{
+    int pos = verticalScrollBar()->value();
+
+    if (abs(pos - mVerticalScrollPos) > 10)
+    {
+        mVerticalScrollPos = pos;
+        emit verticalScrollEnd(pos);
+    }
 }
 
 

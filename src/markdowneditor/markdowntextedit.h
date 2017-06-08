@@ -3,6 +3,7 @@
 
 #include <QPlainTextEdit>
 #include <QStringList>
+#include <QTimer>
 
 class MarkdownTextEdit : public QPlainTextEdit
 {
@@ -22,9 +23,11 @@ protected slots:
 
 private slots:
     void onSuggestionActionTriggered();
+    void emitVerticalScrollEnd();
 
 signals:
-    void replaceSelection(const QString& word);
+    void suggestionActionTriggered(const QString& word);
+    void verticalScrollEnd(int position);
 
 private:
     void indent(QKeyEvent* event);
@@ -32,6 +35,8 @@ private:
 
 private:
     QList<QAction*> mSuggestionActions;
+    QTimer mVerticalScrollTimer;
+    int mVerticalScrollPos;
     static const char* sTag;
 };
 

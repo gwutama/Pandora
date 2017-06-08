@@ -3,6 +3,7 @@
 #include <QFileInfo>
 #include <QDebug>
 #include <QShortcut>
+#include <QScrollBar>
 #include <hunspell/hunspell.hxx>
 #include "insertmodifylinkdialog.h"
 #include "insertmodifyimagedialog.h"
@@ -25,7 +26,7 @@ MarkdownEditor::MarkdownEditor(QSharedPointer<AppConfig> config,
     // Setup spell checker
     connect(mUi->textEdit, &MarkdownTextEdit::customContextMenuRequested,
             this, &MarkdownEditor::showContextMenuWithWordSuggestions);
-    connect(mUi->textEdit, &MarkdownTextEdit::replaceSelection,
+    connect(mUi->textEdit, &MarkdownTextEdit::suggestionActionTriggered,
             this, &MarkdownEditor::replaceSelection);
     mSpellCheck = QSharedPointer<SpellCheck>(new SpellCheck(mConfig));
 
@@ -51,7 +52,10 @@ MarkdownEditor::MarkdownEditor(QSharedPointer<AppConfig> config,
     connect(mUi->findReplaceWidget, &FindReplaceWidget::replaceAllButtonClicked,
             this, &MarkdownEditor::replaceMatches);
 
+    // Timers
     connect(&mContentChangeTimer, &QTimer::timeout, this, &MarkdownEditor::checkContentChanged);
+    connect(mUi->textEdit, &MarkdownTextEdit::verticalScrollEnd,
+            this, &MarkdownEditor::spellcheckVisibleText);
 
     QShortcut* escKeyShortcut = new QShortcut(Qt::Key_Escape, parent);
     connect(escKeyShortcut, &QShortcut::activated, this, &MarkdownEditor::onEscKeyActivated);
@@ -188,11 +192,9 @@ bool MarkdownEditor::open()
     if (openFile(mConfig->markdownFile()))
     {
         qDebug() << sTag << "Content has been changed";
-        mContentChangeTimer.setSingleShot(false);
         mContentChangeTimer.start(3000); // 3 seconds
         checkContentChanged();
-        spellcheckDocument();
-        //grammarCheckDocument();
+        spellcheckVisibleText(0);
         return true;
     }
 
@@ -796,6 +798,7 @@ void MarkdownEditor::toggleSelectionBlockquote()
 }
 
 
+// DEPRECATED
 void MarkdownEditor::spellcheckDocument()
 {
     mSpellCheckSelections.clear();
@@ -821,6 +824,55 @@ void MarkdownEditor::spellcheckDocument()
 
     mUi->textEdit->setExtraSelections(mSpellCheckSelections);
     mUi->textEdit->setTextCursor(currentCursor);
+}
+
+
+void MarkdownEditor::spellcheckVisibleText(int scrollbarPosition)
+{
+    qDebug() << sTag << "Spell checking visible text "
+                        "because scroll bar position changed to" << scrollbarPosition;
+
+    // see: https://stackoverflow.com/questions/21493750/getting-only-the-visible-text-from-a-qtextedit-widget
+    QTextCursor cursor = mUi->textEdit->cursorForPosition(QPoint(0, 0));
+    QPoint bottomRight(mUi->textEdit->viewport()->width() - 1,
+                       mUi->textEdit->viewport()->height() - 1);
+    int endPos = mUi->textEdit->cursorForPosition(bottomRight).position();
+    cursor.setPosition(endPos, QTextCursor::KeepAnchor);
+
+    // Memorize positions
+    // See: https://stackoverflow.com/questions/21955923/prevent-a-qtextedit-widget-from-scrolling-when-there-is-a-selection
+    QTextCursor currentCursor = mUi->textEdit->textCursor();
+
+    // actual spell checking
+    mSpellCheckSelections.clear();
+
+    QTextCharFormat fmt;
+    fmt.setUnderlineStyle(QTextCharFormat::DashDotDotLine);
+    fmt.setUnderlineColor(Qt::red);
+
+    while (mUi->textEdit->find(QRegExp("((?!_)\\w)+")))
+    {
+        if (mUi->textEdit->textCursor().position() > endPos)
+        {
+            break;
+        }
+
+        QString word = mUi->textEdit->textCursor().selectedText();
+
+        if (!mSpellCheck->spellcheck(word))
+        {
+            QTextEdit::ExtraSelection extra;
+            extra.cursor = mUi->textEdit->textCursor();
+            extra.format = fmt;
+            mSpellCheckSelections.append(extra);
+        }
+    }
+
+    mUi->textEdit->setExtraSelections(mSpellCheckSelections);
+
+    // Set positions back to previous ones
+    mUi->textEdit->setTextCursor(currentCursor);
+    mUi->textEdit->verticalScrollBar()->setValue(scrollbarPosition);
 }
 
 
@@ -893,7 +945,8 @@ void MarkdownEditor::grammarCheckFinished()
         cur.setPosition(suggestion.offset(), QTextCursor::MoveAnchor);
         cur.setPosition(suggestion.offset() + suggestion.length(), QTextCursor::KeepAnchor);
 
-        qDebug() << sTag << "Selecting pos" << suggestion.offset() << "to" << suggestion.offset() + suggestion.length();
+        qDebug() << sTag << "Selecting pos" << suggestion.offset() << "to" << suggestion.offset() +
+                 suggestion.length();
 
         QTextEdit::ExtraSelection extra;
         extra.cursor = cur;
