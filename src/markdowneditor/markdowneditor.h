@@ -10,6 +10,7 @@
 #include "imagepreviewdialog.h"
 #include "documentstatisticsdialog.h"
 #include "spellcheck.h"
+#include "languagetool.h"
 
 namespace Ui
 {
@@ -79,9 +80,6 @@ public slots:
     inline void showDocumentStatsDialog()
     { mDocStatsDialog->show(); }
 
-    void spellcheckDocument();
-    void showCustomContextMenu(const QPoint& point);
-
 signals:
     void contentChanged(const QString& content);
 
@@ -104,6 +102,12 @@ private slots:
 
     void replaceSelection(const QString& replacement);
 
+    // Spell checker and grammar tools
+    void spellcheckDocument();
+    void showContextMenuWithWordSuggestions(const QPoint& point);
+    void grammarCheckDocument();
+    void grammarCheckFinished();
+
 private:
     void setupEditor();
     QString parseFirstPathInText(const QString& text);
@@ -118,9 +122,11 @@ private:
     QString mOldContent;
     QList<QTextEdit::ExtraSelection> mMatchTextSelections;
     QList<QTextEdit::ExtraSelection> mSpellCheckSelections;
+    QList<QTextEdit::ExtraSelection> mGrammarCheckSelections;
     ImagePreviewDialog* mImagePreviewDialog;
     DocumentStatisticsDialog* mDocStatsDialog;
     QSharedPointer<SpellCheck> mSpellCheck;
+    QSharedPointer<LanguageTool> mLanguageTool;
 
     static const char* sTag;
 };

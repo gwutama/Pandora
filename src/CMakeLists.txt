@@ -24,6 +24,8 @@ set(SOURCE_FILES
     markdowneditor/markdowntextedit.cpp
     markdowneditor/documentstatisticsdialog.cpp
     markdowneditor/spellcheck.cpp
+    markdowneditor/languagetool.cpp
+    markdowneditor/languagetoolmatch.cpp
 )
 
 qt5_add_resources(RESOURCE_FILES resources.qrc)
@@ -45,6 +47,7 @@ find_package(Qt5Core REQUIRED)
 find_package(Qt5Gui REQUIRED)
 find_package(Qt5Widgets REQUIRED)
 find_package(Qt5WebEngineWidgets REQUIRED)
+find_package(Qt5Network REQUIRED)
 find_package(HUNSPELL REQUIRED)
 
 include_directories(${HUNSPELL_INCLUDE_DIR})
@@ -54,7 +57,8 @@ set(CMAKE_INCLUDE_CURRENT_DIR ON)
 
 add_executable(${PROJECT_NAME} ${SOURCE_FILES} ${UI_FILES} ${RESOURCE_FILES})
 target_link_libraries(${PROJECT_NAME}
-                      Qt5::Core Qt5::Gui Qt5::Widgets Qt5::WebEngineWidgets ${HUNSPELL_LIBRARIES})
+                      Qt5::Core Qt5::Gui Qt5::Widgets Qt5::WebEngineWidgets Qt5::Network
+                      ${HUNSPELL_LIBRARIES})
 
 if (APPLE)
     set_target_properties(${PROJECT_NAME} PROPERTIES 

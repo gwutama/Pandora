@@ -24,10 +24,16 @@ MarkdownEditor::MarkdownEditor(QSharedPointer<AppConfig> config,
 
     // Setup spell checker
     connect(mUi->textEdit, &MarkdownTextEdit::customContextMenuRequested,
-            this, &MarkdownEditor::showCustomContextMenu);
+            this, &MarkdownEditor::showContextMenuWithWordSuggestions);
     connect(mUi->textEdit, &MarkdownTextEdit::replaceSelection,
             this, &MarkdownEditor::replaceSelection);
     mSpellCheck = QSharedPointer<SpellCheck>(new SpellCheck(mConfig));
+
+    // Setup language tool
+    LanguageTool* ltPtr = new LanguageTool(QUrl("http://localhost:8080/v2/check"));
+    mLanguageTool = QSharedPointer<LanguageTool>(ltPtr);
+    connect(mLanguageTool.data(), &LanguageTool::suggestionsReady,
+            this, &MarkdownEditor::grammarCheckFinished);
 
     // Find/replace widget
     connect(mUi->findReplaceWidget, &FindReplaceWidget::wantToExecuteSearch,
@@ -186,6 +192,7 @@ bool MarkdownEditor::open()
         mContentChangeTimer.start(3000); // 3 seconds
         checkContentChanged();
         spellcheckDocument();
+        //grammarCheckDocument();
         return true;
     }
 
@@ -817,7 +824,7 @@ void MarkdownEditor::spellcheckDocument()
 }
 
 
-void MarkdownEditor::showCustomContextMenu(const QPoint& point)
+void MarkdownEditor::showContextMenuWithWordSuggestions(const QPoint& point)
 {
     // Get word under cursor
     QTextCursor cursor = mUi->textEdit->textCursor();
@@ -853,4 +860,47 @@ void MarkdownEditor::replaceSelection(const QString& replacement)
     QTextCursor cursor = mUi->textEdit->textCursor();
     cursor.select(QTextCursor::WordUnderCursor);
     cursor.insertText(replacement);
+}
+
+
+void MarkdownEditor::grammarCheckDocument()
+{
+    mLanguageTool->check(content());
+}
+
+
+void MarkdownEditor::grammarCheckFinished()
+{
+    mGrammarCheckSelections.clear();
+    QTextCursor currentCursor = mUi->textEdit->textCursor();
+    mUi->textEdit->moveCursor(QTextCursor::Start);
+
+    QTextCharFormat fmt;
+    fmt.setUnderlineStyle(QTextCharFormat::DashDotDotLine);
+    fmt.setUnderlineColor(Qt::blue);
+
+    QList<LanguageToolMatch> suggestions = mLanguageTool->suggestions();
+
+    qDebug() << sTag << "Highlighting suggestions:" << suggestions.size();
+
+    for (int i = 0; i < suggestions.size(); i++)
+    {
+        LanguageToolMatch suggestion = suggestions.at(i);
+
+        // Select text
+        // From https://stackoverflow.com/questions/21122928/selecting-a-piece-of-text-using-qtextcursor
+        QTextCursor cur = currentCursor;
+        cur.setPosition(suggestion.offset(), QTextCursor::MoveAnchor);
+        cur.setPosition(suggestion.offset() + suggestion.length(), QTextCursor::KeepAnchor);
+
+        qDebug() << sTag << "Selecting pos" << suggestion.offset() << "to" << suggestion.offset() + suggestion.length();
+
+        QTextEdit::ExtraSelection extra;
+        extra.cursor = cur;
+        extra.format = fmt;
+        mGrammarCheckSelections.append(extra);
+    }
+
+    mUi->textEdit->setExtraSelections(mGrammarCheckSelections);
+    mUi->textEdit->setTextCursor(currentCursor);
 }
