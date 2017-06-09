@@ -94,8 +94,6 @@ private slots:
     bool replaceMatches();
 
     // Spell checker and grammar tools
-    void spellcheckVisibleText();
-    void showContextMenuWithWordSuggestions(const QPoint& point);
     void grammarCheckDocument();
     void grammarCheckFinished();
 
@@ -108,11 +106,9 @@ private:
     Ui::MarkdownEditor* mUi;
     QSharedPointer<AppConfig> mConfig;
     QList<QTextEdit::ExtraSelection> mMatchTextSelections;
-    QList<QTextEdit::ExtraSelection> mSpellCheckSelections;
     QList<QTextEdit::ExtraSelection> mGrammarCheckSelections;
     ImagePreviewDialog* mImagePreviewDialog;
     DocumentStatisticsDialog* mDocStatsDialog;
-    QSharedPointer<SpellCheck> mSpellCheck;
     QSharedPointer<LanguageTool> mLanguageTool;
 
     static const char* sTag;

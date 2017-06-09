@@ -23,11 +23,6 @@ MarkdownEditor::MarkdownEditor(QSharedPointer<AppConfig> config,
     mDocStatsDialog = new DocumentStatisticsDialog(mUi->textEdit->document(), this);
     mUi->findReplaceWidget->hide();
 
-    // Setup spell checker
-    connect(mUi->textEdit, &MarkdownTextEdit::customContextMenuRequested,
-            this, &MarkdownEditor::showContextMenuWithWordSuggestions);
-    mSpellCheck = QSharedPointer<SpellCheck>(new SpellCheck(mConfig));
-
     // Setup language tool
     LanguageTool* ltPtr = new LanguageTool(QUrl("http://localhost:8080/v2/check"));
     mLanguageTool = QSharedPointer<LanguageTool>(ltPtr);
@@ -52,10 +47,6 @@ MarkdownEditor::MarkdownEditor(QSharedPointer<AppConfig> config,
 
     connect(mUi->textEdit, &MarkdownTextEdit::laxTextChanged,
             this, &MarkdownEditor::contentChanged);
-    connect(mUi->textEdit, &MarkdownTextEdit::laxTextChanged,
-            this, &MarkdownEditor::spellcheckVisibleText);
-    connect(mUi->textEdit, &MarkdownTextEdit::laxVerticalScrollEnd,
-            this, &MarkdownEditor::spellcheckVisibleText);
 
     QShortcut* escKeyShortcut = new QShortcut(Qt::Key_Escape, parent);
     connect(escKeyShortcut, &QShortcut::activated, this, &MarkdownEditor::onEscKeyActivated);
@@ -77,6 +68,9 @@ void MarkdownEditor::setupEditor()
     font.setPointSize(mConfig->editorFontPointSize());
     mUi->textEdit->setFont(font);
     setNarrowMargin(); // default margin
+
+    auto spellCheck = QSharedPointer<SpellCheck>(new SpellCheck(mConfig));
+    mUi->textEdit->setSpellCheck(spellCheck);
 }
 
 
@@ -177,8 +171,7 @@ bool MarkdownEditor::open()
 
     mImagePreviewDialog->hide();
 
-    // Run spell check on the visible text
-    spellcheckVisibleText();
+    mUi->textEdit->spellcheckVisibleText();
 
     // Emit signals so that mainwindow picks the signal up and tell markdownpreview
     // to generate preview
@@ -761,86 +754,6 @@ void MarkdownEditor::toggleSelectionBlockquote()
     }
 
     currentCursor.insertText(newText);
-}
-
-
-void MarkdownEditor::spellcheckVisibleText()
-{
-    qDebug() << sTag << "Spell checking visible text";
-
-    // Memorize positions
-    // See: https://stackoverflow.com/questions/21955923/prevent-a-qtextedit-widget-from-scrolling-when-there-is-a-selection
-    QTextCursor currentCursor = mUi->textEdit->textCursor();
-    int scrollbarPosition = mUi->textEdit->verticalScrollBar()->value();
-
-    // see: https://stackoverflow.com/questions/21493750/getting-only-the-visible-text-from-a-qtextedit-widget
-    QTextCursor cursor = mUi->textEdit->cursorForPosition(QPoint(0, 0));
-    QPoint bottomRight(mUi->textEdit->viewport()->width() - 1,
-                       mUi->textEdit->viewport()->height() - 1);
-    int endPos = mUi->textEdit->cursorForPosition(bottomRight).position();
-    mUi->textEdit->setTextCursor(cursor);
-
-    // actual spell checking
-    mSpellCheckSelections.clear();
-
-    QTextCharFormat fmt;
-    fmt.setUnderlineStyle(QTextCharFormat::DashDotDotLine);
-    fmt.setUnderlineColor(Qt::red);
-
-    while (mUi->textEdit->find(QRegExp("((?!_)\\w)+")))
-    {
-        QString word = mUi->textEdit->textCursor().selectedText();
-
-        if (!mSpellCheck->spellcheck(word))
-        {
-            QTextEdit::ExtraSelection extra;
-            extra.cursor = mUi->textEdit->textCursor();
-            extra.format = fmt;
-            mSpellCheckSelections.append(extra);
-        }
-
-        if (mUi->textEdit->textCursor().position() > endPos)
-        {
-            break;
-        }
-    }
-
-    mUi->textEdit->setExtraSelections(mSpellCheckSelections);
-
-    // Set positions back to previous ones
-    mUi->textEdit->setTextCursor(currentCursor);
-    mUi->textEdit->verticalScrollBar()->setValue(scrollbarPosition);
-}
-
-
-void MarkdownEditor::showContextMenuWithWordSuggestions(const QPoint& point)
-{
-    // Get word under cursor
-    QTextCursor cursor = mUi->textEdit->textCursor();
-    cursor.select(QTextCursor::WordUnderCursor);
-    QString word = cursor.selectedText();
-
-    // Are we on one of the possibly incorrect words?
-    bool showSuggestions = false;
-
-    foreach (QTextEdit::ExtraSelection selection, mSpellCheckSelections)
-    {
-        if (word == selection.cursor.selectedText())
-        {
-            showSuggestions = true;
-            break;
-        }
-    }
-
-    // Retrieve suggestions and show context menu with suggestions
-    QStringList suggestions;
-
-    if (showSuggestions)
-    {
-        suggestions = mSpellCheck->suggest(word);
-    }
-
-    mUi->textEdit->showContextMenu(suggestions, point);
 }
 
 
