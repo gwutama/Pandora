@@ -4,6 +4,7 @@
 #include <QPlainTextEdit>
 #include <QStringList>
 #include <QTimer>
+#include "markdowneditorhighlighter.h"
 
 class MarkdownTextEdit : public QPlainTextEdit
 {
@@ -17,25 +18,29 @@ public slots:
     void showContextMenu(const QStringList& suggestions,
                          const QPoint& point);
 
-protected slots:
-    void keyPressEvent(QKeyEvent* event);
-    void mousePressEvent(QMouseEvent* event);
+    void increaseFontSize();
+    void decreaseFontSize();
+    void setMargin(unsigned int size);
 
 private slots:
+    void keyPressEvent(QKeyEvent* event);
+    void mousePressEvent(QMouseEvent* event);
     void onSuggestionActionTriggered();
     void checkVerticalScroll();
     void checkTextChanged();
+    void replaceSelection(const QString& replacement);
 
 signals:
-    void suggestionActionTriggered(const QString& word);
     void laxVerticalScrollEnd(int position);
     void laxTextChanged(const QString& text);
 
 private:
+    void setup();
     void indent(QKeyEvent* event);
     void outdent(QKeyEvent* event);
 
 private:
+    QSharedPointer<MarkdownEditorHighlighter> mHighlighter;
     QList<QAction*> mSuggestionActions;
     QTimer mVerticalScrollTimer;
     QTimer mContentChangeTimer;

@@ -9,7 +9,16 @@ MarkdownTextEdit::MarkdownTextEdit(QWidget* parent) :
     QPlainTextEdit(parent),
     mVerticalScrollPos(0)
 {
+    // Setup editor
+    QFont font;
+    font.setFamily("Courier");
+    font.setStyleHint(QFont::Monospace);
+    font.setFixedPitch(true);
+    setFont(font);
+    MarkdownEditorHighlighter* mhPtr = new MarkdownEditorHighlighter(document());
+    mHighlighter = QSharedPointer<MarkdownEditorHighlighter>(mhPtr);
     setContextMenuPolicy(Qt::CustomContextMenu);
+    // end setup
 
     connect(verticalScrollBar(), &QScrollBar::valueChanged,
             &mVerticalScrollTimer, static_cast<void (QTimer::*)(void)>(&QTimer::start));
@@ -55,12 +64,65 @@ void MarkdownTextEdit::showContextMenu(const QStringList& suggestions,
 }
 
 
+void MarkdownTextEdit::increaseFontSize()
+{
+    QFont newFont = font();
+    newFont.setPointSize(newFont.pointSize() + 1);
+    setFont(newFont);
+}
+
+
+void MarkdownTextEdit::decreaseFontSize()
+{
+    QFont newFont = font();
+    newFont.setPointSize(newFont.pointSize() - 1);
+    setFont(newFont);
+}
+
+
+void MarkdownTextEdit::setMargin(unsigned int size)
+{
+    document()->setDocumentMargin(size);
+}
+
+
+void MarkdownTextEdit::keyPressEvent(QKeyEvent* event)
+{
+    if (event->key() == Qt::Key_Tab)
+    {
+        indent(event);
+        return;
+    }
+    else if (event->key() == Qt::Key_Backtab)
+    {
+        outdent(event);
+        return;
+    }
+
+    QPlainTextEdit::keyPressEvent(event);
+}
+
+
+void MarkdownTextEdit::mousePressEvent(QMouseEvent* event)
+{
+    if (event->button() == Qt::RightButton)
+    {
+        // move cursor to the nearest position on right click
+        QTextCursor nearestCursor = cursorForPosition(event->pos());
+        setTextCursor(nearestCursor);
+        qDebug() << sTag << "Nearest cursor position to mouse pointer:" << nearestCursor.position();
+    }
+
+    QPlainTextEdit::mousePressEvent(event);
+}
+
+
 void MarkdownTextEdit::onSuggestionActionTriggered()
 {
     QObject* obj = sender();
     QAction* action = qobject_cast<QAction*>(obj);
     QString replacement = action->data().toString();
-    emit suggestionActionTriggered(replacement);
+    replaceSelection(replacement);
 }
 
 
@@ -88,20 +150,11 @@ void MarkdownTextEdit::checkTextChanged()
 }
 
 
-void MarkdownTextEdit::keyPressEvent(QKeyEvent* event)
+void MarkdownTextEdit::replaceSelection(const QString& replacement)
 {
-    if (event->key() == Qt::Key_Tab)
-    {
-        indent(event);
-        return;
-    }
-    else if (event->key() == Qt::Key_Backtab)
-    {
-        outdent(event);
-        return;
-    }
-
-    QPlainTextEdit::keyPressEvent(event);
+    QTextCursor cursor = textCursor();
+    cursor.select(QTextCursor::WordUnderCursor);
+    cursor.insertText(replacement);
 }
 
 
@@ -186,18 +239,4 @@ void MarkdownTextEdit::outdent(QKeyEvent* event)
         event->accept();
         return;
     }
-}
-
-
-void MarkdownTextEdit::mousePressEvent(QMouseEvent* event)
-{
-    if (event->button() == Qt::RightButton)
-    {
-        // move cursor to the nearest position on right click
-        QTextCursor nearestCursor = cursorForPosition(event->pos());
-        setTextCursor(nearestCursor);
-        qDebug() << sTag << "Nearest cursor position to mouse pointer:" << nearestCursor.position();
-    }
-
-    QPlainTextEdit::mousePressEvent(event);
 }

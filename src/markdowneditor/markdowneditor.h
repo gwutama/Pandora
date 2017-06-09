@@ -3,10 +3,8 @@
 
 #include <QWidget>
 #include <QSharedPointer>
-#include <QTimer>
 #include <QTextEdit>
 #include "common/appconfig.h"
-#include "markdowneditorhighlighter.h"
 #include "imagepreviewdialog.h"
 #include "documentstatisticsdialog.h"
 #include "spellcheck.h"
@@ -33,7 +31,6 @@ public:
     ~MarkdownEditor();
 
     QString content();
-    void setMargin(unsigned int size);
 
 public slots:
     void refocusEditor();
@@ -43,11 +40,8 @@ public slots:
     bool saveAs(const QString& path);
     void showFindReplaceWidget();
 
-    inline void setNarrowMargin()
-    { setMargin(80); }
-
-    inline void setWideMargin()
-    { setMargin(150); }
+    void setNarrowMargin();
+    void setWideMargin();
 
     void increaseFontSize();
     void decreaseFontSize();
@@ -99,8 +93,6 @@ private slots:
     bool replaceMatchGoToNextOne();
     bool replaceMatches();
 
-    void replaceSelection(const QString& replacement);
-
     // Spell checker and grammar tools
     void spellcheckVisibleText();
     void showContextMenuWithWordSuggestions(const QPoint& point);
@@ -110,13 +102,11 @@ private slots:
 private:
     void setupEditor();
     QString parseFirstPathInText(const QString& text);
-    bool openFile(const QString& path = QString());
     void toggleHeadingHelper(int level);
 
 private:
     Ui::MarkdownEditor* mUi;
     QSharedPointer<AppConfig> mConfig;
-    QSharedPointer<MarkdownEditorHighlighter> mHighlighter;
     QList<QTextEdit::ExtraSelection> mMatchTextSelections;
     QList<QTextEdit::ExtraSelection> mSpellCheckSelections;
     QList<QTextEdit::ExtraSelection> mGrammarCheckSelections;

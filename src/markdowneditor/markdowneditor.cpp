@@ -26,8 +26,6 @@ MarkdownEditor::MarkdownEditor(QSharedPointer<AppConfig> config,
     // Setup spell checker
     connect(mUi->textEdit, &MarkdownTextEdit::customContextMenuRequested,
             this, &MarkdownEditor::showContextMenuWithWordSuggestions);
-    connect(mUi->textEdit, &MarkdownTextEdit::suggestionActionTriggered,
-            this, &MarkdownEditor::replaceSelection);
     mSpellCheck = QSharedPointer<SpellCheck>(new SpellCheck(mConfig));
 
     // Setup language tool
@@ -75,19 +73,9 @@ MarkdownEditor::~MarkdownEditor()
 
 void MarkdownEditor::setupEditor()
 {
-    QFont font;
-    font.setFamily("Courier");
-    font.setStyleHint(QFont::Monospace);
-    font.setFixedPitch(true);
+    QFont font = mUi->textEdit->font();
     font.setPointSize(mConfig->editorFontPointSize());
     mUi->textEdit->setFont(font);
-
-    QFontMetrics metrics(font);
-    mUi->textEdit->setTabStopWidth(2 * metrics.width(' ')); // replace tab with 2 spaces
-
-    MarkdownEditorHighlighter* mhPtr = new MarkdownEditorHighlighter(mUi->textEdit->document());
-    mHighlighter = QSharedPointer<MarkdownEditorHighlighter>(mhPtr);
-
     setNarrowMargin(); // default margin
 }
 
@@ -95,13 +83,6 @@ void MarkdownEditor::setupEditor()
 QString MarkdownEditor::content()
 {
     return mUi->textEdit->document()->toPlainText();
-}
-
-
-void MarkdownEditor::setMargin(unsigned int size)
-{
-    QTextDocument* doc = mUi->textEdit->document();
-    doc->setDocumentMargin(size);
 }
 
 
@@ -180,21 +161,29 @@ void MarkdownEditor::refocusEditor()
 
 bool MarkdownEditor::open()
 {
-    if (openFile(mConfig->markdownFile()))
+    QFile file(mConfig->markdownFile());
+
+    if (!file.open(QFile::ReadOnly | QFile::Text))
     {
-        qDebug() << sTag << "Content has been changed";
-
-        // Run spell check on the visible text
-        spellcheckVisibleText();
-
-        // Emit signals so that mainwindow picks the signal up and tell markdownpreview
-        // to generate preview
-        emit contentChanged(content());
-
-        return true;
+        qWarning() << sTag << "Cannot open file for reading:" << mConfig->markdownFile();
+        return false;
     }
 
-    return false;
+    QByteArray ba = file.readAll();
+    QTextDocument* doc = mUi->textEdit->document();
+    doc->setPlainText(ba);
+    mUi->textEdit->moveCursor(QTextCursor::Start);
+    file.close();
+
+    mImagePreviewDialog->hide();
+
+    // Run spell check on the visible text
+    spellcheckVisibleText();
+
+    // Emit signals so that mainwindow picks the signal up and tell markdownpreview
+    // to generate preview
+    emit contentChanged(content());
+    return true;
 }
 
 
@@ -235,35 +224,21 @@ bool MarkdownEditor::saveAs(const QString& path)
 }
 
 
-bool MarkdownEditor::openFile(const QString& path)
+void MarkdownEditor::setNarrowMargin()
 {
-    QFile file(path);
+    mUi->textEdit->setMargin(80);
+}
 
-    if (!file.open(QFile::ReadOnly | QFile::Text))
-    {
-        qWarning() << sTag << "Cannot open file for reading:" << path;
-        return false;
-    }
 
-    QByteArray content = file.readAll();
-    QTextDocument* doc = mUi->textEdit->document();
-    doc->setPlainText(content);
-    mUi->textEdit->moveCursor(QTextCursor::Start);
-    file.close();
-
-    mImagePreviewDialog->hide();
-
-    return true;
+void MarkdownEditor::setWideMargin()
+{
+    mUi->textEdit->setMargin(150);
 }
 
 
 void MarkdownEditor::increaseFontSize()
 {
-    QFont font = mUi->textEdit->font();
-    font.setPointSize(font.pointSize() + 1);
-    mUi->textEdit->setFont(font);
-
-    // Save
+    mUi->textEdit->increaseFontSize();
     mConfig->setEditorFontPointSize(mUi->textEdit->font().pointSize());
     mConfig->save();
 }
@@ -271,11 +246,7 @@ void MarkdownEditor::increaseFontSize()
 
 void MarkdownEditor::decreaseFontSize()
 {
-    QFont font = mUi->textEdit->font();
-    font.setPointSize(font.pointSize() - 1);
-    mUi->textEdit->setFont(font);
-
-    // Save
+    mUi->textEdit->decreaseFontSize();
     mConfig->setEditorFontPointSize(mUi->textEdit->font().pointSize());
     mConfig->save();
 }
@@ -870,14 +841,6 @@ void MarkdownEditor::showContextMenuWithWordSuggestions(const QPoint& point)
     }
 
     mUi->textEdit->showContextMenu(suggestions, point);
-}
-
-
-void MarkdownEditor::replaceSelection(const QString& replacement)
-{
-    QTextCursor cursor = mUi->textEdit->textCursor();
-    cursor.select(QTextCursor::WordUnderCursor);
-    cursor.insertText(replacement);
 }
 
 
