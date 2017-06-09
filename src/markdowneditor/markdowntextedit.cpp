@@ -25,9 +25,9 @@ MarkdownTextEdit::MarkdownTextEdit(QWidget* parent) :
     connect(&mVerticalScrollTimer, &QTimer::timeout, this, &MarkdownTextEdit::checkVerticalScroll);
     connect(&mContentChangeTimer, &QTimer::timeout, this, &MarkdownTextEdit::checkTextChanged);
 
-    mVerticalScrollTimer.setInterval(1000);
+    mVerticalScrollTimer.setInterval(500);
     mVerticalScrollTimer.setSingleShot(true);
-    mContentChangeTimer.setInterval(7000);
+    mContentChangeTimer.setInterval(5000);
     mContentChangeTimer.setSingleShot(false);
 
     mContentChangeTimer.start();

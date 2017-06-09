@@ -19,11 +19,13 @@ private slots:
     virtual void runDocumentCheck(const QString& text);
     void checkFinished();
     virtual void showContextMenu(const QPoint& point);
+    virtual void replaceSelectionWithTextReplacement();
 
 private:
     QSharedPointer<LanguageTool> mLanguageTool;
     int mCheckOffset;
-    QList<LanguageToolMatch> mSuggestions;
+    QList<LanguageToolMatch> mMatches;
+    LanguageToolMatch mSelectedMatch;
     static const char* sTag;
 };
 

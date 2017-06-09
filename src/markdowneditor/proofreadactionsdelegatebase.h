@@ -22,7 +22,7 @@ public slots:
 
 protected slots:
     virtual void showContextMenu(const QPoint& point) = 0;
-    virtual void replaceSelectionWithTextReplacement();
+    virtual void replaceSelectionWithTextReplacement() = 0;
 
 protected:
     virtual void runVisibleTextCheck(const QString& text, int startPos, int endPos) = 0;

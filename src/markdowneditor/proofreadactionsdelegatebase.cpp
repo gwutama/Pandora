@@ -84,17 +84,3 @@ void ProofreadActionsDelegateBase::showContextMenuWithSuggestions(const QPoint& 
     menu->exec(mTextEdit->mapToGlobal(point));
     delete menu;
 }
-
-
-void ProofreadActionsDelegateBase::replaceSelectionWithTextReplacement()
-{
-    QObject* obj = sender();
-    QAction* action = qobject_cast<QAction*>(obj);
-    QString replacement = action->data().toString();
-
-    // Replace selection
-    QTextCursor cursor = mTextEdit->textCursor();
-    cursor.select(QTextCursor::WordUnderCursor);
-    cursor.insertText(replacement);
-}
-

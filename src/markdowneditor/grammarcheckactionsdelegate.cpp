@@ -1,6 +1,7 @@
 #include "grammarcheckactionsdelegate.h"
 #include <QDebug>
 #include <QScrollBar>
+#include <QAction>
 
 const char* GrammarCheckActionsDelegate::sTag = "[GrammarCheckActionsDelegate]";
 
@@ -54,24 +55,26 @@ void GrammarCheckActionsDelegate::checkFinished()
     int scrollbarPosition = mTextEdit->verticalScrollBar()->value();
 
     mSelections.clear();
-    mSuggestions.clear();
+    mMatches.clear();
 
     QTextCharFormat fmt;
-    fmt.setUnderlineStyle(QTextCharFormat::DashDotDotLine);
+    fmt.setUnderlineStyle(QTextCharFormat::WaveUnderline);
     fmt.setUnderlineColor(Qt::blue);
 
-    mSuggestions = mLanguageTool->suggestions();
-    qDebug() << sTag << "Highlighting suggestions:" << mSuggestions.size();
+    mMatches = mLanguageTool->suggestions();
+    qDebug() << sTag << "Highlighting suggestions:" << mMatches.size();
 
-    for (int i = 0; i < mSuggestions.size(); i++)
+    for (int i = 0; i < mMatches.size(); i++)
     {
-        LanguageToolMatch suggestion = mSuggestions.at(i);
+        LanguageToolMatch suggestion = mMatches.at(i);
 
         // Select text
         // From https://stackoverflow.com/questions/21122928/selecting-a-piece-of-text-using-qtextcursor
         QTextCursor cur = currentCursor;
-        cur.setPosition(mCheckOffset + suggestion.offset(), QTextCursor::MoveAnchor);
-        cur.setPosition(mCheckOffset + suggestion.offset() + suggestion.length(), QTextCursor::KeepAnchor);
+        int start = mCheckOffset + suggestion.offset();
+        int end = mCheckOffset + suggestion.offset() + suggestion.length();
+        cur.setPosition(start, QTextCursor::MoveAnchor);
+        cur.setPosition(end, QTextCursor::KeepAnchor);
 
         QTextEdit::ExtraSelection extra;
         extra.cursor = cur;
@@ -93,16 +96,40 @@ void GrammarCheckActionsDelegate::showContextMenu(const QPoint& point)
     QStringList suggestions;
 
     // Are we on one of the possibly incorrect words?
-    foreach (LanguageToolMatch match, mSuggestions)
+    foreach (LanguageToolMatch match, mMatches)
     {
-        if (cursor.position() >= mCheckOffset + match.offset() &&
-                cursor.position() <= mCheckOffset + match.offset() + match.length())
+        int start = mCheckOffset + match.offset();
+        int end = mCheckOffset + match.offset() + match.length();
+
+        if (cursor.position() >= start && cursor.position() <= end)
         {
             suggestions = match.replacements();
             qDebug() << sTag << "Replacements:" << match.replacements();
+            mSelectedMatch = match;
             break;
         }
     }
 
     showContextMenuWithSuggestions(point, suggestions);
 }
+
+
+void GrammarCheckActionsDelegate::replaceSelectionWithTextReplacement()
+{
+    QObject* obj = sender();
+    QAction* action = qobject_cast<QAction*>(obj);
+    QString replacement = action->data().toString();
+
+    // Select text to be replaced
+    QTextCursor cur = mTextEdit->textCursor();
+    int start = mCheckOffset + mSelectedMatch.offset();
+    int end = mCheckOffset + mSelectedMatch.offset() + mSelectedMatch.length();
+    cur.setPosition(start, QTextCursor::MoveAnchor);
+    cur.setPosition(end, QTextCursor::KeepAnchor);
+
+    // Replace selection
+    cur.insertText(replacement);
+
+    checkVisibleText();
+}
+
