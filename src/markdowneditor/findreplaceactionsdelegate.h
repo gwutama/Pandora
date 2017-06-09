@@ -2,7 +2,7 @@
 #define FINDREPLACEACTIONSDELEGATE_H
 
 #include <QObject>
-#include <QPlainTextEdit>
+#include "markdowntextedit.h"
 #include "findreplacewidget.h"
 
 class FindReplaceActionsDelegate : public QObject
@@ -10,7 +10,7 @@ class FindReplaceActionsDelegate : public QObject
     Q_OBJECT
 
 public:
-    explicit FindReplaceActionsDelegate(QPlainTextEdit* textEdit,
+    explicit FindReplaceActionsDelegate(MarkdownTextEdit* textEdit,
                                         FindReplaceWidget* findReplaceWidget,
                                         QObject* parent = nullptr);
     virtual ~FindReplaceActionsDelegate();
@@ -31,7 +31,7 @@ private:
     bool goToNearestMatch(const QTextCursor& cursor);
 
 private:
-    QPlainTextEdit* mTextEdit;
+    MarkdownTextEdit* mTextEdit;
     FindReplaceWidget* mFindReplaceWidget;
     QList<QTextEdit::ExtraSelection> mMatchTextSelections;
 

@@ -2,14 +2,14 @@
 #define TEXTMANIPULATIONACTIONSDELEGATE_H
 
 #include <QObject>
-#include <QPlainTextEdit>
+#include "markdowntextedit.h"
 
 class TextManipulationActionsDelegate : public QObject
 {
     Q_OBJECT
 
 public:
-    explicit TextManipulationActionsDelegate(QPlainTextEdit* textEdit,
+    explicit TextManipulationActionsDelegate(MarkdownTextEdit* textEdit,
                                              QObject* parent = nullptr);
     virtual ~TextManipulationActionsDelegate();
 
@@ -43,7 +43,7 @@ private:
     void toggleHeadingHelper(int level);
 
 private:
-    QPlainTextEdit* mTextEdit;
+    MarkdownTextEdit* mTextEdit;
 };
 
 #endif // TEXTMANIPULATIONACTIONSDELEGATE_H

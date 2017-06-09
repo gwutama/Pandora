@@ -10,9 +10,12 @@ set(SOURCE_FILES
     main.cpp
     mainwindow.cpp
     maintoolbar.cpp
-    common/appconfig.cpp
+
     preferences/preferencesdialog.cpp
+
+    common/appconfig.cpp
     common/filebrowserinputwidget.cpp
+
     markdownviewer/documentgenerator.cpp
     markdownviewer/markdownviewer.cpp
     markdowneditor/markdowneditor.cpp
@@ -28,6 +31,7 @@ set(SOURCE_FILES
     markdowneditor/languagetoolmatch.cpp
     markdowneditor/textmanipulationactionsdelegate.cpp
     markdowneditor/findreplaceactionsdelegate.cpp
+    markdowneditor/spellcheckactionsdelegate.cpp
 )
 
 qt5_add_resources(RESOURCE_FILES resources.qrc)
@@ -35,8 +39,11 @@ qt5_add_resources(RESOURCE_FILES resources.qrc)
 qt5_wrap_ui(UI_FILES
     mainwindow.ui
     maintoolbar.ui
-    preferences/preferencesdialog.ui 
+
+    preferences/preferencesdialog.ui
+
     common/filebrowserinputwidget.ui
+
     markdowneditor/markdowneditor.ui
     markdowneditor/findreplacewidget.ui
     markdowneditor/insertmodifylinkdialog.ui

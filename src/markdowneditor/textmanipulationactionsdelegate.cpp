@@ -2,7 +2,7 @@
 #include "insertmodifylinkdialog.h"
 #include "insertmodifyimagedialog.h"
 
-TextManipulationActionsDelegate::TextManipulationActionsDelegate(QPlainTextEdit* textEdit,
+TextManipulationActionsDelegate::TextManipulationActionsDelegate(MarkdownTextEdit* textEdit,
                                                                  QObject* parent) :
     QObject(parent),
     mTextEdit(textEdit)

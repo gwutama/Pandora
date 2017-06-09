@@ -7,9 +7,9 @@
 #include "common/appconfig.h"
 #include "textmanipulationactionsdelegate.h"
 #include "findreplaceactionsdelegate.h"
+#include "spellcheckactionsdelegate.h"
 #include "imagepreviewdialog.h"
 #include "documentstatisticsdialog.h"
-#include "spellcheck.h"
 #include "languagetool.h"
 
 namespace Ui
@@ -41,7 +41,10 @@ public slots:
     void refocusEditor();
     bool open();
     void close();
-    bool save();
+
+    inline bool save()
+    { return saveAs(mConfig->markdownFile()); }
+
     bool saveAs(const QString& path);
     void showFindReplaceWidget();
 
@@ -75,6 +78,7 @@ private:
     QSharedPointer<AppConfig> mConfig;
     QSharedPointer<TextManipulationActionsDelegate> mTextManipulationActions;
     QSharedPointer<FindReplaceActionsDelegate> mFindReplaceActions;
+    QSharedPointer<SpellCheckActionsDelegate> mSpellCheckActions;
     QList<QTextEdit::ExtraSelection> mGrammarCheckSelections;
     ImagePreviewDialog* mImagePreviewDialog;
     DocumentStatisticsDialog* mDocStatsDialog;

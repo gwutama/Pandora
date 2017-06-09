@@ -23,8 +23,13 @@ MarkdownEditor::MarkdownEditor(QSharedPointer<AppConfig> config,
     auto findActionsPtr = new FindReplaceActionsDelegate(mUi->textEdit, mUi->findReplaceWidget);
     mFindReplaceActions = QSharedPointer<FindReplaceActionsDelegate>(findActionsPtr);
 
+    // Spell check actions
+    auto spellCheck = QSharedPointer<SpellCheck>(new SpellCheck(mConfig));
+    auto spellCheckActionsPtr = new SpellCheckActionsDelegate(mUi->textEdit, spellCheck);
+    mSpellCheckActions = QSharedPointer<SpellCheckActionsDelegate>(spellCheckActionsPtr);
+
+    // Document statistics dialog
     mDocStatsDialog = new DocumentStatisticsDialog(mUi->textEdit->document(), this);
-    mUi->findReplaceWidget->hide();
 
     // Setup language tool
     LanguageTool* ltPtr = new LanguageTool(QUrl("http://localhost:8080/v2/check"));
@@ -32,16 +37,28 @@ MarkdownEditor::MarkdownEditor(QSharedPointer<AppConfig> config,
     connect(mLanguageTool.data(), &LanguageTool::suggestionsReady,
             this, &MarkdownEditor::grammarCheckFinished);
 
+    // Text edit signals slots
     connect(mUi->textEdit, &MarkdownTextEdit::laxTextChanged,
             this, &MarkdownEditor::contentChanged);
+    connect(mUi->textEdit, &MarkdownTextEdit::laxTextChanged,
+            mSpellCheckActions.data(), &SpellCheckActionsDelegate::spellcheckVisibleText);
+    connect(mUi->textEdit, &MarkdownTextEdit::laxVerticalScrollEnd,
+            mSpellCheckActions.data(), &SpellCheckActionsDelegate::spellcheckVisibleText);
+    connect(this, &MarkdownEditor::contentChanged,
+            mSpellCheckActions.data(), &SpellCheckActionsDelegate::spellcheckVisibleText);
 
+    // Escape shortcuts
     QShortcut* escKeyShortcut = new QShortcut(Qt::Key_Escape, parent);
     connect(escKeyShortcut, &QShortcut::activated, this, &MarkdownEditor::onEscKeyActivated);
     connect(escKeyShortcut, &QShortcut::activated,
             mFindReplaceActions.data(), &FindReplaceActionsDelegate::removeHighlightMatches);
 
+    // Magic shortcut
     QShortcut* magicShortcut = new QShortcut(QKeySequence(tr("Ctrl+M")), parent);
     connect(magicShortcut, &QShortcut::activated, this, &MarkdownEditor::onMagicShortcutActivated);
+
+    // Misc
+    mUi->findReplaceWidget->hide();
 }
 
 
@@ -57,9 +74,6 @@ void MarkdownEditor::setupEditor()
     font.setPointSize(mConfig->editorFontPointSize());
     mUi->textEdit->setFont(font);
     setNarrowMargin(); // default margin
-
-    auto spellCheck = QSharedPointer<SpellCheck>(new SpellCheck(mConfig));
-    mUi->textEdit->setSpellCheck(spellCheck);
 }
 
 
@@ -159,10 +173,9 @@ bool MarkdownEditor::open()
 
     mImagePreviewDialog->hide();
 
-    mUi->textEdit->spellcheckVisibleText();
-
-    // Emit signals so that mainwindow picks the signal up and tell markdownpreview
-    // to generate preview
+    // Emit signals so that
+    // 1. mainwindow picks the signal up and tell markdownpreview to generate preview
+    // 2. SpellCheckActionsDelegate picks the signal up and runs spell check
     emit contentChanged(content());
     return true;
 }
@@ -171,12 +184,6 @@ bool MarkdownEditor::open()
 void MarkdownEditor::close()
 {
     mUi->textEdit->clear();
-}
-
-
-bool MarkdownEditor::save()
-{
-    return saveAs(mConfig->markdownFile());
 }
 
 

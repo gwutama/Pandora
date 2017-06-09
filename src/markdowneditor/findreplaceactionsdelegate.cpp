@@ -3,7 +3,7 @@
 
 const char* FindReplaceActionsDelegate::sTag = "[FindReplaceActionsDelegate]";
 
-FindReplaceActionsDelegate::FindReplaceActionsDelegate(QPlainTextEdit* textEdit,
+FindReplaceActionsDelegate::FindReplaceActionsDelegate(MarkdownTextEdit* textEdit,
                                                        FindReplaceWidget* findReplaceWidget,
                                                        QObject* parent) :
     QObject(parent),
