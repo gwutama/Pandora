@@ -20,6 +20,7 @@ MainWindow::MainWindow(QWidget* parent) :
     mEditor = new MarkdownEditor(mConfig, this);
     mEditor->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
     mUi->horizontalLayout->addWidget(mEditor);
+    TextManipulationActionsDelegate* textActions = mEditor->textManipulationActions().data();
 
     // Setup markdown viewer
     mViewer = new MarkdownViewer(mConfig, this);
@@ -49,8 +50,10 @@ MainWindow::MainWindow(QWidget* parent) :
             mEditor, &MarkdownEditor::increaseFontSize);
     connect(mUi->actionDecreaseFontSize, &QAction::triggered,
             mEditor, &MarkdownEditor::decreaseFontSize);
-    connect(mUi->actionUndo, &QAction::triggered, mEditor, &MarkdownEditor::undo);
-    connect(mUi->actionRedo, &QAction::triggered, mEditor, &MarkdownEditor::redo);
+    connect(mUi->actionUndo, &QAction::triggered,
+            textActions, &TextManipulationActionsDelegate::undo);
+    connect(mUi->actionRedo, &QAction::triggered,
+            textActions, &TextManipulationActionsDelegate::redo);
     connect(mUi->actionDocumentStatistics, &QAction::triggered,
             mEditor, &MarkdownEditor::showDocumentStatsDialog);
 
@@ -67,28 +70,34 @@ MainWindow::MainWindow(QWidget* parent) :
             this, &MainWindow::onNewActionTriggered);
     connect(mToolbar, &MainToolbar::saveDocumentButtonClicked,
             this, &MainWindow::onSaveActionTriggered);
-    connect(mToolbar, &MainToolbar::undoButtonClicked, mEditor, &MarkdownEditor::undo);
-    connect(mToolbar, &MainToolbar::redoButtonClicked, mEditor, &MarkdownEditor::redo);
+    connect(mToolbar, &MainToolbar::undoButtonClicked,
+            textActions, &TextManipulationActionsDelegate::undo);
+    connect(mToolbar, &MainToolbar::redoButtonClicked,
+            textActions, &TextManipulationActionsDelegate::redo);
     connect(mToolbar, &MainToolbar::boldSelectionButtonClicked,
-            mEditor, &MarkdownEditor::toggleSelectionBold);
+            textActions, &TextManipulationActionsDelegate::toggleSelectionBold);
     connect(mToolbar, &MainToolbar::italicSelectionButtonClicked,
-            mEditor, &MarkdownEditor::toggleSelectionItalic);
+            textActions, &TextManipulationActionsDelegate::toggleSelectionItalic);
     connect(mToolbar, &MainToolbar::strikeoutSelectionButtonClicked,
-            mEditor, &MarkdownEditor::toggleSelectionStrikeout);
-    connect(mToolbar, &MainToolbar::h1ButtonClicked, mEditor, &MarkdownEditor::toggleH1);
-    connect(mToolbar, &MainToolbar::h2ButtonClicked, mEditor, &MarkdownEditor::toggleH2);
-    connect(mToolbar, &MainToolbar::h3ButtonClicked, mEditor, &MarkdownEditor::toggleH3);
-    connect(mToolbar, &MainToolbar::linkButtonClicked, mEditor, &MarkdownEditor::insertModifyLink);
+            textActions, &TextManipulationActionsDelegate::toggleSelectionStrikeout);
+    connect(mToolbar, &MainToolbar::h1ButtonClicked, textActions,
+            &TextManipulationActionsDelegate::toggleH1);
+    connect(mToolbar, &MainToolbar::h2ButtonClicked, textActions,
+            &TextManipulationActionsDelegate::toggleH2);
+    connect(mToolbar, &MainToolbar::h3ButtonClicked, textActions,
+            &TextManipulationActionsDelegate::toggleH3);
+    connect(mToolbar, &MainToolbar::linkButtonClicked, textActions,
+            &TextManipulationActionsDelegate::insertModifyLink);
     connect(mToolbar, &MainToolbar::imageButtonClicked,
-            mEditor, &MarkdownEditor::insertModifyImage);
+            textActions, &TextManipulationActionsDelegate::insertModifyImage);
     connect(mToolbar, &MainToolbar::horizontalLineButtonClicked,
-            mEditor, &MarkdownEditor::insertHorizontalLine);
+            textActions, &TextManipulationActionsDelegate::insertHorizontalLine);
     connect(mToolbar, &MainToolbar::orderedListButtonClicked,
-            mEditor, &MarkdownEditor::toggleSelectionOrderedList);
+            textActions, &TextManipulationActionsDelegate::toggleSelectionOrderedList);
     connect(mToolbar, &MainToolbar::unorderedListButtonClicked,
-            mEditor, &MarkdownEditor::toggleSelectionUnorderedList);
+            textActions, &TextManipulationActionsDelegate::toggleSelectionUnorderedList);
     connect(mToolbar, &MainToolbar::blockquoteButtonClicked,
-            mEditor, &MarkdownEditor::toggleSelectionBlockquote);
+            textActions, &TextManipulationActionsDelegate::toggleSelectionBlockquote);
 
     // Default ui set: no file open
     uiStateNoFileOpen();

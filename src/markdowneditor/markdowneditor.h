@@ -5,6 +5,7 @@
 #include <QSharedPointer>
 #include <QTextEdit>
 #include "common/appconfig.h"
+#include "textmanipulationactionsdelegate.h"
 #include "imagepreviewdialog.h"
 #include "documentstatisticsdialog.h"
 #include "spellcheck.h"
@@ -32,6 +33,9 @@ public:
 
     QString content();
 
+    QSharedPointer<TextManipulationActionsDelegate> textManipulationActions()
+    { return mTextManipulationActions; }
+
 public slots:
     void refocusEditor();
     bool open();
@@ -45,31 +49,6 @@ public slots:
 
     void increaseFontSize();
     void decreaseFontSize();
-
-    void toggleSelectionBold();
-    void toggleSelectionItalic();
-    void toggleSelectionStrikeout();
-
-    inline void toggleH1()
-    { toggleHeadingHelper(1); }
-
-    inline void toggleH2()
-    { toggleHeadingHelper(2); }
-
-    inline void toggleH3()
-    { toggleHeadingHelper(3); }
-
-    void undo();
-    void redo();
-
-    void insertHorizontalLine();
-    void insertModifyLink();
-    void insertModifyImage();
-
-    void toggleSelectionUnorderedList();
-    void toggleSelectionOrderedList();
-
-    void toggleSelectionBlockquote();
 
     inline void showDocumentStatsDialog()
     { mDocStatsDialog->show(); }
@@ -100,11 +79,11 @@ private slots:
 private:
     void setupEditor();
     QString parseFirstPathInText(const QString& text);
-    void toggleHeadingHelper(int level);
 
 private:
     Ui::MarkdownEditor* mUi;
     QSharedPointer<AppConfig> mConfig;
+    QSharedPointer<TextManipulationActionsDelegate> mTextManipulationActions;
     QList<QTextEdit::ExtraSelection> mMatchTextSelections;
     QList<QTextEdit::ExtraSelection> mGrammarCheckSelections;
     ImagePreviewDialog* mImagePreviewDialog;

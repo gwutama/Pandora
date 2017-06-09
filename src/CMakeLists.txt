@@ -26,6 +26,7 @@ set(SOURCE_FILES
     markdowneditor/spellcheck.cpp
     markdowneditor/languagetool.cpp
     markdowneditor/languagetoolmatch.cpp
+    markdowneditor/textmanipulationactionsdelegate.cpp
 )
 
 qt5_add_resources(RESOURCE_FILES resources.qrc)
