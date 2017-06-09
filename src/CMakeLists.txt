@@ -34,6 +34,7 @@ set(SOURCE_FILES
     markdowneditor/findreplaceactionsdelegate.cpp
     markdowneditor/spellcheckactionsdelegate.cpp
     markdowneditor/grammarcheckactionsdelegate.cpp
+    markdowneditor/proofreadactionsdelegatebase.cpp
 )
 
 qt5_add_resources(RESOURCE_FILES resources.qrc)

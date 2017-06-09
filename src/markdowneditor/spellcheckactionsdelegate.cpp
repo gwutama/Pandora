@@ -12,8 +12,8 @@ SpellCheckActionsDelegate::SpellCheckActionsDelegate(MarkdownTextEdit* textEdit,
     mTextEdit(textEdit),
     mSpellCheck(spellCheck)
 {
-    connect(mTextEdit, &MarkdownTextEdit::customContextMenuRequested,
-            this, &SpellCheckActionsDelegate::showContextMenu);
+//    connect(mTextEdit, &MarkdownTextEdit::customContextMenuRequested,
+//            this, &SpellCheckActionsDelegate::showContextMenu);
 }
 
 

@@ -1,35 +1,29 @@
 #ifndef GRAMMARCHECKACTIONSDELEGATE_H
 #define GRAMMARCHECKACTIONSDELEGATE_H
 
-#include <QObject>
-#include "markdowntextedit.h"
+#include "proofreadactionsdelegatebase.h"
 #include "languagetool.h"
 
-class GrammarCheckActionsDelegate : public QObject
+class GrammarCheckActionsDelegate : public ProofreadActionsDelegateBase
 {
     Q_OBJECT
+
 public:
     explicit GrammarCheckActionsDelegate(MarkdownTextEdit* textEdit,
                                          QSharedPointer<LanguageTool> languageTool,
                                          QObject* parent = nullptr);
     virtual ~GrammarCheckActionsDelegate();
 
-    inline QList<QTextEdit::ExtraSelection> selections()
-    { return mSelections; }
-
-public slots:
-    void checkVisibleText();
-
 private slots:
-    void checkDocument();
+    virtual void runVisibleTextCheck(const QString& text, int startPos, int endPos);
+    virtual void runDocumentCheck(const QString& text);
     void checkFinished();
+    virtual void showContextMenu(const QPoint& point);
 
 private:
-    MarkdownTextEdit* mTextEdit;
     QSharedPointer<LanguageTool> mLanguageTool;
-    QList<QTextEdit::ExtraSelection> mSelections;
     int mCheckOffset;
-
+    QList<LanguageToolMatch> mSuggestions;
     static const char* sTag;
 };
 
