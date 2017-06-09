@@ -22,7 +22,7 @@ SpellCheckActionsDelegate::~SpellCheckActionsDelegate()
 }
 
 
-void SpellCheckActionsDelegate::spellcheckVisibleText()
+void SpellCheckActionsDelegate::checkVisibleText()
 {
     if (mSpellCheck.isNull())
     {
@@ -43,7 +43,7 @@ void SpellCheckActionsDelegate::spellcheckVisibleText()
     mTextEdit->setTextCursor(cursor);
 
     // actual spell checking
-    mSpellCheckSelections.clear();
+    mSelections.clear();
 
     QTextCharFormat fmt;
     fmt.setUnderlineStyle(QTextCharFormat::DashDotDotLine);
@@ -58,7 +58,7 @@ void SpellCheckActionsDelegate::spellcheckVisibleText()
             QTextEdit::ExtraSelection extra;
             extra.cursor = mTextEdit->textCursor();
             extra.format = fmt;
-            mSpellCheckSelections.append(extra);
+            mSelections.append(extra);
         }
 
         if (mTextEdit->textCursor().position() > endPos)
@@ -67,7 +67,7 @@ void SpellCheckActionsDelegate::spellcheckVisibleText()
         }
     }
 
-    mTextEdit->setExtraSelections(mSpellCheckSelections);
+    mTextEdit->setExtraSelections(mSelections);
 
     // Set positions back to previous ones
     mTextEdit->setTextCursor(currentCursor);
@@ -85,7 +85,7 @@ void SpellCheckActionsDelegate::showContextMenu(const QPoint& point)
     // Are we on one of the possibly incorrect words?
     bool showSuggestions = false;
 
-    foreach (QTextEdit::ExtraSelection selection, mSpellCheckSelections)
+    foreach (QTextEdit::ExtraSelection selection, mSelections)
     {
         if (word == selection.cursor.selectedText())
         {

@@ -40,12 +40,18 @@ MarkdownEditor::MarkdownEditor(QSharedPointer<AppConfig> config,
     // Text edit signals slots
     connect(mUi->textEdit, &MarkdownTextEdit::laxTextChanged,
             this, &MarkdownEditor::contentChanged);
+//    connect(mUi->textEdit, &MarkdownTextEdit::laxTextChanged,
+//            mSpellCheckActions.data(), &SpellCheckActionsDelegate::checkVisibleText);
+//    connect(mUi->textEdit, &MarkdownTextEdit::laxVerticalScrollEnd,
+//            mSpellCheckActions.data(), &SpellCheckActionsDelegate::checkVisibleText);
+//    connect(this, &MarkdownEditor::contentChanged,
+//            mSpellCheckActions.data(), &SpellCheckActionsDelegate::checkVisibleText);
     connect(mUi->textEdit, &MarkdownTextEdit::laxTextChanged,
-            mSpellCheckActions.data(), &SpellCheckActionsDelegate::spellcheckVisibleText);
+            mGrammarCheckActions.data(), &GrammarCheckActionsDelegate::checkVisibleText);
     connect(mUi->textEdit, &MarkdownTextEdit::laxVerticalScrollEnd,
-            mSpellCheckActions.data(), &SpellCheckActionsDelegate::spellcheckVisibleText);
+            mGrammarCheckActions.data(), &GrammarCheckActionsDelegate::checkVisibleText);
     connect(this, &MarkdownEditor::contentChanged,
-            mSpellCheckActions.data(), &SpellCheckActionsDelegate::spellcheckVisibleText);
+            mGrammarCheckActions.data(), &GrammarCheckActionsDelegate::checkVisibleText);
 
     // Escape shortcuts
     QShortcut* escKeyShortcut = new QShortcut(Qt::Key_Escape, parent);

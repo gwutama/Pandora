@@ -14,14 +14,21 @@ public:
                                          QObject* parent = nullptr);
     virtual ~GrammarCheckActionsDelegate();
 
+    inline QList<QTextEdit::ExtraSelection> selections()
+    { return mSelections; }
+
+public slots:
+    void checkVisibleText();
+
 private slots:
-    void grammarCheckDocument();
-    void grammarCheckFinished();
+    void checkDocument();
+    void checkFinished();
 
 private:
     MarkdownTextEdit* mTextEdit;
     QSharedPointer<LanguageTool> mLanguageTool;
-    QList<QTextEdit::ExtraSelection> mGrammarCheckSelections;
+    QList<QTextEdit::ExtraSelection> mSelections;
+    int mCheckOffset;
 
     static const char* sTag;
 };

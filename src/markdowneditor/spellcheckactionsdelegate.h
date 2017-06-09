@@ -14,11 +14,11 @@ public:
                                        QObject* parent = nullptr);
     virtual ~SpellCheckActionsDelegate();
 
-    inline QList<QTextEdit::ExtraSelection> spellCheckSelections()
-    { return mSpellCheckSelections; }
+    inline QList<QTextEdit::ExtraSelection> selections()
+    { return mSelections; }
 
 public slots:
-    void spellcheckVisibleText();
+    void checkVisibleText();
 
 private slots:
     void showContextMenu(const QPoint& point);
@@ -29,7 +29,7 @@ private slots:
 private:
     MarkdownTextEdit* mTextEdit;
     QSharedPointer<SpellCheck> mSpellCheck;
-    QList<QTextEdit::ExtraSelection> mSpellCheckSelections;
+    QList<QTextEdit::ExtraSelection> mSelections;
     QList<QAction*> mSuggestionActions;
 
     static const char* sTag;
