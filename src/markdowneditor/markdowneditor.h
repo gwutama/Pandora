@@ -10,7 +10,7 @@
 #include "spellcheckactionsdelegate.h"
 #include "imagepreviewdialog.h"
 #include "documentstatisticsdialog.h"
-#include "languagetool.h"
+#include "grammarcheckactionsdelegate.h"
 
 namespace Ui
 {
@@ -62,12 +62,7 @@ signals:
 
 private slots:
     void onEscKeyActivated();
-    void onMagicShortcutActivated();
     void toggleImagePreviewModal();
-
-    // Spell checker and grammar tools
-    void grammarCheckDocument();
-    void grammarCheckFinished();
 
 private:
     void setupEditor();
@@ -79,10 +74,9 @@ private:
     QSharedPointer<TextManipulationActionsDelegate> mTextManipulationActions;
     QSharedPointer<FindReplaceActionsDelegate> mFindReplaceActions;
     QSharedPointer<SpellCheckActionsDelegate> mSpellCheckActions;
-    QList<QTextEdit::ExtraSelection> mGrammarCheckSelections;
+    QSharedPointer<GrammarCheckActionsDelegate> mGrammarCheckActions;
     ImagePreviewDialog* mImagePreviewDialog;
     DocumentStatisticsDialog* mDocStatsDialog;
-    QSharedPointer<LanguageTool> mLanguageTool;
 
     static const char* sTag;
 };

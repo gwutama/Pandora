@@ -18,6 +18,7 @@ set(SOURCE_FILES
 
     markdownviewer/documentgenerator.cpp
     markdownviewer/markdownviewer.cpp
+
     markdowneditor/markdowneditor.cpp
     markdowneditor/markdowneditorhighlighter.cpp
     markdowneditor/findreplacewidget.cpp
@@ -32,6 +33,7 @@ set(SOURCE_FILES
     markdowneditor/textmanipulationactionsdelegate.cpp
     markdowneditor/findreplaceactionsdelegate.cpp
     markdowneditor/spellcheckactionsdelegate.cpp
+    markdowneditor/grammarcheckactionsdelegate.cpp
 )
 
 qt5_add_resources(RESOURCE_FILES resources.qrc)

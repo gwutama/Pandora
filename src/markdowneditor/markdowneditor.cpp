@@ -31,11 +31,11 @@ MarkdownEditor::MarkdownEditor(QSharedPointer<AppConfig> config,
     // Document statistics dialog
     mDocStatsDialog = new DocumentStatisticsDialog(mUi->textEdit->document(), this);
 
-    // Setup language tool
-    LanguageTool* ltPtr = new LanguageTool(QUrl("http://localhost:8080/v2/check"));
-    mLanguageTool = QSharedPointer<LanguageTool>(ltPtr);
-    connect(mLanguageTool.data(), &LanguageTool::suggestionsReady,
-            this, &MarkdownEditor::grammarCheckFinished);
+    // Grammar check actions
+    auto ltPtr = new LanguageTool(QUrl("http://localhost:8080/v2/check"));
+    auto languageTool = QSharedPointer<LanguageTool>(ltPtr);
+    auto grammarCheckActionsPtr = new GrammarCheckActionsDelegate(mUi->textEdit, languageTool);
+    mGrammarCheckActions = QSharedPointer<GrammarCheckActionsDelegate>(grammarCheckActionsPtr);
 
     // Text edit signals slots
     connect(mUi->textEdit, &MarkdownTextEdit::laxTextChanged,
@@ -53,9 +53,9 @@ MarkdownEditor::MarkdownEditor(QSharedPointer<AppConfig> config,
     connect(escKeyShortcut, &QShortcut::activated,
             mFindReplaceActions.data(), &FindReplaceActionsDelegate::removeHighlightMatches);
 
-    // Magic shortcut
-    QShortcut* magicShortcut = new QShortcut(QKeySequence(tr("Ctrl+M")), parent);
-    connect(magicShortcut, &QShortcut::activated, this, &MarkdownEditor::onMagicShortcutActivated);
+    // Image shortcut
+    QShortcut* imgShortcut = new QShortcut(QKeySequence(tr("Ctrl+M")), parent);
+    connect(imgShortcut, &QShortcut::activated, this, &MarkdownEditor::toggleImagePreviewModal);
 
     // Misc
     mUi->findReplaceWidget->hide();
@@ -94,12 +94,6 @@ void MarkdownEditor::onEscKeyActivated()
     {
         mUi->findReplaceWidget->hide();
     }
-}
-
-
-void MarkdownEditor::onMagicShortcutActivated()
-{
-    toggleImagePreviewModal();
 }
 
 
@@ -247,48 +241,4 @@ void MarkdownEditor::showFindReplaceWidget()
         mUi->findReplaceWidget->show();
         mUi->findReplaceWidget->setFocus();
     }
-}
-
-
-void MarkdownEditor::grammarCheckDocument()
-{
-    mLanguageTool->check(content());
-}
-
-
-void MarkdownEditor::grammarCheckFinished()
-{
-    mGrammarCheckSelections.clear();
-    QTextCursor currentCursor = mUi->textEdit->textCursor();
-    mUi->textEdit->moveCursor(QTextCursor::Start);
-
-    QTextCharFormat fmt;
-    fmt.setUnderlineStyle(QTextCharFormat::DashDotDotLine);
-    fmt.setUnderlineColor(Qt::blue);
-
-    QList<LanguageToolMatch> suggestions = mLanguageTool->suggestions();
-
-    qDebug() << sTag << "Highlighting suggestions:" << suggestions.size();
-
-    for (int i = 0; i < suggestions.size(); i++)
-    {
-        LanguageToolMatch suggestion = suggestions.at(i);
-
-        // Select text
-        // From https://stackoverflow.com/questions/21122928/selecting-a-piece-of-text-using-qtextcursor
-        QTextCursor cur = currentCursor;
-        cur.setPosition(suggestion.offset(), QTextCursor::MoveAnchor);
-        cur.setPosition(suggestion.offset() + suggestion.length(), QTextCursor::KeepAnchor);
-
-        qDebug() << sTag << "Selecting pos" << suggestion.offset() << "to" << suggestion.offset() +
-                 suggestion.length();
-
-        QTextEdit::ExtraSelection extra;
-        extra.cursor = cur;
-        extra.format = fmt;
-        mGrammarCheckSelections.append(extra);
-    }
-
-    mUi->textEdit->setExtraSelections(mGrammarCheckSelections);
-    mUi->textEdit->setTextCursor(currentCursor);
 }
