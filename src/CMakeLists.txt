@@ -27,6 +27,7 @@ set(SOURCE_FILES
     markdowneditor/languagetool.cpp
     markdowneditor/languagetoolmatch.cpp
     markdowneditor/textmanipulationactionsdelegate.cpp
+    markdowneditor/findreplaceactionsdelegate.cpp
 )
 
 qt5_add_resources(RESOURCE_FILES resources.qrc)

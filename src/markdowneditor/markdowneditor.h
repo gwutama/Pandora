@@ -6,6 +6,7 @@
 #include <QTextEdit>
 #include "common/appconfig.h"
 #include "textmanipulationactionsdelegate.h"
+#include "findreplaceactionsdelegate.h"
 #include "imagepreviewdialog.h"
 #include "documentstatisticsdialog.h"
 #include "spellcheck.h"
@@ -61,17 +62,6 @@ private slots:
     void onMagicShortcutActivated();
     void toggleImagePreviewModal();
 
-    // Find and replace methods
-    void searchAndHighlightMatches();
-    void removeHighlightMatches();
-    bool goToNextMatch();
-    bool goToPreviousMatch();
-    bool goToNthMatch(unsigned int index);
-    bool goToNearestMatch(const QTextCursor& cursor);
-    bool replaceMatch();
-    bool replaceMatchGoToNextOne();
-    bool replaceMatches();
-
     // Spell checker and grammar tools
     void grammarCheckDocument();
     void grammarCheckFinished();
@@ -84,7 +74,7 @@ private:
     Ui::MarkdownEditor* mUi;
     QSharedPointer<AppConfig> mConfig;
     QSharedPointer<TextManipulationActionsDelegate> mTextManipulationActions;
-    QList<QTextEdit::ExtraSelection> mMatchTextSelections;
+    QSharedPointer<FindReplaceActionsDelegate> mFindReplaceActions;
     QList<QTextEdit::ExtraSelection> mGrammarCheckSelections;
     ImagePreviewDialog* mImagePreviewDialog;
     DocumentStatisticsDialog* mDocStatsDialog;
