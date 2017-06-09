@@ -37,7 +37,7 @@ MarkdownTextEdit::MarkdownTextEdit(QWidget* parent) :
 
     // Setup spell checker
     connect(this, &MarkdownTextEdit::customContextMenuRequested,
-            this, &MarkdownTextEdit::showContextMenu2);
+            this, &MarkdownTextEdit::showContextMenu);
 }
 
 
@@ -197,7 +197,7 @@ void MarkdownTextEdit::spellcheckVisibleText()
 }
 
 
-void MarkdownTextEdit::showContextMenu2(const QPoint& point)
+void MarkdownTextEdit::showContextMenu(const QPoint& point)
 {
     if (mSpellCheck.isNull())
     {

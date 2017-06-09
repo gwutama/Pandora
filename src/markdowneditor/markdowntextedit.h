@@ -31,7 +31,7 @@ private slots:
     void checkVerticalScroll();
     void checkTextChanged();
     void replaceSelection(const QString& replacement);
-    void showContextMenu2(const QPoint& point);
+    void showContextMenu(const QPoint& point);
     void showContextMenuWithSuggestions(const QPoint& point,
                                         const QStringList& suggestions = QStringList());
 
