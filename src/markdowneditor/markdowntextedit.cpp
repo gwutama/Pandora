@@ -17,8 +17,13 @@ MarkdownTextEdit::MarkdownTextEdit(QWidget* parent) :
     mVerticalScrollTimer.setInterval(1000);
     mVerticalScrollTimer.setSingleShot(true);
 
-    connect(&mVerticalScrollTimer, &QTimer::timeout,
-            this, &MarkdownTextEdit::emitVerticalScrollEnd);
+    mContentChangeTimer.setInterval(7000);
+    mContentChangeTimer.setSingleShot(false);
+
+    connect(&mVerticalScrollTimer, &QTimer::timeout, this, &MarkdownTextEdit::checkVerticalScroll);
+    connect(&mContentChangeTimer, &QTimer::timeout, this, &MarkdownTextEdit::checkTextChanged);
+
+    mContentChangeTimer.start();
 }
 
 
@@ -43,11 +48,6 @@ void MarkdownTextEdit::showContextMenu(const QStringList& suggestions,
         connect(action, &QAction::triggered, this, &MarkdownTextEdit::onSuggestionActionTriggered);
 
         mSuggestionActions.append(action);
-
-        if (i >= 4) // show max 5 suggestions
-        {
-            break;
-        }
     }
 
     menu->exec(mapToGlobal(point));
@@ -64,14 +64,26 @@ void MarkdownTextEdit::onSuggestionActionTriggered()
 }
 
 
-void MarkdownTextEdit::emitVerticalScrollEnd()
+void MarkdownTextEdit::checkVerticalScroll()
 {
     int pos = verticalScrollBar()->value();
 
     if (abs(pos - mVerticalScrollPos) > 10)
     {
         mVerticalScrollPos = pos;
-        emit verticalScrollEnd(pos);
+        emit laxVerticalScrollEnd(pos);
+    }
+}
+
+
+void MarkdownTextEdit::checkTextChanged()
+{
+    QString content = document()->toPlainText();
+
+    if (mOldContent != content)
+    {
+        mOldContent = content;
+        emit laxTextChanged(content);
     }
 }
 
@@ -184,7 +196,7 @@ void MarkdownTextEdit::mousePressEvent(QMouseEvent* event)
         // move cursor to the nearest position on right click
         QTextCursor nearestCursor = cursorForPosition(event->pos());
         setTextCursor(nearestCursor);
-        qDebug() << sTag << nearestCursor.position();
+        qDebug() << sTag << "Nearest cursor position to mouse pointer:" << nearestCursor.position();
     }
 
     QPlainTextEdit::mousePressEvent(event);

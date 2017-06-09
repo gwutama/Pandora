@@ -23,11 +23,13 @@ protected slots:
 
 private slots:
     void onSuggestionActionTriggered();
-    void emitVerticalScrollEnd();
+    void checkVerticalScroll();
+    void checkTextChanged();
 
 signals:
     void suggestionActionTriggered(const QString& word);
-    void verticalScrollEnd(int position);
+    void laxVerticalScrollEnd(int position);
+    void laxTextChanged(const QString& text);
 
 private:
     void indent(QKeyEvent* event);
@@ -36,7 +38,9 @@ private:
 private:
     QList<QAction*> mSuggestionActions;
     QTimer mVerticalScrollTimer;
+    QTimer mContentChangeTimer;
     int mVerticalScrollPos;
+    QString mOldContent;
     static const char* sTag;
 };
 

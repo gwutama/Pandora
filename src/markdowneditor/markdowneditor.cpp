@@ -52,9 +52,11 @@ MarkdownEditor::MarkdownEditor(QSharedPointer<AppConfig> config,
     connect(mUi->findReplaceWidget, &FindReplaceWidget::replaceAllButtonClicked,
             this, &MarkdownEditor::replaceMatches);
 
-    // Timers
-    connect(&mContentChangeTimer, &QTimer::timeout, this, &MarkdownEditor::checkContentChanged);
-    connect(mUi->textEdit, &MarkdownTextEdit::verticalScrollEnd,
+    connect(mUi->textEdit, &MarkdownTextEdit::laxTextChanged,
+            this, &MarkdownEditor::contentChanged);
+    connect(mUi->textEdit, &MarkdownTextEdit::laxTextChanged,
+            this, &MarkdownEditor::spellcheckVisibleText);
+    connect(mUi->textEdit, &MarkdownTextEdit::laxVerticalScrollEnd,
             this, &MarkdownEditor::spellcheckVisibleText);
 
     QShortcut* escKeyShortcut = new QShortcut(Qt::Key_Escape, parent);
@@ -170,31 +172,25 @@ QString MarkdownEditor::parseFirstPathInText(const QString& text)
 }
 
 
-void MarkdownEditor::checkContentChanged()
-{
-    QString content = mUi->textEdit->document()->toPlainText();
-
-    if (mOldContent != content)
-    {
-        emit contentChanged(content);
-        mOldContent = content;
-    }
-}
-
-
 void MarkdownEditor::refocusEditor()
 {
     mUi->textEdit->setFocus();
 }
+
 
 bool MarkdownEditor::open()
 {
     if (openFile(mConfig->markdownFile()))
     {
         qDebug() << sTag << "Content has been changed";
-        mContentChangeTimer.start(3000); // 3 seconds
-        checkContentChanged();
-        spellcheckVisibleText(0);
+
+        // Run spell check on the visible text
+        spellcheckVisibleText();
+
+        // Emit signals so that mainwindow picks the signal up and tell markdownpreview
+        // to generate preview
+        emit contentChanged(content());
+
         return true;
     }
 
@@ -205,7 +201,6 @@ bool MarkdownEditor::open()
 void MarkdownEditor::close()
 {
     mUi->textEdit->clear();
-    mContentChangeTimer.stop();
 }
 
 
@@ -798,50 +793,21 @@ void MarkdownEditor::toggleSelectionBlockquote()
 }
 
 
-// DEPRECATED
-void MarkdownEditor::spellcheckDocument()
+void MarkdownEditor::spellcheckVisibleText()
 {
-    mSpellCheckSelections.clear();
+    qDebug() << sTag << "Spell checking visible text";
+
+    // Memorize positions
+    // See: https://stackoverflow.com/questions/21955923/prevent-a-qtextedit-widget-from-scrolling-when-there-is-a-selection
     QTextCursor currentCursor = mUi->textEdit->textCursor();
-    mUi->textEdit->moveCursor(QTextCursor::Start);
-
-    QTextCharFormat fmt;
-    fmt.setUnderlineStyle(QTextCharFormat::DashDotDotLine);
-    fmt.setUnderlineColor(Qt::red);
-
-    while (mUi->textEdit->find(QRegExp("((?!_)\\w)+")))
-    {
-        QString word = mUi->textEdit->textCursor().selectedText();
-
-        if (!mSpellCheck->spellcheck(word))
-        {
-            QTextEdit::ExtraSelection extra;
-            extra.cursor = mUi->textEdit->textCursor();
-            extra.format = fmt;
-            mSpellCheckSelections.append(extra);
-        }
-    }
-
-    mUi->textEdit->setExtraSelections(mSpellCheckSelections);
-    mUi->textEdit->setTextCursor(currentCursor);
-}
-
-
-void MarkdownEditor::spellcheckVisibleText(int scrollbarPosition)
-{
-    qDebug() << sTag << "Spell checking visible text "
-                        "because scroll bar position changed to" << scrollbarPosition;
+    int scrollbarPosition = mUi->textEdit->verticalScrollBar()->value();
 
     // see: https://stackoverflow.com/questions/21493750/getting-only-the-visible-text-from-a-qtextedit-widget
     QTextCursor cursor = mUi->textEdit->cursorForPosition(QPoint(0, 0));
     QPoint bottomRight(mUi->textEdit->viewport()->width() - 1,
                        mUi->textEdit->viewport()->height() - 1);
     int endPos = mUi->textEdit->cursorForPosition(bottomRight).position();
-    cursor.setPosition(endPos, QTextCursor::KeepAnchor);
-
-    // Memorize positions
-    // See: https://stackoverflow.com/questions/21955923/prevent-a-qtextedit-widget-from-scrolling-when-there-is-a-selection
-    QTextCursor currentCursor = mUi->textEdit->textCursor();
+    mUi->textEdit->setTextCursor(cursor);
 
     // actual spell checking
     mSpellCheckSelections.clear();
@@ -852,11 +818,6 @@ void MarkdownEditor::spellcheckVisibleText(int scrollbarPosition)
 
     while (mUi->textEdit->find(QRegExp("((?!_)\\w)+")))
     {
-        if (mUi->textEdit->textCursor().position() > endPos)
-        {
-            break;
-        }
-
         QString word = mUi->textEdit->textCursor().selectedText();
 
         if (!mSpellCheck->spellcheck(word))
@@ -865,6 +826,11 @@ void MarkdownEditor::spellcheckVisibleText(int scrollbarPosition)
             extra.cursor = mUi->textEdit->textCursor();
             extra.format = fmt;
             mSpellCheckSelections.append(extra);
+        }
+
+        if (mUi->textEdit->textCursor().position() > endPos)
+        {
+            break;
         }
     }
 

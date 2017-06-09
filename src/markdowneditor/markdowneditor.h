@@ -87,7 +87,6 @@ private slots:
     void onEscKeyActivated();
     void onMagicShortcutActivated();
     void toggleImagePreviewModal();
-    void checkContentChanged();
 
     // Find and replace methods
     void searchAndHighlightMatches();
@@ -103,13 +102,7 @@ private slots:
     void replaceSelection(const QString& replacement);
 
     // Spell checker and grammar tools
-    /**
-     * @brief spellcheckDocument
-     * @deprecated
-     * @see spellcheckVisibleText()
-     */
-    void spellcheckDocument();
-    void spellcheckVisibleText(int scrollbarPosition);
+    void spellcheckVisibleText();
     void showContextMenuWithWordSuggestions(const QPoint& point);
     void grammarCheckDocument();
     void grammarCheckFinished();
@@ -124,8 +117,6 @@ private:
     Ui::MarkdownEditor* mUi;
     QSharedPointer<AppConfig> mConfig;
     QSharedPointer<MarkdownEditorHighlighter> mHighlighter;
-    QTimer mContentChangeTimer;
-    QString mOldContent;
     QList<QTextEdit::ExtraSelection> mMatchTextSelections;
     QList<QTextEdit::ExtraSelection> mSpellCheckSelections;
     QList<QTextEdit::ExtraSelection> mGrammarCheckSelections;
