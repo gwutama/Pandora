@@ -8,12 +8,9 @@ const char* SpellCheckActionsDelegate::sTag = "[SpellCheckActionsDelegate]";
 SpellCheckActionsDelegate::SpellCheckActionsDelegate(MarkdownTextEdit* textEdit,
                                                      QSharedPointer<SpellCheck> spellCheck,
                                                      QObject* parent) :
-    QObject(parent),
-    mTextEdit(textEdit),
+    ProofreadActionsDelegateBase(textEdit, parent),
     mSpellCheck(spellCheck)
 {
-//    connect(mTextEdit, &MarkdownTextEdit::customContextMenuRequested,
-//            this, &SpellCheckActionsDelegate::showContextMenu);
 }
 
 
@@ -22,7 +19,7 @@ SpellCheckActionsDelegate::~SpellCheckActionsDelegate()
 }
 
 
-void SpellCheckActionsDelegate::checkVisibleText()
+void SpellCheckActionsDelegate::runVisibleTextCheck(const QString& text, int startPos, int endPos)
 {
     if (mSpellCheck.isNull())
     {
@@ -31,23 +28,13 @@ void SpellCheckActionsDelegate::checkVisibleText()
 
     qDebug() << sTag << "Spell checking visible text";
 
-    // Memorize positions
-    // See: https://stackoverflow.com/questions/21955923/prevent-a-qtextedit-widget-from-scrolling-when-there-is-a-selection
-    QTextCursor currentCursor = mTextEdit->textCursor();
-    int scrollbarPosition = mTextEdit->verticalScrollBar()->value();
-
-    // see: https://stackoverflow.com/questions/21493750/getting-only-the-visible-text-from-a-qtextedit-widget
     QTextCursor cursor = mTextEdit->cursorForPosition(QPoint(0, 0));
-    QPoint bottomRight(mTextEdit->viewport()->width() - 1, mTextEdit->viewport()->height() - 1);
-    int endPos = mTextEdit->cursorForPosition(bottomRight).position();
     mTextEdit->setTextCursor(cursor);
-
-    // actual spell checking
     mSelections.clear();
 
     QTextCharFormat fmt;
-    fmt.setUnderlineStyle(QTextCharFormat::DashDotDotLine);
-    fmt.setUnderlineColor(Qt::red);
+    fmt.setUnderlineStyle(QTextCharFormat::WaveUnderline);
+    fmt.setUnderlineColor(Qt::blue);
 
     while (mTextEdit->find(QRegExp("((?!_)\\w)+")))
     {
@@ -68,10 +55,11 @@ void SpellCheckActionsDelegate::checkVisibleText()
     }
 
     mTextEdit->setExtraSelections(mSelections);
+}
 
-    // Set positions back to previous ones
-    mTextEdit->setTextCursor(currentCursor);
-    mTextEdit->verticalScrollBar()->setValue(scrollbarPosition);
+
+void SpellCheckActionsDelegate::runDocumentCheck(const QString& text)
+{
 }
 
 
@@ -106,30 +94,6 @@ void SpellCheckActionsDelegate::showContextMenu(const QPoint& point)
 }
 
 
-void SpellCheckActionsDelegate::showContextMenuWithSuggestions(const QPoint& point,
-                                                               const QStringList& suggestions)
-{
-    mSuggestionActions.clear();
-
-    QMenu* menu = mTextEdit->createStandardContextMenu();
-    menu->addSeparator();
-
-    for (int i = 0; i < suggestions.size(); i++)
-    {
-        QAction* action = menu->addAction(suggestions.at(i));
-        action->setData(suggestions.at(i));
-
-        connect(action, &QAction::triggered,
-                this, &SpellCheckActionsDelegate::replaceSelectionWithTextReplacement);
-
-        mSuggestionActions.append(action);
-    }
-
-    menu->exec(mTextEdit->mapToGlobal(point));
-    delete menu;
-}
-
-
 void SpellCheckActionsDelegate::replaceSelectionWithTextReplacement()
 {
     QObject* obj = sender();
@@ -140,5 +104,7 @@ void SpellCheckActionsDelegate::replaceSelectionWithTextReplacement()
     QTextCursor cursor = mTextEdit->textCursor();
     cursor.select(QTextCursor::WordUnderCursor);
     cursor.insertText(replacement);
+
+    checkVisibleText();
 }
 

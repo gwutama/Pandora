@@ -11,8 +11,7 @@ ProofreadActionsDelegateBase::ProofreadActionsDelegateBase(MarkdownTextEdit* tex
     mTextEdit(textEdit)
 {
     connect(mTextEdit, &MarkdownTextEdit::customContextMenuRequested,
-            this, &ProofreadActionsDelegateBase::showContextMenu,
-            Qt::UniqueConnection);
+            this, &ProofreadActionsDelegateBase::showContextMenu);
 }
 
 

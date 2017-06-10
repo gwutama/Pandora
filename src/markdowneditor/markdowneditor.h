@@ -73,7 +73,7 @@ private:
     QSharedPointer<AppConfig> mConfig;
     QSharedPointer<TextManipulationActionsDelegate> mTextManipulationActions;
     QSharedPointer<FindReplaceActionsDelegate> mFindReplaceActions;
-    QSharedPointer<SpellCheckActionsDelegate> mSpellCheckActions;
+//    QSharedPointer<SpellCheckActionsDelegate> mSpellCheckActions;
     QSharedPointer<GrammarCheckActionsDelegate> mGrammarCheckActions;
     ImagePreviewDialog* mImagePreviewDialog;
     DocumentStatisticsDialog* mDocStatsDialog;
