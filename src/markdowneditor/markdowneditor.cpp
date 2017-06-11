@@ -32,13 +32,14 @@ MarkdownEditor::MarkdownEditor(QSharedPointer<AppConfig> config,
     //    auto spellCheckActionsPtr = new SpellCheckActionsDelegate(mUi->textEdit, spellCheck);
     //    mSpellCheckActions = QSharedPointer<SpellCheckActionsDelegate>(spellCheckActionsPtr);
     //    connect(mUi->textEdit, &MarkdownTextEdit::laxTextChanged,
-    //            this, &MarkdownEditor::contentChanged);
-    //    connect(mUi->textEdit, &MarkdownTextEdit::laxTextChanged,
     //            mSpellCheckActions.data(), &SpellCheckActionsDelegate::checkVisibleText);
     //    connect(mUi->textEdit, &MarkdownTextEdit::laxVerticalScrollEnd,
     //            mSpellCheckActions.data(), &SpellCheckActionsDelegate::checkVisibleText);
     //    connect(this, &MarkdownEditor::contentChanged,
     //            mSpellCheckActions.data(), &SpellCheckActionsDelegate::checkVisibleText);
+
+    connect(mUi->textEdit, &MarkdownTextEdit::laxTextChanged,
+            this, &MarkdownEditor::contentChanged);
 
     // Grammar check actions
     auto ltPtr = new LanguageTool(QUrl("http://localhost:8888/v2/check"));
