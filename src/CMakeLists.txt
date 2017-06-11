@@ -1,24 +1,12 @@
-find_package(Qt5Core REQUIRED)
-find_package(Qt5Gui REQUIRED)
-find_package(Qt5Widgets REQUIRED)
-find_package(Qt5WebEngineWidgets REQUIRED)
-
-set(CMAKE_AUTOMOC ON)
-set(CMAKE_INCLUDE_CURRENT_DIR ON)
-
 set(SOURCE_FILES
     main.cpp
     mainwindow.cpp
     maintoolbar.cpp
-
     preferences/preferencesdialog.cpp
-
     common/appconfig.cpp
     common/filebrowserinputwidget.cpp
-
     markdownviewer/documentgenerator.cpp
     markdownviewer/markdownviewer.cpp
-
     markdowneditor/markdowneditor.cpp
     markdowneditor/markdowneditorhighlighter.cpp
     markdowneditor/findreplacewidget.cpp
@@ -35,24 +23,19 @@ set(SOURCE_FILES
     markdowneditor/spellcheckactionsdelegate.cpp
     markdowneditor/grammarcheckactionsdelegate.cpp
     markdowneditor/proofreadactionsdelegatebase.cpp
-)
 
-qt5_add_resources(RESOURCE_FILES resources.qrc)
-
-qt5_wrap_ui(UI_FILES
     mainwindow.ui
     maintoolbar.ui
-
     preferences/preferencesdialog.ui
-
     common/filebrowserinputwidget.ui
-
     markdowneditor/markdowneditor.ui
     markdowneditor/findreplacewidget.ui
     markdowneditor/insertmodifylinkdialog.ui
     markdowneditor/insertmodifyimagedialog.ui
     markdowneditor/imagepreviewdialog.ui
     markdowneditor/documentstatisticsdialog.ui
+
+    resources.qrc
 )
 
 find_package(Qt5Core REQUIRED)
@@ -62,10 +45,12 @@ find_package(Qt5WebEngineWidgets REQUIRED)
 find_package(Qt5Network REQUIRED)
 find_package(HUNSPELL REQUIRED)
 
-include_directories(${HUNSPELL_INCLUDE_DIR})
-
 set(CMAKE_AUTOMOC ON)
+set(CMAKE_AUTORCC ON)
+set(CMAKE_AUTOUIC ON)
 set(CMAKE_INCLUDE_CURRENT_DIR ON)
+
+include_directories(${HUNSPELL_INCLUDE_DIR})
 
 add_executable(${PROJECT_NAME} ${SOURCE_FILES} ${UI_FILES} ${RESOURCE_FILES})
 target_link_libraries(${PROJECT_NAME}
