@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
 # CHANGEME
-CMAKE_PREFIX_PATH=/Users/galuh/Qt/5.9/clang_64
+CMAKE_PREFIX_PATH=/Users/galuh/Qt/5.7/clang_64
 
 
 QMAKE_BIN=$CMAKE_PREFIX_PATH/bin/qmake
