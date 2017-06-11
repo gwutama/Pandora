@@ -8,19 +8,38 @@
 const char* LanguageTool::sTag = "[LanguageTool]";
 
 LanguageTool::LanguageTool(const QUrl& url,
+                           const QString& language,
+                           bool useBuiltin,
                            QObject* parent) :
     QObject(parent),
     mUrl(url),
-    mLanguage("en-US")
+    mLanguage(language),
+    mUseBuiltin(useBuiltin)
 {
     mNetwork = QSharedPointer<QNetworkAccessManager>(new QNetworkAccessManager);
     connect(mNetwork.data(), &QNetworkAccessManager::finished,
             this, &LanguageTool::replyFinished);
+
+    if (mUseBuiltin)
+    {
+        run();
+        connect(&mExecProc, &QProcess::started, this, &LanguageTool::toolReady);
+    }
+    else
+    {
+        emit toolReady();
+    }
 }
 
 
 LanguageTool::~LanguageTool()
 {
+    if (mUseBuiltin)
+    {
+        mExecProc.terminate();
+        mExecProc.waitForFinished();
+        mExecProc.kill();
+    }
 }
 
 
@@ -37,6 +56,12 @@ void LanguageTool::check(const QString& text)
 
 void LanguageTool::replyFinished(QNetworkReply* reply)
 {
+    if (reply->error())
+    {
+        qWarning() << sTag << "Network error:" << reply->errorString();
+        return;
+    }
+
     // Process json
     QByteArray ba = reply->readAll();
     qDebug() << sTag << "Got reply from languagetool server";
@@ -61,4 +86,25 @@ void LanguageTool::replyFinished(QNetworkReply* reply)
 
         emit suggestionsReady();
     }
+}
+
+
+void LanguageTool::run()
+{
+    if (mExecProc.state() != QProcess::NotRunning)
+    {
+        return;
+    }
+
+    qDebug() << sTag << "Running LanguageTool";
+    // run java -cp languagetool-server.jar org.languagetool.server.HTTPServer --port 8080
+    mExecProc.setProgram("java");
+    QStringList args;
+    args << "-cp"
+         << "/Users/galuh/Downloads/LanguageTool-3.7/languagetool-server.jar"
+         << "org.languagetool.server.HTTPServer"
+         << "--port"
+         << QString::number(mUrl.port());
+    mExecProc.setArguments(args);
+    mExecProc.start();
 }

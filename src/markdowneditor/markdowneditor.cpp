@@ -27,23 +27,26 @@ MarkdownEditor::MarkdownEditor(QSharedPointer<AppConfig> config,
     mDocStatsDialog = new DocumentStatisticsDialog(mUi->textEdit->document(), this);
 
     // Spell check actions
-//    auto spellCheck = QSharedPointer<SpellCheck>(new SpellCheck(mConfig));
-//    auto spellCheckActionsPtr = new SpellCheckActionsDelegate(mUi->textEdit, spellCheck);
-//    mSpellCheckActions = QSharedPointer<SpellCheckActionsDelegate>(spellCheckActionsPtr);
-//    connect(mUi->textEdit, &MarkdownTextEdit::laxTextChanged,
-//            this, &MarkdownEditor::contentChanged);
-//    connect(mUi->textEdit, &MarkdownTextEdit::laxTextChanged,
-//            mSpellCheckActions.data(), &SpellCheckActionsDelegate::checkVisibleText);
-//    connect(mUi->textEdit, &MarkdownTextEdit::laxVerticalScrollEnd,
-//            mSpellCheckActions.data(), &SpellCheckActionsDelegate::checkVisibleText);
-//    connect(this, &MarkdownEditor::contentChanged,
-//            mSpellCheckActions.data(), &SpellCheckActionsDelegate::checkVisibleText);
+    // DEPRECATED
+    //    auto spellCheck = QSharedPointer<SpellCheck>(new SpellCheck(mConfig));
+    //    auto spellCheckActionsPtr = new SpellCheckActionsDelegate(mUi->textEdit, spellCheck);
+    //    mSpellCheckActions = QSharedPointer<SpellCheckActionsDelegate>(spellCheckActionsPtr);
+    //    connect(mUi->textEdit, &MarkdownTextEdit::laxTextChanged,
+    //            this, &MarkdownEditor::contentChanged);
+    //    connect(mUi->textEdit, &MarkdownTextEdit::laxTextChanged,
+    //            mSpellCheckActions.data(), &SpellCheckActionsDelegate::checkVisibleText);
+    //    connect(mUi->textEdit, &MarkdownTextEdit::laxVerticalScrollEnd,
+    //            mSpellCheckActions.data(), &SpellCheckActionsDelegate::checkVisibleText);
+    //    connect(this, &MarkdownEditor::contentChanged,
+    //            mSpellCheckActions.data(), &SpellCheckActionsDelegate::checkVisibleText);
 
     // Grammar check actions
     auto ltPtr = new LanguageTool(QUrl("http://localhost:8080/v2/check"));
-    auto languageTool = QSharedPointer<LanguageTool>(ltPtr);
+    QSharedPointer<LanguageTool> languageTool = QSharedPointer<LanguageTool>(ltPtr);
     auto grammarCheckActionsPtr = new GrammarCheckActionsDelegate(mUi->textEdit, languageTool);
     mGrammarCheckActions = QSharedPointer<GrammarCheckActionsDelegate>(grammarCheckActionsPtr);
+    connect(languageTool.data(), &LanguageTool::toolReady,
+            mGrammarCheckActions.data(), &GrammarCheckActionsDelegate::checkVisibleText);
     connect(mUi->textEdit, &MarkdownTextEdit::laxTextChanged,
             mGrammarCheckActions.data(), &GrammarCheckActionsDelegate::checkVisibleText);
     connect(mUi->textEdit, &MarkdownTextEdit::laxVerticalScrollEnd,
@@ -218,7 +221,7 @@ void MarkdownEditor::setNarrowMargin()
 
 void MarkdownEditor::setWideMargin()
 {
-    mUi->textEdit->setMargin(150);
+    mUi->textEdit->setMargin(120);
 }
 
 
