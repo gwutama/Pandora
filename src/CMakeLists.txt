@@ -52,7 +52,7 @@ set(CMAKE_INCLUDE_CURRENT_DIR ON)
 
 include_directories(${HUNSPELL_INCLUDE_DIR})
 
-add_executable(${PROJECT_NAME} ${SOURCE_FILES} ${UI_FILES} ${RESOURCE_FILES})
+add_executable(${PROJECT_NAME} ${SOURCE_FILES})
 target_link_libraries(${PROJECT_NAME}
                       Qt5::Core Qt5::Gui Qt5::Widgets Qt5::WebEngineWidgets Qt5::Network
                       ${HUNSPELL_LIBRARIES})
