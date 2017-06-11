@@ -37,7 +37,11 @@ void ProofreadActionsDelegateBase::checkVisibleText()
     mTextEdit->setTextCursor(cursor);
 
     QString content = mTextEdit->textCursor().selectedText();
-    runVisibleTextCheck(content, startPos, endPos);
+
+    if (!content.isEmpty())
+    {
+        runVisibleTextCheck(content, startPos, endPos);
+    }
 
     // Set positions back to previous ones
     mTextEdit->setTextCursor(currentCursor);
@@ -53,7 +57,11 @@ void ProofreadActionsDelegateBase::checkDocument()
     int scrollbarPosition = mTextEdit->verticalScrollBar()->value();
 
     QString content = mTextEdit->document()->toPlainText();
-    runDocumentCheck(content);
+
+    if (!content.isEmpty())
+    {
+        runDocumentCheck(content);
+    }
 
     // Set positions back to previous ones
     mTextEdit->setTextCursor(currentCursor);

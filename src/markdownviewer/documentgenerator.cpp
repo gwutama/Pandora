@@ -9,7 +9,7 @@ const char* DocumentGenerator::sTag = "[DocumentGenerator]";
 DocumentGenerator::DocumentGenerator(QObject* parent) :
     QObject(parent)
 {
-    mExecProc.setProgram("pandoc");
+    mExecProc.setProgram("Pandora.app/Contents/MacOS/pandoc/pandoc");
     connect(&mExecProc, static_cast<void (QProcess::*)(int, QProcess::ExitStatus)>(&QProcess::finished),
             this, &DocumentGenerator::processFinished);
 }

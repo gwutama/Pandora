@@ -41,7 +41,7 @@ MarkdownEditor::MarkdownEditor(QSharedPointer<AppConfig> config,
     //            mSpellCheckActions.data(), &SpellCheckActionsDelegate::checkVisibleText);
 
     // Grammar check actions
-    auto ltPtr = new LanguageTool(QUrl("http://localhost:8080/v2/check"));
+    auto ltPtr = new LanguageTool(QUrl("http://localhost:8888/v2/check"));
     QSharedPointer<LanguageTool> languageTool = QSharedPointer<LanguageTool>(ltPtr);
     auto grammarCheckActionsPtr = new GrammarCheckActionsDelegate(mUi->textEdit, languageTool);
     mGrammarCheckActions = QSharedPointer<GrammarCheckActionsDelegate>(grammarCheckActionsPtr);

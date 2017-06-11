@@ -98,10 +98,10 @@ void LanguageTool::run()
 
     qDebug() << sTag << "Running LanguageTool";
     // run java -cp languagetool-server.jar org.languagetool.server.HTTPServer --port 8080
-    mExecProc.setProgram("java");
+    mExecProc.setProgram("/usr/bin/java");
     QStringList args;
     args << "-cp"
-         << "/Users/galuh/Downloads/LanguageTool-3.7/languagetool-server.jar"
+         << "Pandora.app/Contents/MacOS/LanguageTool/languagetool-server.jar"
          << "org.languagetool.server.HTTPServer"
          << "--port"
          << QString::number(mUrl.port());
