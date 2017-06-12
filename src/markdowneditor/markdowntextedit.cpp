@@ -27,11 +27,11 @@ MarkdownTextEdit::MarkdownTextEdit(QWidget* parent) :
     connect(&mHoverCursorTimer, &QTimer::timeout,
             this, &MarkdownTextEdit::checkMouseHoverPositionChanged);
 
-    mVerticalScrollTimer.setInterval(1000);
+    mVerticalScrollTimer.setInterval(250);
     mVerticalScrollTimer.setSingleShot(true);
     mContentChangeTimer.setInterval(5000);
     mContentChangeTimer.setSingleShot(false);
-    mHoverCursorTimer.setInterval(1000);
+    mHoverCursorTimer.setInterval(500);
     mHoverCursorTimer.setSingleShot(true);
 
     mContentChangeTimer.start();
