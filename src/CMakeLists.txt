@@ -23,6 +23,8 @@ set(SOURCE_FILES
     markdowneditor/spellcheckactionsdelegate.cpp
     markdowneditor/grammarcheckactionsdelegate.cpp
     markdowneditor/proofreadactionsdelegatebase.cpp
+    markdowncollection/markdowncollection.cpp
+    markdowncollection/markdowncollectionitem.cpp
 
     mainwindow.ui
     maintoolbar.ui
