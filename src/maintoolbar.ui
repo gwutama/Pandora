@@ -50,7 +50,7 @@
        </property>
        <property name="icon">
         <iconset resource="resources.qrc">
-         <normaloff>:/icons/newdocument.svg</normaloff>:/icons/newdocument.svg</iconset>
+         <normaloff>:/icons/png/newdocument.png</normaloff>:/icons/png/newdocument.png</iconset>
        </property>
        <property name="iconSize">
         <size>
@@ -79,7 +79,7 @@
        </property>
        <property name="icon">
         <iconset resource="resources.qrc">
-         <normaloff>:/icons/savedocument.svg</normaloff>:/icons/savedocument.svg</iconset>
+         <normaloff>:/icons/png/savedocument.png</normaloff>:/icons/png/savedocument.png</iconset>
        </property>
        <property name="iconSize">
         <size>
@@ -121,7 +121,7 @@
        </property>
        <property name="icon">
         <iconset resource="resources.qrc">
-         <normaloff>:/icons/undo.svg</normaloff>:/icons/undo.svg</iconset>
+         <normaloff>:/icons/png/undo.png</normaloff>:/icons/png/undo.png</iconset>
        </property>
        <property name="iconSize">
         <size>
@@ -150,7 +150,7 @@
        </property>
        <property name="icon">
         <iconset resource="resources.qrc">
-         <normaloff>:/icons/redo.svg</normaloff>:/icons/redo.svg</iconset>
+         <normaloff>:/icons/png/redo.png</normaloff>:/icons/png/redo.png</iconset>
        </property>
        <property name="iconSize">
         <size>
@@ -198,7 +198,7 @@
        </property>
        <property name="icon">
         <iconset resource="resources.qrc">
-         <normaloff>:/icons/bold.svg</normaloff>:/icons/bold.svg</iconset>
+         <normaloff>:/icons/png/bold.png</normaloff>:/icons/png/bold.png</iconset>
        </property>
        <property name="iconSize">
         <size>
@@ -239,7 +239,7 @@
        </property>
        <property name="icon">
         <iconset resource="resources.qrc">
-         <normaloff>:/icons/italic.svg</normaloff>:/icons/italic.svg</iconset>
+         <normaloff>:/icons/png/italic.png</normaloff>:/icons/png/italic.png</iconset>
        </property>
        <property name="iconSize">
         <size>
@@ -277,7 +277,7 @@
        </property>
        <property name="icon">
         <iconset resource="resources.qrc">
-         <normaloff>:/icons/strikethrough.svg</normaloff>:/icons/strikethrough.svg</iconset>
+         <normaloff>:/icons/png/strikethrough.png</normaloff>:/icons/png/strikethrough.png</iconset>
        </property>
        <property name="iconSize">
         <size>
@@ -440,7 +440,7 @@
        </property>
        <property name="icon">
         <iconset resource="resources.qrc">
-         <normaloff>:/icons/link.svg</normaloff>:/icons/link.svg</iconset>
+         <normaloff>:/icons/png/link.png</normaloff>:/icons/png/link.png</iconset>
        </property>
        <property name="iconSize">
         <size>
@@ -484,7 +484,7 @@
        </property>
        <property name="icon">
         <iconset resource="resources.qrc">
-         <normaloff>:/icons/image.svg</normaloff>:/icons/image.svg</iconset>
+         <normaloff>:/icons/png/image.png</normaloff>:/icons/png/image.png</iconset>
        </property>
        <property name="iconSize">
         <size>
@@ -535,7 +535,7 @@
        </property>
        <property name="icon">
         <iconset resource="resources.qrc">
-         <normaloff>:/icons/orderedlist.svg</normaloff>:/icons/orderedlist.svg</iconset>
+         <normaloff>:/icons/png/orderedlist.png</normaloff>:/icons/png/orderedlist.png</iconset>
        </property>
        <property name="shortcut">
         <string>Ctrl+Shift+O</string>
@@ -567,7 +567,7 @@
        </property>
        <property name="icon">
         <iconset resource="resources.qrc">
-         <normaloff>:/icons/unorderedlist.svg</normaloff>:/icons/unorderedlist.svg</iconset>
+         <normaloff>:/icons/png/unorderedlist.png</normaloff>:/icons/png/unorderedlist.png</iconset>
        </property>
        <property name="shortcut">
         <string>Ctrl+Shift+U</string>
@@ -593,7 +593,7 @@
        </property>
        <property name="icon">
         <iconset resource="resources.qrc">
-         <normaloff>:/icons/horizontalline.svg</normaloff>:/icons/horizontalline.svg</iconset>
+         <normaloff>:/icons/png/horizontalline.png</normaloff>:/icons/png/horizontalline.png</iconset>
        </property>
        <property name="shortcut">
         <string>Ctrl+Shift+H</string>
@@ -616,7 +616,7 @@
        </property>
        <property name="icon">
         <iconset resource="resources.qrc">
-         <normaloff>:/icons/blockquote.svg</normaloff>:/icons/blockquote.svg</iconset>
+         <normaloff>:/icons/png/blockquote.png</normaloff>:/icons/png/blockquote.png</iconset>
        </property>
        <property name="shortcut">
         <string>Ctrl+Shift+B</string>

@@ -2,20 +2,20 @@
     <qresource prefix="/">
         <file>themes/default.css</file>
         <file>markdownviewer/emptymarkdownviewer.html</file>
-        <file>icons/bold.svg</file>
-        <file>icons/italic.svg</file>
-        <file>icons/strikethrough.svg</file>
-        <file>icons/image.svg</file>
-        <file>icons/newdocument.svg</file>
-        <file>icons/redo.svg</file>
-        <file>icons/savedocument.svg</file>
-        <file>icons/undo.svg</file>
-        <file>icons/blockquote.svg</file>
-        <file>icons/horizontalline.svg</file>
-        <file>icons/link.svg</file>
-        <file>icons/orderedlist.svg</file>
-        <file>icons/unorderedlist.svg</file>
         <file>dictionaries/en_US.aff</file>
         <file>dictionaries/en_US.dic</file>
+        <file>icons/png/blockquote.png</file>
+        <file>icons/png/bold.png</file>
+        <file>icons/png/horizontalline.png</file>
+        <file>icons/png/image.png</file>
+        <file>icons/png/italic.png</file>
+        <file>icons/png/link.png</file>
+        <file>icons/png/newdocument.png</file>
+        <file>icons/png/orderedlist.png</file>
+        <file>icons/png/redo.png</file>
+        <file>icons/png/savedocument.png</file>
+        <file>icons/png/strikethrough.png</file>
+        <file>icons/png/undo.png</file>
+        <file>icons/png/unorderedlist.png</file>
     </qresource>
 </RCC>

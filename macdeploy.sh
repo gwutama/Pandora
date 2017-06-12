@@ -16,6 +16,6 @@ cp -r ../3rdparty/MacOS/ src/Pandora.app/Contents/MacOS/
 
 # macdeployqt must be run from qt bin directory so that qrc still works!
 # see https://forum.qt.io/topic/59030/solved-macdeployqt-problem/9
-#BUILD_DIR=$(pwd)
-#cd $CMAKE_PREFIX_PATH/bin/
-#./macdeployqt $BUILD_DIR/src/Pandora.app
+BUILD_DIR=$(pwd)
+cd $CMAKE_PREFIX_PATH/bin/
+./macdeployqt $BUILD_DIR/src/Pandora.app -dmg
