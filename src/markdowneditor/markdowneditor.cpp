@@ -54,6 +54,8 @@ MarkdownEditor::MarkdownEditor(QSharedPointer<AppConfig> config,
             mGrammarCheckActions.data(), &GrammarCheckActionsDelegate::checkVisibleText);
     connect(this, &MarkdownEditor::contentChanged,
             mGrammarCheckActions.data(), &GrammarCheckActionsDelegate::checkVisibleText);
+    connect(mUi->textEdit, &MarkdownTextEdit::mouseHover,
+            mGrammarCheckActions.data(), &GrammarCheckActionsDelegate::showSuggestionTooltip);
 
     // Escape shortcuts
     QShortcut* escKeyShortcut = new QShortcut(Qt::Key_Escape, parent);

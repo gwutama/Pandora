@@ -2,6 +2,7 @@
 #include <QDebug>
 #include <QScrollBar>
 #include <QAction>
+#include <QToolTip>
 
 const char* GrammarCheckActionsDelegate::sTag = "[GrammarCheckActionsDelegate]";
 
@@ -19,6 +20,30 @@ GrammarCheckActionsDelegate::GrammarCheckActionsDelegate(MarkdownTextEdit* textE
 
 GrammarCheckActionsDelegate::~GrammarCheckActionsDelegate()
 {
+}
+
+
+void GrammarCheckActionsDelegate::showSuggestionTooltip(const QTextCursor& cursor)
+{
+    mMatches = mLanguageTool->suggestions();
+
+    if (mMatches.size() == 0)
+    {
+        return;
+    }
+
+    for (int i = 0; i < mMatches.size(); i++)
+    {
+        LanguageToolMatch suggestion = mMatches.at(i);
+        int start = mCheckOffset + suggestion.offset();
+        int end = mCheckOffset + suggestion.offset() + suggestion.length();
+
+        if (cursor.position() >= start && cursor.position() <= end)
+        {
+            QToolTip::showText(QCursor::pos(), suggestion.message());
+            return;
+        }
+    }
 }
 
 

@@ -14,6 +14,9 @@ public:
                                          QObject* parent = nullptr);
     virtual ~GrammarCheckActionsDelegate();
 
+public slots:
+    void showSuggestionTooltip(const QTextCursor& cursor);
+
 private slots:
     virtual void runVisibleTextCheck(const QString& text, int startPos, int endPos);
     virtual void runDocumentCheck(const QString& text);

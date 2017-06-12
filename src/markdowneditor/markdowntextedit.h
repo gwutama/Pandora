@@ -22,8 +22,10 @@ public slots:
 private slots:
     void keyPressEvent(QKeyEvent* event);
     void mousePressEvent(QMouseEvent* event);
+    void mouseMoveEvent(QMouseEvent* event);
     void checkVerticalScroll();
     void checkTextChanged();
+    void checkMouseHoverPositionChanged();
 
 private:
     void indent(QKeyEvent* event);
@@ -32,13 +34,16 @@ private:
 signals:
     void laxVerticalScrollEnd(int position);
     void laxTextChanged(const QString& text);
+    void mouseHover(const QTextCursor& cursor);
 
 private:
     QSharedPointer<MarkdownEditorHighlighter> mHighlighter;
     QTimer mVerticalScrollTimer;
     QTimer mContentChangeTimer;
+    QTimer mHoverCursorTimer;
     int mVerticalScrollPos;
     QString mOldContent;
+    QTextCursor mHoverCursor;
 
     static const char* sTag;
 };

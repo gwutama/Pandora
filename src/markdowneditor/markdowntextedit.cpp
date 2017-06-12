@@ -24,13 +24,19 @@ MarkdownTextEdit::MarkdownTextEdit(QWidget* parent) :
             &mVerticalScrollTimer, static_cast<void (QTimer::*)(void)>(&QTimer::start));
     connect(&mVerticalScrollTimer, &QTimer::timeout, this, &MarkdownTextEdit::checkVerticalScroll);
     connect(&mContentChangeTimer, &QTimer::timeout, this, &MarkdownTextEdit::checkTextChanged);
+    connect(&mHoverCursorTimer, &QTimer::timeout,
+            this, &MarkdownTextEdit::checkMouseHoverPositionChanged);
 
-    mVerticalScrollTimer.setInterval(500);
+    mVerticalScrollTimer.setInterval(1000);
     mVerticalScrollTimer.setSingleShot(true);
     mContentChangeTimer.setInterval(5000);
     mContentChangeTimer.setSingleShot(false);
+    mHoverCursorTimer.setInterval(1000);
+    mHoverCursorTimer.setSingleShot(true);
 
     mContentChangeTimer.start();
+
+    setMouseTracking(true);
 }
 
 
@@ -92,11 +98,18 @@ void MarkdownTextEdit::mousePressEvent(QMouseEvent* event)
 }
 
 
+void MarkdownTextEdit::mouseMoveEvent(QMouseEvent* event)
+{
+    mHoverCursor = cursorForPosition(event->pos());
+    mHoverCursorTimer.start();
+}
+
+
 void MarkdownTextEdit::checkVerticalScroll()
 {
     int pos = verticalScrollBar()->value();
 
-    if (abs(pos - mVerticalScrollPos) > 10)
+    if (abs(pos - mVerticalScrollPos) > 5)
     {
         mVerticalScrollPos = pos;
         emit laxVerticalScrollEnd(pos);
@@ -113,6 +126,13 @@ void MarkdownTextEdit::checkTextChanged()
         mOldContent = content;
         emit laxTextChanged(content);
     }
+}
+
+
+void MarkdownTextEdit::checkMouseHoverPositionChanged()
+{
+    qDebug() << sTag << "Nearest cursor hover pos to mouse pointer:" << mHoverCursor.position();
+    emit mouseHover(mHoverCursor);
 }
 
 
