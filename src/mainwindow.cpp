@@ -16,10 +16,14 @@ MainWindow::MainWindow(QWidget* parent) :
     setAccessibleName("Pandora");
     setWindowTitle("Pandora");
 
+    // Setup collection list
+    mCollectionList = new CollectionListView(this);
+    mUi->horizontalLayout->addWidget(mCollectionList);
+
     // Setup markdown editor
     mEditor = new MarkdownEditor(mConfig, this);
     mEditor->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
-    mUi->horizontalLayout->addWidget(mEditor);
+    mUi->horizontalLayout->addWidget(mEditor);    
     TextManipulationActionsDelegate* textActions = mEditor->textManipulationActions().data();
 
     // Setup markdown viewer
@@ -46,6 +50,8 @@ MainWindow::MainWindow(QWidget* parent) :
             mEditor, &MarkdownEditor::showFindReplaceWidget);
     connect(mUi->actionTogglePreview, &QAction::triggered,
             this, &MainWindow::onTogglePreviewActionTriggered);
+    connect(mUi->actionToggleCollectionItems, &QAction::triggered,
+            this, &MainWindow::onToggleCollectionItemsActionTriggered);
     connect(mUi->actionIncreaseFontSize, &QAction::triggered,
             mEditor, &MarkdownEditor::increaseFontSize);
     connect(mUi->actionDecreaseFontSize, &QAction::triggered,
@@ -58,7 +64,7 @@ MainWindow::MainWindow(QWidget* parent) :
             mEditor, &MarkdownEditor::showDocumentStatsDialog);
 
     // Set window size and position
-    setMinimumSize(1200, 800);
+    setMinimumSize(1450, 800);
     restoreGeometry(mConfig->settings().value("geometry").toByteArray());
     restoreState(mConfig->settings().value("state").toByteArray());
 
@@ -114,6 +120,7 @@ void MainWindow::uiStateNoFileOpen()
 {
     // Disable menus File->Close, File->Save, File->Save As
     // Disable editor
+    mUi->actionNewCollectionItem->setDisabled(true);
     mUi->actionClose->setDisabled(true);
     mUi->actionSave->setDisabled(true);
     mUi->actionSaveAs->setDisabled(true);
@@ -121,11 +128,15 @@ void MainWindow::uiStateNoFileOpen()
     mUi->menuEdit->setDisabled(true);
     mEditor->setDisabled(true);
     mUi->toolBar->setDisabled(true);
+    mCollectionList->setDisabled(true);
+    mUi->menuEditor->setDisabled(true);
+    mUi->actionDocumentStatistics->setDisabled(true);
 }
 
 
 void MainWindow::uiStateFileOpened()
 {
+    mUi->actionNewCollectionItem->setEnabled(true);
     mUi->actionClose->setEnabled(true);
     mUi->actionSave->setEnabled(true);
     mUi->actionSaveAs->setEnabled(true);
@@ -133,6 +144,9 @@ void MainWindow::uiStateFileOpened()
     mUi->menuEdit->setEnabled(true);
     mEditor->setEnabled(true);
     mUi->toolBar->setEnabled(true);
+    mCollectionList->setEnabled(true);
+    mUi->menuEditor->setEnabled(true);
+    mUi->actionDocumentStatistics->setEnabled(true);
 }
 
 
@@ -308,5 +322,20 @@ void MainWindow::onTogglePreviewActionTriggered(bool /*checked*/)
 
         // Directly load preview
         mViewer->load(mEditor->content());
+    }
+}
+
+
+void MainWindow::onToggleCollectionItemsActionTriggered(bool /*checked*/)
+{
+    if (mCollectionList->isVisible())
+    {
+        mCollectionList->hide();
+        mCollectionList->setDisabled(true);
+    }
+    else
+    {
+        mCollectionList->show();
+        mCollectionList->setEnabled(true);
     }
 }

@@ -8,6 +8,7 @@
 #include "preferences/preferencesdialog.h"
 #include "markdowneditor/markdowneditor.h"
 #include "markdownviewer/markdownviewer.h"
+#include "markdowncollection/collectionlistview.h"
 #include "maintoolbar.h"
 
 namespace Ui
@@ -38,6 +39,7 @@ private slots:
     void onSaveAsActionTriggered(bool checked);
     void onExportAsActionTriggered(bool checked);
     void onTogglePreviewActionTriggered(bool checked);
+    void onToggleCollectionItemsActionTriggered(bool checked);
 
 private:
     Ui::MainWindow* mUi;
@@ -45,6 +47,7 @@ private:
     MarkdownViewer* mViewer;
     MarkdownEditor* mEditor;
     MainToolbar* mToolbar;
+    CollectionListView* mCollectionList;
     QSharedPointer<AppConfig> mConfig;
     QSharedPointer<QTemporaryFile> mTmpMarkdownFile; // for "new" file (not saved yet)
 

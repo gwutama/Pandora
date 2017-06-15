@@ -4,6 +4,8 @@
 MarkdownCollectionItem::MarkdownCollectionItem(QObject* parent) :
     QObject(parent)
 {
+    mCreationTimestamp = QDateTime::currentMSecsSinceEpoch();
+    mUid = QUuid::createUuid();
 }
 
 

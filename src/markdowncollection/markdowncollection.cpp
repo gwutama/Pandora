@@ -14,24 +14,11 @@ MarkdownCollection::~MarkdownCollection()
 }
 
 
-bool MarkdownCollection::appendItem(QSharedPointer<MarkdownCollectionItem> item)
+bool MarkdownCollection::removeItem(const QUuid& uid)
 {
-    if (!mItems.contains(item))
+    if (mItems.contains(uid))
     {
-        mItems.append(item);
-        return true;
-    }
-
-    qWarning() << sTag << "Cannot append item into collection because item exists";
-    return false;
-}
-
-
-bool MarkdownCollection::removeOneItem(QSharedPointer<MarkdownCollectionItem> item)
-{
-    if (mItems.contains(item))
-    {
-        return mItems.removeOne(item);
+        return mItems.remove(uid);
     }
 
     qWarning() << sTag << "Cannot remove item from collection because item does not exist";
@@ -39,13 +26,15 @@ bool MarkdownCollection::removeOneItem(QSharedPointer<MarkdownCollectionItem> it
 }
 
 
-QSharedPointer<MarkdownCollectionItem> MarkdownCollection::takeOneItem(uint pos)
+QStringList MarkdownCollection::uids()
 {
-    if (pos < mItems.size())
+    QList<QUuid> uids = mItems.keys();
+    QStringList out;
+
+    foreach (QUuid uid, uids)
     {
-        return mItems.takeAt(pos);
+        out.append(uid.toString());
     }
 
-    qWarning() << sTag << "Index out of bound";
-    return QSharedPointer<MarkdownCollectionItem>();
+    return out;
 }

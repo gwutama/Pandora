@@ -50,6 +50,7 @@
     </property>
     <addaction name="actionPreferences"/>
     <addaction name="actionNew"/>
+    <addaction name="actionNewCollectionItem"/>
     <addaction name="actionOpen"/>
     <addaction name="separator"/>
     <addaction name="actionClose"/>
@@ -79,6 +80,7 @@
      <addaction name="actionIncreaseFontSize"/>
      <addaction name="actionDecreaseFontSize"/>
     </widget>
+    <addaction name="actionToggleCollectionItems"/>
     <addaction name="actionTogglePreview"/>
     <addaction name="separator"/>
     <addaction name="menuEditor"/>
@@ -142,7 +144,7 @@
   </action>
   <action name="actionNew">
    <property name="text">
-    <string>New</string>
+    <string>New Collection</string>
    </property>
    <property name="shortcut">
     <string>Ctrl+N</string>
@@ -220,6 +222,22 @@
   <action name="actionDocumentStatistics">
    <property name="text">
     <string>Document Statistics</string>
+   </property>
+  </action>
+  <action name="actionToggleCollectionItems">
+   <property name="text">
+    <string>Toggle Items List</string>
+   </property>
+   <property name="shortcut">
+    <string>Alt+1</string>
+   </property>
+  </action>
+  <action name="actionNewCollectionItem">
+   <property name="text">
+    <string>New Item For Collection</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+Shift+N</string>
    </property>
   </action>
  </widget>

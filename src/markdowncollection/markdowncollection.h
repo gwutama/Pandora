@@ -2,7 +2,8 @@
 #define MARKDOWNCOLLECTION_H
 
 #include <QObject>
-#include <QList>
+#include <QMap>
+#include <QUuid>
 #include <QSharedPointer>
 #include "markdowncollectionitem.h"
 
@@ -14,22 +15,24 @@ public:
     explicit MarkdownCollection(QObject* parent = nullptr);
     virtual ~MarkdownCollection();
 
-    inline QList< QSharedPointer<MarkdownCollectionItem> > items()
+    inline QMap< QUuid, QSharedPointer<MarkdownCollectionItem> > items()
     { return mItems; }
 
-    bool appendItem(QSharedPointer<MarkdownCollectionItem> item);
-    bool removeOneItem(QSharedPointer<MarkdownCollectionItem> item);
+    bool removeItem(const QUuid& uid);
 
-    void insertItem(QSharedPointer<MarkdownCollectionItem> item, uint pos)
-    { mItems.insert(pos, item); }
+    void insertItem(QSharedPointer<MarkdownCollectionItem> item)
+    { mItems.insert(item->uid(), item); }
 
-    QSharedPointer<MarkdownCollectionItem> takeOneItem(uint pos);
+    inline QSharedPointer<MarkdownCollectionItem> findItem(const QUuid& uid)
+    { return mItems.value(uid); }
 
     inline void clearItems()
     { mItems.clear(); }
 
+    QStringList uids();
+
 private:
-    QList< QSharedPointer<MarkdownCollectionItem> > mItems;
+    QMap< QUuid, QSharedPointer<MarkdownCollectionItem> > mItems;
 
     static const char* sTag;
 };

@@ -25,6 +25,7 @@ set(SOURCE_FILES
     markdowneditor/proofreadactionsdelegatebase.cpp
     markdowncollection/markdowncollection.cpp
     markdowncollection/markdowncollectionitem.cpp
+    markdowncollection/collectionlistview.cpp
 
     mainwindow.ui
     maintoolbar.ui
