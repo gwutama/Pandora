@@ -26,6 +26,7 @@ set(SOURCE_FILES
     markdowncollection/markdowncollection.cpp
     markdowncollection/markdowncollectionitem.cpp
     markdowncollection/collectionlistview.cpp
+    markdowncollection/richtextstyleditemdelegate.cpp
 
     mainwindow.ui
     maintoolbar.ui

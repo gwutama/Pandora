@@ -4,6 +4,7 @@
 #include <QListView>
 #include <QStandardItemModel>
 #include "markdowncollection.h"
+#include "richtextstyleditemdelegate.h"
 
 class CollectionListView : public QListView
 {
@@ -26,6 +27,7 @@ private slots:
 private:
     QStandardItemModel* mCollectionModel;
     MarkdownCollection mCollection;
+    RichTextStyledItemDelegate* mRichTextDelegate;
     static const char* sTag;
 };
 

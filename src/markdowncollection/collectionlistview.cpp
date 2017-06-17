@@ -8,11 +8,14 @@ CollectionListView::CollectionListView(QWidget* parent) :
     QListView(parent)
 {
     setFixedWidth(250);
-    setStyleSheet("QListView { border:none }");
+    setStyleSheet("QListView { border: none }");
     setContextMenuPolicy(Qt::CustomContextMenu);
 
     mCollectionModel = new QStandardItemModel(this);
     setModel(mCollectionModel);
+
+    mRichTextDelegate = new RichTextStyledItemDelegate;
+    setItemDelegate(mRichTextDelegate);
 
     // Signals slots
     connect(this, &CollectionListView::customContextMenuRequested,
@@ -24,6 +27,11 @@ CollectionListView::CollectionListView(QWidget* parent) :
 
 CollectionListView::~CollectionListView()
 {
+    if (mRichTextDelegate)
+    {
+        delete (mRichTextDelegate);
+        mRichTextDelegate = 0;
+    }
 }
 
 
@@ -49,8 +57,11 @@ void CollectionListView::newItem()
     mCollection.insertItem(item);
 
     // Append to the end of the list
-    QStandardItem* stdItem = new QStandardItem(item->title());
+    QStandardItem* stdItem = new QStandardItem;
     stdItem->setData(item->uid(), Qt::UserRole);
+    QString richTitle("<h3>%1</h3><p>This is the content</p>");
+    richTitle = richTitle.arg(item->title());
+    stdItem->setData(richTitle, Qt::DisplayRole);
     mCollectionModel->appendRow(stdItem);
 
     qDebug() << sTag << "Created new item" << item->title() << item->uid();
