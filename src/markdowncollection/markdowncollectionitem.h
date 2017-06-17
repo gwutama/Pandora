@@ -32,6 +32,8 @@ public:
     inline QString content()
     { return mContent; }
 
+    QString richTitle();
+
 private:
     QUuid mUid;
     qint64 mCreationTimestamp;

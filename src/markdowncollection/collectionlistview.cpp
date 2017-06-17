@@ -59,9 +59,7 @@ void CollectionListView::newItem()
     // Append to the end of the list
     QStandardItem* stdItem = new QStandardItem;
     stdItem->setData(item->uid(), Qt::UserRole);
-    QString richTitle("<h3>%1</h3><p>This is the content</p>");
-    richTitle = richTitle.arg(item->title());
-    stdItem->setData(richTitle, Qt::DisplayRole);
+    stdItem->setData(item->richTitle(), Qt::DisplayRole);
     mCollectionModel->appendRow(stdItem);
 
     qDebug() << sTag << "Created new item" << item->title() << item->uid();

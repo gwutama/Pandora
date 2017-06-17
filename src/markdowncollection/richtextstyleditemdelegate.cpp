@@ -57,5 +57,5 @@ QSize RichTextStyledItemDelegate::sizeHint(const QStyleOptionViewItem& option,
     doc.setDefaultFont(opt.font);
 
     //    return QSize(doc.idealWidth(), doc.size().height());
-    return QSize(doc.idealWidth(), 50); // seems to work
+    return QSize(doc.idealWidth(), 60); // seems to work
 }
