@@ -11,6 +11,14 @@ CollectionListView::CollectionListView(QWidget* parent) :
     setStyleSheet("QListView { border: none }");
     setContextMenuPolicy(Qt::CustomContextMenu);
 
+    // Drag and drop model.
+    // Resources:
+    // http://www.qtforum.org/article/12733/how-to-make-drag-drop-in-qlistview.html
+    // https://stackoverflow.com/questions/40165709/moving-items-via-dragdrop-in-qlistview-iconmode-removes-them-incorrectly-w
+    setDragEnabled(true);
+    setDragDropMode(QListView::InternalMove);
+    setDefaultDropAction(Qt::MoveAction);
+
     mCollectionModel = new QStandardItemModel(this);
     setModel(mCollectionModel);
 
@@ -52,7 +60,7 @@ void CollectionListView::showContextMenu(const QPoint& point)
 void CollectionListView::newItem()
 {
     MarkdownCollectionItem* itemPtr = new MarkdownCollectionItem;
-    itemPtr->mTitle = "Item Title";
+    itemPtr->mTitle = "Item Title " + QString::number(qrand() % 100);
     auto item = QSharedPointer<MarkdownCollectionItem>(itemPtr);
     mCollection.insertItem(item);
 
@@ -60,6 +68,7 @@ void CollectionListView::newItem()
     QStandardItem* stdItem = new QStandardItem;
     stdItem->setData(item->uid(), Qt::UserRole);
     stdItem->setData(item->richTitle(), Qt::DisplayRole);
+    stdItem->setFlags(Qt::ItemIsSelectable | Qt::ItemIsEnabled | Qt::ItemIsDragEnabled);
     mCollectionModel->appendRow(stdItem);
 
     qDebug() << sTag << "Created new item" << item->title() << item->uid();
