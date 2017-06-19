@@ -16,9 +16,17 @@ MainWindow::MainWindow(QWidget* parent) :
     setAccessibleName("Pandora");
     setWindowTitle("Pandora");
 
+    // Setup markdown collection
+    mCollection = QSharedPointer<MarkdownCollection>(new MarkdownCollection);
+
     // Setup collection list
-    mCollectionList = new CollectionListView(this);
+    mCollectionList = new CollectionListView(mCollection, this);
     mUi->horizontalLayout->addWidget(mCollectionList);
+
+    connect(mCollectionList, &CollectionListView::collectionItemActivated,
+            this, &MainWindow::onCollectionItemActivated);
+    connect(mCollectionList, &CollectionListView::collectionItemRemoved,
+            this, &MainWindow::onCollectionItemRemoved);
 
     // Setup markdown editor
     mEditor = new MarkdownEditor(mConfig, this);
@@ -156,6 +164,26 @@ void MainWindow::closeEvent(QCloseEvent* /*event*/)
     mConfig->settings().setValue("geometry", saveGeometry());
     mConfig->settings().setValue("state", saveState());
     mConfig->settings().sync();
+}
+
+
+void MainWindow::onCollectionItemActivated(QSharedPointer<MarkdownCollectionItem> item)
+{
+    mConfig->setMarkdownFile(file);
+    mConfig->save();
+
+    if (!mEditor->open())
+    {
+        qWarning() << sTag << "Cannot load file:" << file;
+        return false;
+    }
+}
+
+
+void MainWindow::onCollectionItemRemoved()
+{
+    mViewer->close();
+    mEditor->close();
 }
 
 

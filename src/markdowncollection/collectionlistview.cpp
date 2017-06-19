@@ -4,8 +4,10 @@
 
 const char* CollectionListView::sTag = "[CollectionListView]";
 
-CollectionListView::CollectionListView(QWidget* parent) :
-    QListView(parent)
+CollectionListView::CollectionListView(QSharedPointer<MarkdownCollection> collection,
+                                       QWidget* parent) :
+    QListView(parent),
+    mCollection(collection)
 {
     setFixedWidth(250);
     setStyleSheet("QListView { border: none }");
@@ -32,6 +34,8 @@ CollectionListView::CollectionListView(QWidget* parent) :
             this, &CollectionListView::onRowsRemoved);
     connect(mCollectionModel, &QStandardItemModel::rowsInserted,
             this, &CollectionListView::onRowsInserted);
+    connect(this, &CollectionListView::clicked,
+            this, &CollectionListView::onItemSelected);
 }
 
 
@@ -48,23 +52,23 @@ CollectionListView::~CollectionListView()
 void CollectionListView::showContextMenu(const QPoint& point)
 {
     QMenu menu;
-    menu.addAction("New Item", this, SLOT(newItem()));
+    menu.addAction("New Item", this, SLOT(createItem()));
 
     if (!selectedIndexes().isEmpty())
     {
-        menu.addAction("Delete Item", this, SLOT(deleteItems()));
+        menu.addAction("Delete Item", this, SLOT(deleteSelectedItems()));
     }
 
     menu.exec(mapToGlobal(point));
 }
 
 
-void CollectionListView::newItem()
+void CollectionListView::createItem()
 {
     MarkdownCollectionItem* itemPtr = new MarkdownCollectionItem;
     itemPtr->mTitle = "Item Title " + QString::number(qrand() % 100);
     auto item = QSharedPointer<MarkdownCollectionItem>(itemPtr);
-    mCollection.insertItem(item);
+    mCollection->insertItem(item);
 
     // Append to the end of the list
     QStandardItem* stdItem = new QStandardItem;
@@ -78,10 +82,11 @@ void CollectionListView::newItem()
     // Select the newly created item
     QModelIndex lastIdx = mCollectionModel->index(mCollectionModel->rowCount() - 1, 0);
     setCurrentIndex(lastIdx);
+    clicked(lastIdx); // so that item selected and signals triggered
 }
 
 
-void CollectionListView::deleteItems()
+void CollectionListView::deleteSelectedItems()
 {
     QModelIndexList modelIndexes = selectedIndexes();
 
@@ -101,8 +106,8 @@ void CollectionListView::deleteItems()
 
 void CollectionListView::onRowsRemoved(const QModelIndex& parent, int first, int last)
 {
-    qDebug() << sTag << "Rows removed" << first << last;
-
+    // If mModelIndexMoved is not -1, then we are drag and dropping an item.
+    // Otherwise we are actually deleting an item from the list.
     // If mModelIndexMoved is not -1, then a copy of an index was inserted, the old one
     // will be deleted here. What we want to do is select the copied index's item.
     if (mModelIndexMoved > -1)
@@ -122,7 +127,14 @@ void CollectionListView::onRowsRemoved(const QModelIndex& parent, int first, int
 
         QModelIndex idx = mCollectionModel->index(pos, 0);
         setCurrentIndex(idx);
+        clicked(idx); // so that item selected and signals triggered
         mModelIndexMoved = -1; // reset
+
+        qDebug() << sTag << "Rows moved" << first << last;
+    }
+    else
+    {
+        qDebug() << sTag << "Rows removed" << first << last;
     }
 }
 
@@ -136,4 +148,19 @@ void CollectionListView::onRowsInserted(const QModelIndex& parent, int first, in
     // References:
     // https://forum.qt.io/topic/38540/keeping-selection-consistent-after-internalmove-in-qlistview/2
     mModelIndexMoved = first;
+}
+
+
+void CollectionListView::onItemSelected(const QModelIndex& index)
+{
+    QUuid uid = index.data(Qt::UserRole).toUuid();
+
+    // Only activate item if the selected item was not active
+    if (mActiveCollectionItemUid != uid)
+    {
+        mActiveCollectionItemUid = uid;
+        QSharedPointer<MarkdownCollectionItem> item = mCollection->findItem(uid);
+        qDebug() << sTag << "Row selected" << index.data() << uid;
+        emit collectionItemActivated(item);
+    }
 }

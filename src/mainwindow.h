@@ -9,6 +9,7 @@
 #include "markdowneditor/markdowneditor.h"
 #include "markdownviewer/markdownviewer.h"
 #include "markdowncollection/collectionlistview.h"
+#include "markdowncollection/markdowncollection.h"
 #include "maintoolbar.h"
 
 namespace Ui
@@ -41,6 +42,9 @@ private slots:
     void onTogglePreviewActionTriggered(bool checked);
     void onToggleCollectionItemsActionTriggered(bool checked);
 
+    void onCollectionItemActivated(QSharedPointer<MarkdownCollectionItem> item);
+    void onCollectionItemRemoved();
+
 private:
     Ui::MainWindow* mUi;
     PreferencesDialog* mCfgDialog;
@@ -48,6 +52,7 @@ private:
     MarkdownEditor* mEditor;
     MainToolbar* mToolbar;
     CollectionListView* mCollectionList;
+    QSharedPointer<MarkdownCollection> mCollection;
     QSharedPointer<AppConfig> mConfig;
     QSharedPointer<QTemporaryFile> mTmpMarkdownFile; // for "new" file (not saved yet)
 

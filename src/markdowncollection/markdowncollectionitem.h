@@ -24,8 +24,6 @@ public:
     inline qint64 modificationTimestamp()
     { return mModificationTimestamp; }
 
-    void setContent(const QString& content);
-
     inline QString title()
     { return mTitle; }
 
@@ -33,6 +31,9 @@ public:
     { return mContent; }
 
     QString richTitle();
+
+private:
+    void setContent(const QString& content);
 
 private:
     QUuid mUid;

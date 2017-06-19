@@ -11,23 +11,31 @@ class CollectionListView : public QListView
     Q_OBJECT
 
 public:
-    explicit CollectionListView(QWidget* parent = nullptr);
+    explicit CollectionListView(QSharedPointer<MarkdownCollection> collection,
+                                QWidget* parent = nullptr);
     virtual ~CollectionListView();
 
 public slots:
-    void newItem();
+//    void updateItem();
 
-private slots:
+private slots:    
     void showContextMenu(const QPoint& point);
-    void deleteItems();
+    void createItem();
+    void deleteSelectedItems();
     void onRowsRemoved(const QModelIndex& parent, int first, int last);
     void onRowsInserted(const QModelIndex& parent, int first, int last);
+    void onItemSelected(const QModelIndex& index);
+
+signals:
+    void collectionItemActivated(QSharedPointer<MarkdownCollectionItem> item);
+    void collectionItemRemoved();
 
 private:
     QStandardItemModel* mCollectionModel;
-    MarkdownCollection mCollection;
+    QSharedPointer<MarkdownCollection> mCollection;
     RichTextStyledItemDelegate* mRichTextDelegate;
     int mModelIndexMoved;
+    QUuid mActiveCollectionItemUid;
     static const char* sTag;
 };
 
