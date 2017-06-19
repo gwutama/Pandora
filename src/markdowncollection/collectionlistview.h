@@ -20,14 +20,14 @@ public slots:
 private slots:
     void showContextMenu(const QPoint& point);
     void deleteItems();
-    void onItemRenamed(const QModelIndex& topLeft,
-                       const QModelIndex& bottomRight,
-                       const QVector<int>& roles = QVector<int>());
+    void onRowsRemoved(const QModelIndex& parent, int first, int last);
+    void onRowsInserted(const QModelIndex& parent, int first, int last);
 
 private:
     QStandardItemModel* mCollectionModel;
     MarkdownCollection mCollection;
     RichTextStyledItemDelegate* mRichTextDelegate;
+    int mModelIndexMoved;
     static const char* sTag;
 };
 

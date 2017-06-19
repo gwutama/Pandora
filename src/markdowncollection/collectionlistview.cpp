@@ -28,8 +28,10 @@ CollectionListView::CollectionListView(QWidget* parent) :
     // Signals slots
     connect(this, &CollectionListView::customContextMenuRequested,
             this, &CollectionListView::showContextMenu);
-    connect(mCollectionModel, &QStandardItemModel::dataChanged,
-            this, &CollectionListView::onItemRenamed);
+    connect(mCollectionModel, &QStandardItemModel::rowsRemoved,
+            this, &CollectionListView::onRowsRemoved);
+    connect(mCollectionModel, &QStandardItemModel::rowsInserted,
+            this, &CollectionListView::onRowsInserted);
 }
 
 
@@ -97,23 +99,41 @@ void CollectionListView::deleteItems()
 }
 
 
-void CollectionListView::onItemRenamed(const QModelIndex& topLeft,
-                                       const QModelIndex& /*bottomRight*/,
-                                       const QVector<int>& /*roles*/)
+void CollectionListView::onRowsRemoved(const QModelIndex& parent, int first, int last)
 {
-    QString title =  topLeft.data().toString();
+    qDebug() << sTag << "Rows removed" << first << last;
 
-    QStandardItem* stdItem = mCollectionModel->itemFromIndex(topLeft);
-    QUuid uid = stdItem->data(Qt::UserRole).toUuid();
-    QSharedPointer<MarkdownCollectionItem> item = mCollection.findItem(uid);
+    // If mModelIndexMoved is not -1, then a copy of an index was inserted, the old one
+    // will be deleted here. What we want to do is select the copied index's item.
+    if (mModelIndexMoved > -1)
+    {
+        bool isMovingUp = mModelIndexMoved < first; // seriously I don't understand why and how
+        int pos = 0;
 
-    if (!item.isNull())
-    {
-        item->mTitle = title;
-        qDebug() << sTag << "Item title renamed to" << topLeft.data();
+        // Again, not so sure but this apparently works.
+        if (isMovingUp)
+        {
+            pos = mModelIndexMoved;
+        }
+        else
+        {
+            pos = mModelIndexMoved - 1;
+        }
+
+        QModelIndex idx = mCollectionModel->index(pos, 0);
+        setCurrentIndex(idx);
+        mModelIndexMoved = -1; // reset
     }
-    else
-    {
-        qWarning() << sTag << "Cannot rename internal data: item is null";
-    }
+}
+
+
+void CollectionListView::onRowsInserted(const QModelIndex& parent, int first, int last)
+{
+    qDebug() << sTag << "Rows inserted" << first << last;
+
+    // On move with drag and drop, a copy of index is inserted first, then the old one will
+    // be removed. See onRowsRemoved as well.
+    // References:
+    // https://forum.qt.io/topic/38540/keeping-selection-consistent-after-internalmove-in-qlistview/2
+    mModelIndexMoved = first;
 }
