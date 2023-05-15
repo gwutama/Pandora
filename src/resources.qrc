@@ -1,0 +1,21 @@
+<RCC>
+    <qresource prefix="/">
+        <file>themes/default.css</file>
+        <file>markdownviewer/emptymarkdownviewer.html</file>
+        <file>dictionaries/en_US.aff</file>
+        <file>dictionaries/en_US.dic</file>
+        <file>icons/png/blockquote.png</file>
+        <file>icons/png/bold.png</file>
+        <file>icons/png/horizontalline.png</file>
+        <file>icons/png/image.png</file>
+        <file>icons/png/italic.png</file>
+        <file>icons/png/link.png</file>
+        <file>icons/png/newdocument.png</file>
+        <file>icons/png/orderedlist.png</file>
+        <file>icons/png/redo.png</file>
+        <file>icons/png/savedocument.png</file>
+        <file>icons/png/strikethrough.png</file>
+        <file>icons/png/undo.png</file>
+        <file>icons/png/unorderedlist.png</file>
+    </qresource>
+</RCC>
