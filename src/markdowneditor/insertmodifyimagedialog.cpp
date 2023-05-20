@@ -1,6 +1,7 @@
 #include "insertmodifyimagedialog.h"
 #include "ui_insertmodifyimagedialog.h"
 #include <QFileInfo>
+#include <QRegExp>
 
 
 InsertModifyImageDialog::InsertModifyImageDialog(QWidget* parent) :

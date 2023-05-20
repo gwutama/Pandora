@@ -17,7 +17,7 @@ MarkdownViewer::MarkdownViewer(QSharedPointer<AppConfig> config,
     connect(mWebView, &QWebEngineView::loadFinished, this, &MarkdownViewer::onPageLoaded);
 
     QHBoxLayout* layout = new QHBoxLayout(this);
-    layout->setMargin(0);
+//    layout->setMargin(0);
     layout->addWidget(mWebView);
     setLayout(layout);
 }

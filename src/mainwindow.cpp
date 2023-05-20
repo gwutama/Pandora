@@ -169,14 +169,14 @@ void MainWindow::closeEvent(QCloseEvent* /*event*/)
 
 void MainWindow::onCollectionItemActivated(QSharedPointer<MarkdownCollectionItem> item)
 {
-    mConfig->setMarkdownFile(file);
-    mConfig->save();
-
-    if (!mEditor->open())
-    {
-        qWarning() << sTag << "Cannot load file:" << file;
-        return false;
-    }
+//    mConfig->setMarkdownFile(file);
+//    mConfig->save();
+//
+//    if (!mEditor->open())
+//    {
+//        qWarning() << sTag << "Cannot load file:" << file;
+//        return false;
+//    }
 }
 
 

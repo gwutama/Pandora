@@ -1,6 +1,7 @@
 #include "textmanipulationactionsdelegate.h"
 #include "insertmodifylinkdialog.h"
 #include "insertmodifyimagedialog.h"
+#include <QRegularExpression>
 
 TextManipulationActionsDelegate::TextManipulationActionsDelegate(MarkdownTextEdit* textEdit,
                                                                  QObject* parent) :
@@ -42,7 +43,7 @@ void TextManipulationActionsDelegate::toggleSelectionBold()
     QRegExp boldAsteriskRx("\\*{2}.*\\*{2}");
     QRegExp boldUnderlineRx("_{2}.*_{2}");
 
-    if (text.indexOf(boldAsteriskRx) > -1 || text.indexOf(boldUnderlineRx) > -1)
+    if (boldAsteriskRx.indexIn(text) > -1 || boldUnderlineRx.indexIn(text) > -1)
     {
         newText = text.mid(2, text.size() - 4);
     }
@@ -70,7 +71,7 @@ void TextManipulationActionsDelegate::toggleSelectionItalic()
     QRegExp italicAsteriskRx("\\*.*\\*");
     QRegExp italicUnderlineRx("_.*_");
 
-    if (text.indexOf(italicAsteriskRx) > -1 || text.indexOf(italicUnderlineRx) > -1)
+    if (italicAsteriskRx.indexIn(text) > -1 || italicUnderlineRx.indexIn(text) > -1)
     {
         newText = text.mid(1, text.size() - 2);
     }
@@ -98,7 +99,7 @@ void TextManipulationActionsDelegate::toggleSelectionStrikeout()
     // Toggle bold
     QRegExp strikeoutRx("~{2}.*~{2}");
 
-    if (text.indexOf(strikeoutRx) > -1)
+    if (strikeoutRx.indexIn(text) > -1)
     {
         newText = text.mid(2, text.size() - 4);
     }
@@ -176,9 +177,9 @@ void TextManipulationActionsDelegate::toggleSelectionUnorderedList()
     QString newText;
     QRegExp unorderedListkRx("^( )+\\* .*\u2029(( )+\\* .*\u2029)*");
 
-    if (text.indexOf(unorderedListkRx) > -1) // match
+    if (unorderedListkRx.indexIn(text) > -1) // match
     {
-        newText = text.replace(QRegExp("( )+\\* "), "");
+        newText = text.replace(QRegularExpression("( )+\\* "), "");
     }
     else
     {
@@ -213,9 +214,9 @@ void TextManipulationActionsDelegate::toggleSelectionOrderedList()
     QString newText;
     QRegExp orderedListkRx("^( )+[0-9]+\\. .*\u2029(( )+[0-9]+\\. .*\u2029)*");
 
-    if (text.indexOf(orderedListkRx) > -1) // match ordered list
+    if (orderedListkRx.indexIn(text) > -1) // match ordered list
     {
-        newText = text.replace(QRegExp("( )+[0-9]+\\. "), "");
+        newText = text.replace(QRegularExpression("( )+[0-9]+\\. "), "");
     }
     else // not a list
     {
@@ -250,9 +251,9 @@ void TextManipulationActionsDelegate::toggleSelectionBlockquote()
     QString newText;
     QRegExp blockquoteRx("^>(( )+.*)?\u2029(>(( )+.*)?\u2029)*");
 
-    if (text.indexOf(blockquoteRx) > -1) // match
+    if (blockquoteRx.indexIn(text) > -1) // match
     {
-        newText = text.replace(QRegExp(">(( )+)?"), "");
+        newText = text.replace(QRegularExpression(">(( )+)?"), "");
     }
     else
     {
@@ -284,7 +285,7 @@ void TextManipulationActionsDelegate::toggleHeadingHelper(int level)
 
     if (line.startsWith("#")) // line is a heading
     {
-        line.replace(QRegExp("#+ "), "");
+        line.replace(QRegularExpression("#+ "), "");
 
         if (left == headingStart) // case 1: same level we are expecting
         {

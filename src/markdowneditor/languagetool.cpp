@@ -48,7 +48,7 @@ void LanguageTool::check(const QString& text)
     QNetworkRequest request(mUrl);
     request.setHeader(QNetworkRequest::ContentTypeHeader, "application/x-www-form-urlencoded");
     QByteArray data;
-    data.append("language=" + mLanguage);
+    data.append("language=" + mLanguage.toLocal8Bit());
     data.append("&text=" + QUrl::toPercentEncoding(text));
     mNetwork->post(request, data);
 }

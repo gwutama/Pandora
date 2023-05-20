@@ -42,12 +42,10 @@ set(SOURCE_FILES
     resources.qrc
 )
 
-find_package(Qt5Core REQUIRED)
-find_package(Qt5Gui REQUIRED)
-find_package(Qt5Widgets REQUIRED)
-find_package(Qt5WebEngineWidgets REQUIRED)
-find_package(Qt5Network REQUIRED)
-find_package(HUNSPELL REQUIRED)
+find_package(Qt6 REQUIRED COMPONENTS Core Gui Widgets WebEngineWidgets Network Core5Compat)
+
+set(HUNSPELL_INCLUDE_DIR "/opt/homebrew/Cellar/hunspell/1.7.2/include/")
+set(HUNSPELL_LIBRARIES "/opt/homebrew/Cellar/hunspell/1.7.2/lib/libhunspell-1.7.a")
 
 set(CMAKE_AUTOMOC ON)
 set(CMAKE_AUTORCC ON)
@@ -57,8 +55,8 @@ set(CMAKE_INCLUDE_CURRENT_DIR ON)
 include_directories(${HUNSPELL_INCLUDE_DIR})
 
 add_executable(${PROJECT_NAME} ${SOURCE_FILES})
-target_link_libraries(${PROJECT_NAME}
-                      Qt5::Core Qt5::Gui Qt5::Widgets Qt5::WebEngineWidgets Qt5::Network
+target_link_libraries(${PROJECT_NAME} PRIVATE
+                      Qt6::Core Qt6::Gui Qt6::Widgets Qt6::WebEngineWidgets Qt6::Network Qt6::Core5Compat
                       ${HUNSPELL_LIBRARIES})
 
 if (APPLE)

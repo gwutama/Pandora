@@ -2,6 +2,7 @@
 #include <QDebug>
 #include <QScrollBar>
 #include <QMenu>
+#include <QRegularExpression>
 
 const char* SpellCheckActionsDelegate::sTag = "[SpellCheckActionsDelegate]";
 
@@ -36,7 +37,7 @@ void SpellCheckActionsDelegate::runVisibleTextCheck(const QString& text, int sta
     fmt.setUnderlineStyle(QTextCharFormat::WaveUnderline);
     fmt.setUnderlineColor(Qt::blue);
 
-    while (mTextEdit->find(QRegExp("((?!_)\\w)+")))
+    while (mTextEdit->find(QRegularExpression("((?!_)\\w)+")))
     {
         QString word = mTextEdit->textCursor().selectedText();
 

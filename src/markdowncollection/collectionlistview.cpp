@@ -1,6 +1,7 @@
 #include "collectionlistview.h"
 #include <QMenu>
 #include <QDebug>
+#include <QRandomGenerator>
 
 const char* CollectionListView::sTag = "[CollectionListView]";
 
@@ -66,7 +67,7 @@ void CollectionListView::showContextMenu(const QPoint& point)
 void CollectionListView::createItem()
 {
     MarkdownCollectionItem* itemPtr = new MarkdownCollectionItem;
-    itemPtr->mTitle = "Item Title " + QString::number(qrand() % 100);
+    itemPtr->mTitle = "Item Title " + QString::number(QRandomGenerator::global()->generate() % 100);
     auto item = QSharedPointer<MarkdownCollectionItem>(itemPtr);
     mCollection->insertItem(item);
 
